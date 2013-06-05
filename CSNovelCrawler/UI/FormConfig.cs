@@ -22,7 +22,7 @@ namespace CSNovelCrawler.UI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //选择文件夹
+
             var fbd = new FolderBrowserDialog
                 {
                     ShowNewFolderButton = true,

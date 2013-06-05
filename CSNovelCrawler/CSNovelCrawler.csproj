@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSNovelCrawler</RootNamespace>
     <AssemblyName>CSNovelCrawler</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>發行\</PublishUrl>
@@ -26,6 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,19 +47,17 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>CSNovelCrawler.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EncryptAES">
       <HintPath>..\..\EncryptAES\EncryptAES\bin\Debug\EncryptAES.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net20\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -98,9 +97,7 @@
     <Compile Include="Class\CommonTools.cs" />
     <Compile Include="Class\DelegatesContainer.cs" />
     <Compile Include="Plugin\eynyDownloader.cs" />
-    <Compile Include="NoneUsing\eynyParser.cs" />
     <Compile Include="Plugin\eynyPlugin.cs" />
-    <Compile Include="NoneUsing\IParser.cs" />
     <Compile Include="Interface\IPlugin.cs" />
     <Compile Include="Class\Network.cs" />
     <Compile Include="Class\TaskInfo.cs" />
@@ -116,7 +113,6 @@
     <Compile Include="Class\FileWrite.cs" />
     <Compile Include="Core\TaskManager.cs" />
     <Compile Include="Class\TypeSetting.cs" />
-    <Compile Include="Class\UIDelegateContainer.cs" />
     <Compile Include="UI\FormNew.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -183,6 +179,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="NoneUsing\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,7 +10,7 @@ namespace CSNovelCrawler.Plugin
     {
         public Ck101Plugin()
         {
-            Feature =new Dictionary<string, object>();
+            Extensions =new Dictionary<string, object>();
         }
 
         public IDownloader CreateDownloader()
@@ -41,7 +41,7 @@ namespace CSNovelCrawler.Plugin
             return null;
         }
 
-        public Dictionary<string, object> Feature { get; private set; }
+        public Dictionary<string, object> Extensions { get; private set; }
 
         public DictionaryExtension<string, string> Configuration { get; set; }
     }

@@ -22,7 +22,7 @@ namespace CSNovelCrawler.Plugin
         {
             if (CurrentParameter != null)
             {
-                //将停止flag设置为true
+                //將停止旗標設為true
                 CurrentParameter.IsStop = true;
             }
         }

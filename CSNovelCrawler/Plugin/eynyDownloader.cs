@@ -1,10 +1,11 @@
 ﻿using System.Globalization;
 using CSNovelCrawler.Class;
 using CSNovelCrawler.Interface;
+using EncryptAES;
 using HtmlAgilityPack;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
+
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,7 +18,7 @@ namespace CSNovelCrawler.Plugin
 
         public EynyDownloader(IPlugin plugin)
         {
-            var aes = new EncryptAES.EncryptAES();
+            var aes = new EncryptAes();
             string url = string.Format("http://www02.eyny.com/member.php?mod=logging&action=login&loginsubmit=yes&handlekey=login&loginhash=LiKaw&inajax=1");
 
             ServicePointManager.Expect100Continue = false;
@@ -25,11 +26,14 @@ namespace CSNovelCrawler.Plugin
             string postdata = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0WBD7ARSRyDoyl8n0HpXAPIEuJgubT+X9mDY0ncZ5Tl7IjD7xFtsoIPo69qjcdqRQlqzRZDscqED++/VRu1n6EbKqcyOisxN23RpROXOhKPGVs13Drn2bZBC0gh31EHXI0=";
             if (plugin.Configuration.ContainsKey("PostData"))
             {
-                postdata = plugin.Configuration["PostData"];
+                if (string.IsNullOrEmpty(plugin.Configuration["PostData"]))
+                {
+                    postdata = plugin.Configuration["PostData"];
+                }
             }
-            //postdata = "formhash=3b765c67&referer=http%3A%2F%2Fwww02.eyny.com%2F&loginfield=username&username=CSNovelDown&password=V5Bx7ucG+KHP&questionid=0&answer=&cookietime=2592000";
-            byte[] data = Encoding.UTF8.GetBytes(aes.DecryptAES256(postdata));
-            //生成请求
+
+            byte[] data = Encoding.UTF8.GetBytes(aes.DecryptAes256(postdata));
+            //建立請求
             var req = (HttpWebRequest)WebRequest.Create(url);
             req.UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)";
             req.ContentType = "application/x-www-form-urlencoded";
@@ -42,7 +46,7 @@ namespace CSNovelCrawler.Plugin
                 outstream.Write(data, 0, data.Length);
                 outstream.Flush();
             }
-            //关闭请求
+            //關閉請求
             req.GetResponse().Close();
             CurrentParameter = new DownloadParameter
                 {
@@ -75,7 +79,7 @@ namespace CSNovelCrawler.Plugin
 
             //取總頁數
             HtmlNodeCollection nodeHeaders2 = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"pgt\"]/div[1]/div/a");
-            string s = nodeHeaders2[nodeHeaders2.Count() - 3].InnerText;
+            string s = nodeHeaders2[nodeHeaders2.Count - 3].InnerText;
             r = new Regex(@"(?<TotalPage>\d+)");
             m = r.Match(s);
             if (m.Success)
@@ -104,7 +108,7 @@ namespace CSNovelCrawler.Plugin
 
         public int GetSection(HtmlDocument htmlRoot)
         {
-            return htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[1]/td[2]/div[2]/div[2]/div[1]/table[1]/tr[1]/td[1]").Count();
+            return htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[1]/td[2]/div[2]/div[2]/div[1]/table[1]/tr[1]/td[1]").Count;
         }
 
 

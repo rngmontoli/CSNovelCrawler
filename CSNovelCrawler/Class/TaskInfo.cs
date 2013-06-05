@@ -16,7 +16,7 @@ namespace CSNovelCrawler.Class
         }
         private Guid _taskid;
         /// <summary>
-        /// 任务Id
+        /// 任務的GUID
         /// </summary>
         public Guid TaskId
         {
@@ -82,7 +82,7 @@ namespace CSNovelCrawler.Class
         public int CurrentSection { get; set; }
 
         /// <summary>
-        /// 保存目錄
+        /// 儲存目錄
         /// </summary>
         public string SaveDirectory { get; set; }
 
@@ -103,30 +103,30 @@ namespace CSNovelCrawler.Class
         public string Url { get; set; }
 
         /// <summary>
-        /// 关联的UI Item
+        /// 關聯的Ui Object
         /// </summary>
         [XmlIgnore]
         public Object UiItem { get; set; }
 
         /// <summary>
-        /// 下载状态
+        /// 下載狀態
         /// </summary>
         public DownloadStatus Status { get; set; }
 
         private IPlugin _basePlugin;
         /// <summary>
-        /// 包装的BasePlugin对象
+        /// IPlugin插件
         /// </summary>
         public IPlugin BasePlugin { get { return _basePlugin; } }
 
         private IDownloader _downloader;
         /// <summary>
-        /// 包装的Downloader对象
+        /// IDownloader
         /// </summary>
         public IDownloader Downloader { get { return _downloader; } }
 
         /// <summary>
-        /// 销毁关联的IDownloader对象
+        /// 釋放IDownloader
         /// </summary>
         public void DisposeDownloader()
         {
@@ -141,7 +141,7 @@ namespace CSNovelCrawler.Class
 
 
         /// <summary>
-        /// 任务下载进度
+        /// 任務下載進度
         /// </summary>
         /// <returns></returns>
         public double GetProgress()
@@ -175,7 +175,7 @@ namespace CSNovelCrawler.Class
         }
 
         /// <summary>
-        /// 分析任務
+        /// 開始任務
         /// </summary>
         public bool Start()
         {

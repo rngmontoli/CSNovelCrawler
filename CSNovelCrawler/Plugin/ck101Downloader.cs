@@ -2,7 +2,6 @@
 using HtmlAgilityPack;
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using CSNovelCrawler.Class;
@@ -52,7 +51,7 @@ namespace CSNovelCrawler.Plugin
 
             //取總頁數
             HtmlNodeCollection nodeHeaders2 = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"pgt\"]/table/tr/td[1]/div/div/a");
-            string s = nodeHeaders2[nodeHeaders2.Count() - 2].InnerText;
+            string s = nodeHeaders2[nodeHeaders2.Count - 2].InnerText;
             r = new Regex(@"(?<TotalPage>\d+)");
             m = r.Match(s);
             if (m.Success)
@@ -89,7 +88,7 @@ namespace CSNovelCrawler.Plugin
         /// <returns></returns>
         public int GetSection(HtmlDocument htmlRoot)
         {
-            return htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]").Count();
+            return htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]").Count;
         }
         
         public override bool Download()

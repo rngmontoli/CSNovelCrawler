@@ -18,7 +18,7 @@ namespace CSNovelCrawler.Class
         }
 
         /// <summary>
-        /// 获取网页源代码
+        /// 取得網頁網始碼
         /// </summary>
         /// <param name="para"></param>
         /// <param name="encode"></param>
@@ -29,7 +29,7 @@ namespace CSNovelCrawler.Class
         }
 
         /// <summary>
-        /// 获取网页源代码
+        /// 取得網頁網始碼
         /// </summary>
         /// <param name="request"></param>
         /// <param name="encode"></param>
@@ -39,16 +39,16 @@ namespace CSNovelCrawler.Class
             string sline = "";
             bool needRedownload = false;
             int remainTimes = 3;
-            //当需要重试下载时
+            
             do
             {
                 try
                 {
-                    //获取服务器回应
+                    //接收 HTTP 回應
                     HttpWebResponse res = (HttpWebResponse)request.GetResponse();
                     if (res.ContentEncoding == "gzip")
                     {
-                        //Gzip解压缩
+                        //Gzip解壓縮
                         using (GZipStream gzip = new GZipStream(res.GetResponseStream(), CompressionMode.Decompress))
                         {
                             using (StreamReader reader = new StreamReader(gzip, encode))
@@ -59,7 +59,7 @@ namespace CSNovelCrawler.Class
                     }
                     else if (res.ContentEncoding == "deflate")
                     {
-                        //deflate解压缩
+                        //deflate解壓縮
                         using (DeflateStream deflate = new DeflateStream(res.GetResponseStream(), CompressionMode.Decompress))
                         {
                             using (StreamReader reader = new StreamReader(deflate, encode))
@@ -76,16 +76,16 @@ namespace CSNovelCrawler.Class
                         }
                     }
                 }
-                catch (Exception) //发生错误
+                catch (Exception) 
                 {
-                    //重试次数-1
+                    //重試次數-1
                     remainTimes--;
-                    //如果重试次数小于0，抛出错误
+                    //如果重試次數小於0，拋出錯誤
                     if (remainTimes < 0)
                     {
                         throw;
                     }
-                    //等待时间
+                    //重試等待時間
                     Thread.Sleep(1000);
                     needRedownload = true;
                 }
@@ -94,7 +94,7 @@ namespace CSNovelCrawler.Class
         }
 
         /// <summary>
-        /// 取得网页源代码
+        /// 取得網頁網始碼
         /// </summary>
         /// <param name="para"></param>
         /// <param name="encode"></param>

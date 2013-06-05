@@ -7,35 +7,36 @@ namespace CSNovelCrawler.Interface
     public interface IPlugin
     {
         /// <summary>
-        /// 创建新的下载器实例
+        /// 建立IDownloader物件
         /// </summary>
         /// <returns></returns>
         IDownloader CreateDownloader();
         /// <summary>
-        /// 检查指定的Url是否符合能够被当前插件解析
+        /// 檢查url能使用哪個插件
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
         bool CheckUrl(string url);
+
         /// <summary>
-        /// 取得指定Url的Hash值
+        /// 取得url的唯一碼
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
         string GetHash(string url);
 
         /// <summary>
-        /// 插件支持的UI特性
+        ///插件的擴充功能
         /// </summary>
-        Dictionary<String, Object> Feature { get;  } //AutoAnswer(List<AutoAnswer>) ExampleUrl(String[]) ConfigurationForm(MethodInvoker)
+        Dictionary<String, Object> Extensions { get; } //AutoAnswer(List<AutoAnswer>) ExampleUrl(String[]) ConfigurationForm(MethodInvoker)
         /// <summary>
-        /// 插件独立存储
+        /// 插件儲存設定
         /// </summary>
         DictionaryExtension<String, String> Configuration { get; set; }
     }
 
     /// <summary>
-    /// AcDown插件信息
+    /// 插件訊息
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class)]
     public class PluginInformationAttribute : Attribute

@@ -21,7 +21,7 @@
         public static ConfigManager ConfigManager { get; private set; }
 
         /// <summary>
-        /// 初始化AcDown核心
+        /// 初始化核心
         /// </summary>
         public static void Initialize()
         {

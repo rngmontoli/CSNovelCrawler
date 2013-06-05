@@ -16,8 +16,7 @@ namespace CSNovelCrawler.UI
         {
             foreach (var plugin in CoreManager.PluginManager.Plugins)
             {
-                //var attributes = members[0].GetCustomAttributes(typeof(PluginInformationAttribute), false);
-                //var description = ((PluginInformationAttribute)attributes[0]);
+            
                 object[] types = plugin.GetType().GetCustomAttributes(typeof(PluginInformationAttribute), true);
                 if (types.Length > 0)
                 {
@@ -45,7 +44,7 @@ namespace CSNovelCrawler.UI
             {
                 ListViewItem lvi = lv.SelectedItems[0];
                 var plugin = (IPlugin)lvi.Tag;
-                if (plugin.Feature != null && plugin.Feature.ContainsKey("ConfigForm"))
+                if (plugin.Extensions != null && plugin.Extensions.ContainsKey("ConfigForm"))
                 {
                     btnConfig.Enabled = true;
                 }
@@ -59,9 +58,9 @@ namespace CSNovelCrawler.UI
 
             var lvi = listView1.SelectedItems[0];
             var plugin = (IPlugin)lvi.Tag;
-            var method = (Delegate)plugin.Feature["ConfigForm"];
+            var method = (Delegate)plugin.Extensions["ConfigForm"];
             Invoke(method);
-            //保存设置
+            //儲存設定
             CoreManager.PluginManager.SaveConfiguration(plugin);
         }
     }

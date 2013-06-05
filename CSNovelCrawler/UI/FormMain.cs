@@ -21,87 +21,25 @@ namespace CSNovelCrawler.UI
             CoreManager.TaskManager.PreDelegates.Refresh = RefreshTask;
             //啟動自動儲存任務
             CoreManager.TaskManager.StartSaveBackgroundWorker();
-
         }
-/*
-        private void Test()
-        {
-            string Url = string.Format("http://www02.eyny.com/member.php?mod=logging&action=login&loginsubmit=yes&handlekey=login&loginhash=LiKaw&inajax=1");
 
-            ServicePointManager.Expect100Continue = false;
-            string postdata = "formhash=3b765c67&referer=http%3A%2F%2Fwww02.eyny.com%2F&loginfield=username&username=''&password=''&questionid=0&answer=&cookietime=2592000";
-            byte[] data = Encoding.UTF8.GetBytes(postdata);
-            //生成请求
-            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(Url);
-            req.UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)";
-            req.ContentType = "application/x-www-form-urlencoded";
-            req.ContentLength = data.Length;
-            req.Method = "POST";
-            req.CookieContainer = new CookieContainer();
-
-            using (var outstream = req.GetRequestStream())
-            {
-                outstream.Write(data, 0, data.Length);
-                outstream.Flush();
-            }
-            //关闭请求
-            req.GetResponse().Close();
-
-            ////发送POST数据
-            //Stream dataStream = req.GetRequestStream();
-            //// 請求數據放入請求流  
-            //dataStream.Write(data, 0, data.Length);
-            //dataStream.Close();
-            ////返回html  
-            //HttpWebResponse httpWebResponse = (HttpWebResponse)req.GetResponse();
-            //if (httpWebResponse.StatusCode == HttpStatusCode.OK)
-            //{
-            //    StreamReader reader = new StreamReader(httpWebResponse.GetResponseStream(), Encoding.GetEncoding("GBK"));
-            //    //讀取響應流  
-            //    string responseFromServer = reader.ReadToEnd();
-            //    reader.Close();
-            //    dataStream.Close();
-            //    httpWebResponse.Close();
-
-            //    if (responseFromServer.IndexOf("賬號或密碼錯誤") > 0)
-            //    {
-            //        //LoginState = false;
-            //        //Loginlabel.Text = "登錄狀態：失敗！";
-            //    }
-            //    else
-            //    {
-            //        //LoginState = true;
-            //        //保存cookie  
-            //        //gCookieCollention = httpWebResponse.Cookies;
-            //        // cookie = httpWebRequest.CookieContainer;
-            //        // Loginlabel.Text = "登錄狀態：成功！";
-            //    }
-            //}
-
-            
-        }
-*/
-     
-       
         private void Form1_Load(object sender, EventArgs e)
         {
-            //加载任务UI
+            //載入任務到UI
             foreach (TaskInfo task in CoreManager.TaskManager.TaskInfos)
             {
                 RefreshTask(new ParaRefresh(task));
             }
-            
-
         }
 
-        //刷新任务
+        //重新整理UI
         private void RefreshTask(object e)
         {
 
-            //如果需要在安全的线程上下文中执行
+            //如果不是安全執行緒，叫用 (Invoke) 方法
             if (InvokeRequired)
             {
-                Invoke(new AcTaskDelegate(RefreshTask), e);
+                Invoke(new TaskDelegate(RefreshTask), e);
                 return;
             }
 
@@ -109,10 +47,10 @@ namespace CSNovelCrawler.UI
            
             TaskInfo taskInfo = r.SourceTask;
 
-            //如果任务被删除
+            //如果任務已不在集合內
             if (!CoreManager.TaskManager.TaskInfos.Contains(taskInfo))
             {
-                ////移除UI项
+                //移除
                 if (lsv.Items.Contains((ListViewItem)taskInfo.UiItem))
                 {
                     lsv.Items.Remove((ListViewItem)taskInfo.UiItem);
@@ -127,7 +65,7 @@ namespace CSNovelCrawler.UI
             }
             else  //ListView不存在此任務
             {
-                //新建ListViewItem
+                //建立ListViewItem
                 var lvi = new ListViewItem();
                 for (int i = 0; i < 6; i++)
                 {
@@ -177,7 +115,7 @@ namespace CSNovelCrawler.UI
             {
                 if (taskInfo.Status == DownloadStatus.正在下載)
                 {
-                    Invoke(new AcTaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
+                    Invoke(new TaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
                 }
             }
             Monitor.Exit(CoreManager.TaskManager.TaskInfosLock);
@@ -188,6 +126,10 @@ namespace CSNovelCrawler.UI
             var form = new FormNew();
             form.Show();
         }
+
+        /// <summary>
+        /// 暫存最後選取的清單
+        /// </summary>
         TaskInfo _selectedTaskInfo;
         private void lsv_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -196,12 +138,10 @@ namespace CSNovelCrawler.UI
             if (lv.SelectedItems.Count > 0)
             {
                 _selectedTaskInfo = null;
-                //SelectedTaskInfos.Clear();
-                //取得最后一项
-                ListViewItem sItem = lsv.SelectedItems[lv.SelectedIndices.Count - 1];
-                //显示"更多"菜单
+
                 if (lv.SelectedItems.Count == 1)
                 {
+                    ListViewItem sItem = lsv.SelectedItems[0];
 
                     TaskInfo taskInfo = GetTask(new Guid((string)sItem.Tag));
                    
@@ -214,11 +154,12 @@ namespace CSNovelCrawler.UI
                     _selectedTaskInfo = taskInfo;
                     cbSaveDir.Text = taskInfo.SaveDirectory.ToString(CultureInfo.InvariantCulture);
                     cbSaveDir.Enabled = true;
-                    //task.SaveDirectory = new DirectoryInfo(CoreManager.ConfigManager.Settings.SavePath);
+                    
                 }
             }
             
         }
+
 
         private void DisableExtraOptions()
         {
@@ -233,16 +174,16 @@ namespace CSNovelCrawler.UI
         }
 
         /// <summary>
-        /// 根据GUID值寻找对应的任务
+        /// 用GUID找對應的任務
         /// </summary>
         public TaskInfo GetTask(Guid guid)
         {
             return CoreManager.TaskManager.GetTask(guid);
         }
 
+
         private void BtnBrowseDir_Click(object sender, EventArgs e)
         {
-            //选择文件夹
             var fbd = new FolderBrowserDialog
                 {
                     ShowNewFolderButton = true,
@@ -266,15 +207,30 @@ namespace CSNovelCrawler.UI
                 taskInfo.EndSection = CommonTools.TryParse(txtEndSection.Text, 1);
                 taskInfo.Title = txtTitle.Text;
                 taskInfo.SaveDirectory =cbSaveDir.Text;
-                //RefreshTask(new ParaRefresh(taskInfo));
-                Invoke(new AcTaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
+                Invoke(new TaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
             }
         }
 
 
-
         private void UpdateTaskinfo_KeyUp(object sender, KeyEventArgs e)
         {
+            switch (((TextBox)sender).Name)
+            {
+                case "txtBeginSection":
+                    if (CommonTools.TryParse(txtBeginSection.Text, 0) < 1 )
+                    {
+                        txtBeginSection.Text = _selectedTaskInfo.BeginSection.ToString(CultureInfo.InvariantCulture);
+                    }
+                   
+                    break;
+                case "txtEndSection":
+                    if (CommonTools.TryParse(txtEndSection.Text, 0) == 0 ||
+                        CommonTools.TryParse(txtEndSection.Text, 0) > _selectedTaskInfo.TotalSection)
+                        txtEndSection.Text = _selectedTaskInfo.EndSection.ToString(CultureInfo.InvariantCulture);
+                    break;
+            }
+           
+            
             UpdateTaskinfo();
         }
 
@@ -336,7 +292,7 @@ namespace CSNovelCrawler.UI
 				willbedeleted.Add(task);
 			}
 
-			//取消选中所有任务
+			//取消選取的清單
 			lsv.SelectedItems.Clear();
 
 			foreach (TaskInfo taskInfo in willbedeleted)
@@ -350,16 +306,12 @@ namespace CSNovelCrawler.UI
             var config = new FormConfig();
             config.ShowDialog();
             config.Dispose();
-            ////重新加载某些项目
-            ////检查更新
-            //if (CoreManager.ConfigManager.Settings.CheckUpdate)
-            //    CheckUpdate();
-            ////刷新“同时进行的任务数”设置
-            //CoreManager.TaskManager.ContinueNext();
+          
         }
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            notifyIcon1.Visible = false;
             Show();
             WindowState = FormWindowState.Normal;
 
@@ -367,18 +319,26 @@ namespace CSNovelCrawler.UI
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+           
             if (e.CloseReason == CloseReason.UserClosing && CoreManager.ConfigManager.Settings.HideSysTray)
             {
+                notifyIcon1.Visible = true;
                 e.Cancel = true;
                 Hide();
+                return;
             }
-            
+            ExitProgram();
         }
 
         private void ExitProgram()
         {
             Cursor = Cursors.WaitCursor;
+
+            foreach (
+                var taskInfo in
+                    CoreManager.TaskManager.TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.正在下載))
+                CoreManager.TaskManager.StopTask(taskInfo);
+
             //停止自動儲存
             CoreManager.TaskManager.EndSaveBackgroundWorker();
             //儲存所有任務
@@ -386,8 +346,10 @@ namespace CSNovelCrawler.UI
             t.Start();
             Cursor = Cursors.Default;
             //釋放系統列資源
+            notifyIcon1.Visible = false;
             notifyIcon1.Dispose();
-
+            while (CoreManager.TaskManager.TaskInfos.FindAll(taskInfo=>taskInfo.Status==DownloadStatus.正在停止).Count>0){}
+            
             //退出程序
             Application.Exit();
            
@@ -405,6 +367,8 @@ namespace CSNovelCrawler.UI
             plugins.ShowDialog();
             plugins.Dispose();
         }
+
+       
 
 
 

@@ -20,7 +20,7 @@ namespace CSNovelCrawler.Core
         /// </summary>
         public void SaveSettings()
         {
-            //如果文件存在
+
             
             using (FileStream oFileStream = new FileStream(ConfigFullFileName, FileMode.Create))
             {

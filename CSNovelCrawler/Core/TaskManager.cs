@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+
 using System.Threading;
 using System.Xml.Serialization;
 using CSNovelCrawler.Class;
@@ -11,40 +12,42 @@ namespace CSNovelCrawler.Core
 {
     public class TaskManager
     {
-        //所有任务
+        //存放任務
         public List<TaskInfo> TaskInfos = new List<TaskInfo>();
-        //TaskInfos对象的全局锁
+        //TaskInfos的全域鎖定
         public object TaskInfosLock = new object();
-        public UiDelegateContainer PreDelegates = new UiDelegateContainer();
+        public DelegateContainer PreDelegates = new DelegateContainer();
 
         /// <summary>
-        /// 添加任务
+        /// 增加任務
         /// </summary>
-        /// <param name="plugin">任务所属的插件引用</param>
-        /// <param name="url">任务Url</param>
+        /// <param name="plugin">任務的插件</param>
+        /// <param name="url">任務網址</param>
         /// <returns></returns>
         public TaskInfo AddTask(IPlugin plugin, string url)
         {
-            //新建TaskInfo对象
-            TaskInfo taskInfo = new TaskInfo();
-            taskInfo.SaveDirectory = CoreManager.ConfigManager.Settings.DefaultSaveFolder;
-            taskInfo.Url = url;
+            //建立TaskInfo物件
+            var taskInfo = new TaskInfo
+                {
+                    SaveDirectory = CoreManager.ConfigManager.Settings.DefaultSaveFolder,
+                    Url = url
+                };
             taskInfo.SetPlugin(plugin);
             taskInfo.Status = DownloadStatus.任務分析中;
-       
-            //向集合中添加对象
+
+            //向任務集合增加新任務
             Monitor.Enter(TaskInfosLock);
             TaskInfos.Add(taskInfo);
             Monitor.Exit(TaskInfosLock);
-            //提示UI刷新信息
-            //if (delegates.Refresh != null)
-            //	delegates.Refresh.Invoke(new ParaRefresh(task.TaskId));
+            //重新整理UI
+            if (PreDelegates.Refresh != null)
+                PreDelegates.Refresh(new ParaRefresh(taskInfo));
             return taskInfo;
         }
 
         public void AnalysisTask(TaskInfo taskInfo)
         {
-            Thread t = new Thread(() =>
+            var t = new Thread(() =>
             {
                 try
                 {
@@ -57,25 +60,29 @@ namespace CSNovelCrawler.Core
                         taskInfo.Status = DownloadStatus.分析完畢;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
+                    else
+                    {
+                        taskInfo.Status = DownloadStatus.分析失敗;
+                        PreDelegates.Refresh(new ParaRefresh(taskInfo));
+                    }
 
                 }
-                catch (Exception) //如果出现错误
+                catch (Exception)
                 {
                     taskInfo.Status = DownloadStatus.出現錯誤;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
                 }
 
-            });
-            t.IsBackground = true;
-            //开始
+            }) {IsBackground = true};
+            
             t.Start();
-            //刷新UI
+            //重新整理UI
             PreDelegates.Refresh(new ParaRefresh(taskInfo));
         }
 
         public void StartTask(TaskInfo taskInfo)
         {
-            Thread t = new Thread(() =>
+            var t = new Thread(() =>
             {
                 try
                 {
@@ -86,6 +93,11 @@ namespace CSNovelCrawler.Core
                         taskInfo.Status = DownloadStatus.下載完成;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
+                    else
+                    {
+                        taskInfo.Status = DownloadStatus.下載失敗;
+                        PreDelegates.Refresh(new ParaRefresh(taskInfo));
+                    }
 
                 }
                 catch (Exception ) //如果出现错误
@@ -94,73 +106,73 @@ namespace CSNovelCrawler.Core
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
                 }
 
-            });
-            t.IsBackground = true;
-            //开始下载
+            }) {IsBackground = true};
+
             t.Start();
-            //刷新UI
+            //重新整理UI
             PreDelegates.Refresh(new ParaRefresh(taskInfo));
         }
         /// <summary>
-        /// 停止任务
+        /// 停止任務
         /// </summary>
         /// <param name="taskInfo"></param>
         public void StopTask(TaskInfo taskInfo)
         {
-            //只有已开始的任务才可停止
+            //只有已開始的任務才能停止
             switch (taskInfo.Status)
             {
               
-                case DownloadStatus.正在下載: //已经开始的任务启动新线程停止
+                case DownloadStatus.正在下載:
                     taskInfo.Status = DownloadStatus.正在停止;
+                    
                     break;
                 default:
+                    taskInfo.Status = DownloadStatus.任務暫停;
                     return;
             }
 
-            //刷新信息
+            //重新整理UI
             PreDelegates.Refresh(new ParaRefresh(taskInfo));
-            //停止任务
+            //停止任務
             taskInfo.Stop();
 
             if (taskInfo.Status != DownloadStatus.任務暫停)
             {
-                //启动新线程等待任务完全停止
-                Thread t = new Thread(new ThreadStart(() =>
-                {
-                    //超时时长 (10秒钟)
-                    int timeout = 10000;
-                    //等待停止
-                    while (taskInfo.Status == DownloadStatus.正在停止)
+                //啟動新執行緒等待任務完全停止
+                var t = new Thread(() =>
                     {
-                        Thread.Sleep(500);
-                        timeout -= 500;
-                        if (timeout < 0 || taskInfo.HasStopped) //如果到时仍未停止
+                        //等待時間 (10秒)
+                        int timeout = 10000;
+                        //等待停止
+                        while (taskInfo.Status == DownloadStatus.正在停止)
                         {
-                            taskInfo.Status = DownloadStatus.任務暫停;
-                            break;
+                            Thread.Sleep(500);
+                            timeout -= 500;
+                            if (timeout < 0 || taskInfo.HasStopped) //如果到时仍未停止
+                            {
+                                break;
+                            }
                         }
-                    }
-                    //刷新信息
-                    PreDelegates.Refresh(new ParaRefresh(taskInfo));
-                }));
-                t.IsBackground = true;
+
+                        taskInfo.Status = DownloadStatus.任務暫停;
+                        //重新整理UI
+                        PreDelegates.Refresh(new ParaRefresh(taskInfo));
+                    }) {IsBackground = true};
                 t.Start();
             }
-            //销毁Downloader
+            //釋放Downloader
             taskInfo.DisposeDownloader();
         }
         /// <summary>
-        /// 删除任务(自动终止未停止的任务)
+        /// 刪除任任務(自動停止進行中的任務)
         /// </summary>
         /// <param name="taskInfo"></param>
         public void DeleteTask(TaskInfo taskInfo)
         {
-            //停止任务
+            //停止任務
             StopTask(taskInfo);
 
-            //启动新线程等待任务完全停止
-
+            //啟動新執行緒等待任務完全停止
             ThreadPool.QueueUserWorkItem(o =>
                 {
                     try
@@ -170,68 +182,61 @@ namespace CSNovelCrawler.Core
                             Thread.Sleep(50);
                         }
 
-                        ////从任务列表中删除任务
-                        //if (taskInfo.Status != DownloadStatus.正在刪除)
-                        //{
                         TaskInfos.Remove(taskInfo);
-                        //}
-                        //刷新信息
+
+                        //重新整理UI
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
                     catch (Exception)
                     {
-                    
                         taskInfo.Status = DownloadStatus.出現錯誤;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
-               
-
-                
                 });
         }
 
 
 
         /// <summary>
-        /// 根据GUID值寻找对应的任务
+        /// 用GUID找對應的任務
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
         [DebuggerNonUserCode]
         public TaskInfo GetTask(Guid guid)
         {
-            foreach (var i in TaskInfos)
-            {
-                if (i.TaskId == guid)
-                    return i;
-            }
-            return null;
+
+            return TaskInfos.Find(taskInfo => taskInfo.TaskId == guid);
         }
 
 
         private bool _bgWorkerContinue;
         private Timer _bgWorker;
         /// <summary>
-        /// 启动后台自动保存任务的进程
+        /// 啟動背景自動儲存任務
         /// </summary>
         public void StartSaveBackgroundWorker()
         {
             _bgWorkerContinue = true;
             if (_bgWorker == null)
             {
-                //每60秒自动保存一次任务状态信息
+                //每60秒儲存任務資訊
                 _bgWorker = new Timer(SaveBackgroundWorker, null, 60000, 60000);
             }
         }
 
         /// <summary>
-        /// 结束侯台自动保存任务的进程
+        /// 停止背景自動儲存任務
         /// </summary>
         public void EndSaveBackgroundWorker()
         {
             _bgWorkerContinue = false;
         }
 
+        /// <summary>
+        /// 背景自動儲存任務
+        /// </summary>
+        /// <param name="o"></param>
         private void SaveBackgroundWorker(object o)
         {
             if (_bgWorkerContinue)
@@ -244,39 +249,27 @@ namespace CSNovelCrawler.Core
             }
         }
 
-
-        private object saveTaskLock = new object();
-
-
         private string _TaskFolderPath { get { return CoreManager.StartupPath; } }
         private string _TaskFileName { get { return "Task.xml"; } }
         private string TaskFullFileName { get { return Path.Combine(_TaskFolderPath, _TaskFileName); } }
 
         /// <summary>
-        /// 保存所有任务到文件中
+        /// 儲存任務列表到xml
         /// </summary>
         public void SaveAllTasks()
         {
-            lock (saveTaskLock)
+            Monitor.Enter(TaskInfosLock);
+            using (FileStream oFileStream = new FileStream(TaskFullFileName, FileMode.Create))
             {
-                using (FileStream oFileStream = new FileStream(TaskFullFileName, FileMode.Create))
-                {
-
-                    XmlSerializer oXmlSerializer = new XmlSerializer(typeof(List<TaskInfo>));
-
-                    oXmlSerializer.Serialize(oFileStream, TaskInfos);
-
-                    oFileStream.Close();
-
-
-                }
-
-                ////保证TaskInfos对象不会被意外回收
-                //GC.KeepAlive(TaskInfos);
+                XmlSerializer oXmlSerializer = new XmlSerializer(typeof(List<TaskInfo>));
+                oXmlSerializer.Serialize(oFileStream, TaskInfos);
+                oFileStream.Close();
             }
+            Monitor.Exit(TaskInfosLock);
         }
+
         /// <summary>
-        /// 从文件中读取任务列表
+        /// 從xml讀取任務列表
         /// </summary>
         public void LoadAllTasks()
         {
@@ -294,14 +287,12 @@ namespace CSNovelCrawler.Core
 
             foreach (TaskInfo taskInfo in TaskInfos)
             {
-                //寻找所需插件
+                //尋找對應插件
                 if (taskInfo.BasePlugin == null)
                 {
                     taskInfo.SetPlugin(CoreManager.PluginManager.GetPlugin(taskInfo.Url));
-                    //this.preDelegates.Refresh(new ParaRefresh(taskInfo));
                 }
             }
-
         }
 
 

@@ -11,7 +11,7 @@ namespace CSNovelCrawler.Plugin
     {
         public EynyPlugin()
 		{
-            Feature = new Dictionary<string, object>
+            Extensions = new Dictionary<string, object>
                 {
                     {"ConfigForm", new MethodInvoker(() => new EynySettingsForm(Configuration).ShowDialog())}
                 };
@@ -47,7 +47,7 @@ namespace CSNovelCrawler.Plugin
         }
 
 
-        public Dictionary<string, object> Feature { get; private set; }
+        public Dictionary<string, object> Extensions { get; private set; }
 
         public DictionaryExtension<string, string> Configuration { get; set; }
     }
