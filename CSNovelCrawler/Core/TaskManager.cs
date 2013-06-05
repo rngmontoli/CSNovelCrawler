@@ -67,10 +67,12 @@ namespace CSNovelCrawler.Core
                     }
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    CoreManager.LoggingManager.Debug(ex.ToString());
                     taskInfo.Status = DownloadStatus.出現錯誤;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
+                    CoreManager.LoggingManager.Debug(ex.ToString());
                 }
 
             }) {IsBackground = true};
@@ -100,8 +102,9 @@ namespace CSNovelCrawler.Core
                     }
 
                 }
-                catch (Exception ) //如果出现错误
+                catch (Exception ex)
                 {
+                    CoreManager.LoggingManager.Debug(ex.ToString());
                     taskInfo.Status = DownloadStatus.出現錯誤;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
                 }
@@ -187,8 +190,9 @@ namespace CSNovelCrawler.Core
                         //重新整理UI
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        CoreManager.LoggingManager.Debug(ex.ToString());
                         taskInfo.Status = DownloadStatus.出現錯誤;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
@@ -209,6 +213,38 @@ namespace CSNovelCrawler.Core
             return TaskInfos.Find(taskInfo => taskInfo.TaskId == guid);
         }
 
+
+        /// <summary>
+        /// 結束並儲存所有任務
+        /// </summary>
+        public void BreakAndSaveAllTasks()
+        {
+
+
+
+                try
+                {
+                    GC.KeepAlive(TaskInfos);
+                    EndSaveBackgroundWorker();
+                    foreach (var taskInfo in TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.正在下載))
+                        StopTask(taskInfo);
+                    while (TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.正在停止).Count > 0)
+                    {
+                        Thread.Sleep(500);
+                    }
+
+                    SaveAllTasks();
+
+                   
+                }
+                catch (Exception ex)
+                {
+                    CoreManager.LoggingManager.Debug(ex.ToString());
+
+                }
+
+
+        }
 
         private bool _bgWorkerContinue;
         private Timer _bgWorker;
@@ -258,14 +294,15 @@ namespace CSNovelCrawler.Core
         /// </summary>
         public void SaveAllTasks()
         {
-            Monitor.Enter(TaskInfosLock);
+            
             using (FileStream oFileStream = new FileStream(TaskFullFileName, FileMode.Create))
             {
                 XmlSerializer oXmlSerializer = new XmlSerializer(typeof(List<TaskInfo>));
                 oXmlSerializer.Serialize(oFileStream, TaskInfos);
                 oFileStream.Close();
             }
-            Monitor.Exit(TaskInfosLock);
+            
+          
         }
 
         /// <summary>

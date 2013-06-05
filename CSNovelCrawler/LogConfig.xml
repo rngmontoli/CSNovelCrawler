@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<log4net>
+
+  <!--
+      參數設定:
+      %date 代表日期時間  ex: 2010-07-28 13:22:27,843
+      %-5level 代表log等級 ex: ERROR
+      %logger 代表是哪一個類別的logger ex: SimpleSample.Program
+      %message 代表程式中有使用日誌紀錄物件並呼叫其函式所輸出的訊息(log.Info("這是info等級"))
+	  ex: 這是info等級
+      %newline 代表輸出一句完整的日誌記錄後,將指標移至下一行
+      %file 代表程式檔案的完整路徑 ex: C:\Documents and Settings\YiChengHsieh\My Documents\
+	  Visual Studio 2008\Projects\DBConnection\DBConnection\Program.cs
+      %line 代表程式中有使用日誌紀錄物件並呼叫其函式輸出訊息的那一行 ex: 30
+  -->
+
+  <!--使用Console作為log的輸出媒介,名稱為consoleAppender-->
+  <appender name="consoleAppender" type="log4net.Appender.ConsoleAppender">
+    <layout type="log4net.Layout.PatternLayout">
+      <!--log的輸出格式,其設定可參考檔案開頭的"參數設定"-->
+      <conversionPattern value="%date %-5level %logger - %message%newline" />
+    </layout>
+  </appender>
+
+  <!--使用檔案作為log的輸出媒介,名稱為fileAppender-->
+  <appender name="fileAppender" type="log4net.Appender.RollingFileAppender">
+    <!--輸出的檔案名稱及路徑-->
+    <file value="log.txt" />
+    <!--記錄log到檔案時,是否累加,true表累加,false表不累加-->
+    <appendToFile value="true" />
+    <!--
+    假設在file標籤設定主要操作的日誌檔檔名為log.txt
+    rollingStyle代表log紀錄的處理方式,此處設定依檔案Size.只要主要操作檔的大小超
+    過5KB(maximumFileSize),則將資料移至備份檔,且只保留3個備份檔(maxSizeRollBackups,
+    主要操作檔不含在內),每份備份檔大小5KB(maximumFileSize),且每個備份檔檔名為
+    log.txt.1,log.txt.2.....,備份檔最後一碼數字越小者,其備份的資料越新
+    -->
+    <!--
+    <rollingStyle value="Size" />
+    <maximumFileSize value="5KB" />
+    <maxSizeRollBackups value="3" />
+    -->
+
+    <!--
+    假設在file標籤設定主要操作的日誌檔檔名為log.txt
+    rollingStyle代表log紀錄的處理方式,設定Date代表依寫入資料的時間
+    dataPattern若設定為yyyyMMdd-HHmm,則代表每過一分鐘就會建立一份備份檔,而主要操作檔
+    log.txt則紀錄現在這一分鐘的log紀錄,若設定yyyyMMdd則代表每一天會建立一份備份檔,而
+    主要操作檔log.txt則紀錄今天的log紀錄.可參照System.Globalization.DateTimeFormatInfo
+    類別,找到其他時間的格式設定.
+    
+    rollingStyle設定為Date且每日備份,其備份檔檔名範例如 log.txt20100728
+    -->
+    <rollingStyle value="Date" />
+    <datePattern value="yyyyMMdd" />
+
+    <!--
+    尚有混合的rollingStyle設定(寫入資料時間及檔案大小),此部份可參照
+	Apache log4net官網>Documentation>Config Examples
+    -->
+
+    <layout type="log4net.Layout.PatternLayout">
+      <!--log的輸出格式,其設定可參考檔案開頭的"參數設定"-->
+      <conversionPattern value="%-5level %date %logger (%file:%line) - %message%newline" />
+    </layout>
+  </appender>
+
+  <!--程式會從這裡開始參照,之後再參照對應的appender tag-->
+  <root>
+    <!--輸出log的等級-->
+    <!--debug < info < warn < error < fatal-->
+    <!--設定的log等級及其以上的等級才會顯示-->
+    <level value="debug" />
+
+    <!--設定標準輸出裝置(Console)及檔案為log的輸出裝置-->
+    <appender-ref ref="consoleAppender" />
+    <appender-ref ref="fileAppender" />
+  </root>
+</log4net>

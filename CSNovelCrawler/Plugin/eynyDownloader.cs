@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using CSNovelCrawler.Class;
+using CSNovelCrawler.Core;
 using CSNovelCrawler.Interface;
 using EncryptAES;
 using HtmlAgilityPack;
@@ -174,8 +175,9 @@ namespace CSNovelCrawler.Plugin
 
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    //CoreManager.LoggingManager.Debug(ex.ToString());
                     //發生錯誤，當前區塊重取
                     TaskInfo.BeginSection--;
                     numberErrors++;

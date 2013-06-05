@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Threading;
+using CSNovelCrawler.Core;
 using HtmlAgilityPack;
 
 namespace CSNovelCrawler.Class
@@ -76,8 +77,9 @@ namespace CSNovelCrawler.Class
                         }
                     }
                 }
-                catch (Exception) 
+                catch (Exception ex) 
                 {
+                    CoreManager.LoggingManager.Debug(ex.ToString());
                     //重試次數-1
                     remainTimes--;
                     //如果重試次數小於0，拋出錯誤

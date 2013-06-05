@@ -71,8 +71,9 @@ namespace CSNovelCrawler.Core
                 }
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                CoreManager.LoggingManager.Debug(ex.ToString());
                 return false;
             }
 
@@ -96,9 +97,9 @@ namespace CSNovelCrawler.Core
                     {
                         plugin.Configuration = (DictionaryExtension<string, string>) oFileStream.Deserialize(fs);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        
+                        CoreManager.LoggingManager.Debug(ex.ToString());
                     }
                 }
             }

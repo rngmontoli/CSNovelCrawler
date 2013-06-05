@@ -334,24 +334,24 @@ namespace CSNovelCrawler.UI
         {
             Cursor = Cursors.WaitCursor;
 
-            foreach (
-                var taskInfo in
-                    CoreManager.TaskManager.TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.正在下載))
-                CoreManager.TaskManager.StopTask(taskInfo);
-
-            //停止自動儲存
-            CoreManager.TaskManager.EndSaveBackgroundWorker();
-            //儲存所有任務
-            var t = new Thread(CoreManager.TaskManager.SaveAllTasks);
+            
+            Thread t = new Thread(CoreManager.TaskManager.BreakAndSaveAllTasks);
             t.Start();
+            //CoreManager.TaskManager.BreakAndSaveAllTasks();
+
+            while (!t.IsAlive)
+            {
+                Thread.Sleep(50);
+            }
+            
             Cursor = Cursors.Default;
             //釋放系統列資源
             notifyIcon1.Visible = false;
             notifyIcon1.Dispose();
-            while (CoreManager.TaskManager.TaskInfos.FindAll(taskInfo=>taskInfo.Status==DownloadStatus.正在停止).Count>0){}
-            
-            //退出程序
+
+             //退出程序
             Application.Exit();
+            
            
 
         }
@@ -368,6 +368,7 @@ namespace CSNovelCrawler.UI
             plugins.Dispose();
         }
 
+   
        
 
 

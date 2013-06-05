@@ -54,8 +54,9 @@ namespace CSNovelCrawler.Core
                 else
                     throw new Exception();
             }
-            catch
+            catch(Exception ex)
             {
+                CoreManager.LoggingManager.Debug(ex.ToString());
                 CoreManager.ConfigManager.Settings = new CustomSettings();
                 SaveSettings();
             }

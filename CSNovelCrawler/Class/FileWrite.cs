@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CSNovelCrawler.Core;
 
 namespace CSNovelCrawler.Class
 {
@@ -18,7 +19,7 @@ namespace CSNovelCrawler.Class
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                CoreManager.LoggingManager.Debug(ex.ToString());
             }
         }
     }
