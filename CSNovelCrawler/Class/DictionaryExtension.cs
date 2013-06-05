@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections.Generic;
 using System;
 
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Class
 {
     public class DictionaryExtension<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {
@@ -15,23 +15,20 @@ namespace CSNovelCrawler
             throw new NotImplementedException();
         }
 
-        public void ReadXml(XmlReader Reader)                                               //由 XML 反列化為物件
+        public void ReadXml(XmlReader reader)                                               //由 XML 反列化為物件
         {
-            TKey Key;
-            TValue Value;
-
-            if (Reader.IsEmptyElement)
+            if (reader.IsEmptyElement)
                 return;
 
-            while (Reader.Read())
+            while (reader.Read())
             {
-                if (Reader.NodeType == XmlNodeType.Element)
+                if (reader.NodeType == XmlNodeType.Element)
                 {
-                    if (Reader.LocalName == "Item")
+                    if (reader.LocalName == "Item")
                     {
-                        Key = (TKey)GetObjectFromXML(Reader.GetAttribute("Key"), typeof(TKey));
-                        Value = (TValue)GetObjectFromXML(Reader.GetAttribute("Value"), typeof(TValue));
-                        base.Add(Key, Value);
+                        TKey key = (TKey)GetObjectFromXML(reader.GetAttribute("Key"), typeof(TKey));
+                        TValue value = (TValue)GetObjectFromXML(reader.GetAttribute("Value"), typeof(TValue));
+                        Add(key, value);
                     }
                 }
             }
@@ -39,27 +36,27 @@ namespace CSNovelCrawler
 
         public void WriteXml(XmlWriter writer)                                              //將物件序列化為 XML
         {
-            foreach (TKey Key in this.Keys)
+            foreach (TKey key in Keys)
             {
                 writer.WriteStartElement("Item");
-                writer.WriteAttributeString("Key", GetXMLFromObject(Key));
-                writer.WriteAttributeString("Value", GetXMLFromObject(this[Key]));
+                writer.WriteAttributeString("Key", GetXMLFromObject(key));
+                writer.WriteAttributeString("Value", GetXMLFromObject(this[key]));
                 writer.WriteEndElement();
             }
         }
 
-        private string GetXMLFromObject(object Source)                                      //將物件轉為 XML (僅供 DictionaryExtension 使用)
+        private string GetXMLFromObject(object source)                                      //將物件轉為 XML (僅供 DictionaryExtension 使用)
         {
-            XmlSerializer XmlSerializer = new XmlSerializer(Source.GetType());
+            XmlSerializer XmlSerializer = new XmlSerializer(source.GetType());
             StringBuilder XmlWriterBuf = new StringBuilder();
-            XmlSerializer.Serialize(XmlWriter.Create(XmlWriterBuf), Source);
+            XmlSerializer.Serialize(XmlWriter.Create(XmlWriterBuf), source);
 
             return XmlWriterBuf.ToString();
         }
-        private object GetObjectFromXML(string XMLData, Type ObjectType)                    //將 XML 轉為物件 (僅供 DictionaryExtension 使用)
+        private object GetObjectFromXML(string xmlData, Type objectType)                    //將 XML 轉為物件 (僅供 DictionaryExtension 使用)
         {
-            XmlSerializer XmlSerializer = new XmlSerializer(ObjectType);
-            StringReader XmlData = new StringReader(XMLData);
+            XmlSerializer XmlSerializer = new XmlSerializer(objectType);
+            StringReader XmlData = new StringReader(xmlData);
 
             return XmlSerializer.Deserialize(XmlData);
         }

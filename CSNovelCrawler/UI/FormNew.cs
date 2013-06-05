@@ -1,13 +1,8 @@
-﻿using CSNovelCrawler.Core;
+﻿using CSNovelCrawler.Class;
+using CSNovelCrawler.Core;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.UI
 {
@@ -20,20 +15,20 @@ namespace CSNovelCrawler.UI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (var Url in richTextBox1.Lines)
+            foreach (var url in richTextBox1.Lines)
             {
-                if (!string.IsNullOrEmpty(Url.Trim()))
+                if (!string.IsNullOrEmpty(url.Trim()))
                 {
-                    IPlugin Plugin = CoreManager.PluginManager.GetPlugin(Url);
-                    TaskInfo Info = CoreManager.TaskManager.AddTask(Plugin, Url);
-                    CoreManager.TaskManager.AnalysisTask(Info);
+                    IPlugin plugin = CoreManager.PluginManager.GetPlugin(url);
+                    TaskInfo taskInfo = CoreManager.TaskManager.AddTask(plugin, url);
+                    CoreManager.TaskManager.AnalysisTask(taskInfo);
                 }
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
     }

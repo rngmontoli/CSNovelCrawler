@@ -5,9 +5,6 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.ComponentModel;
@@ -31,13 +28,13 @@ namespace CSNovelCrawler.UI
 
         public SplitContainerEx()
         {
-            this.SetStyle(
+            SetStyle(
                 ControlStyles.UserPaint |
                 ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.OptimizedDoubleBuffer, true);
-            this.SplitterWidth = 9;
-            this.Panel1MinSize = 0;
-            this.Panel2MinSize = 0;
+            SplitterWidth = 9;
+            Panel1MinSize = 0;
+            Panel2MinSize = 0;
         }
 
         [Browsable(false)]

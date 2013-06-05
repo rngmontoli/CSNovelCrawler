@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CSNovelCrawler.Class;
+using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Plugin
 {
     [Serializable]
-    public abstract class abstractDownloader : IDownloader
+    public abstract class AbstractDownloader : IDownloader
     {
-        public TaskInfo Info { get; set; }
+        public TaskInfo TaskInfo { get; set; }
 
       
-        public DownloadParameter currentParameter { get; set; }
+        public DownloadParameter CurrentParameter { get; set; }
 
         public abstract bool Analysis();
 
@@ -22,10 +20,10 @@ namespace CSNovelCrawler.Plugin
 
         public void StopDownload()
         {
-            if (currentParameter != null)
+            if (CurrentParameter != null)
             {
                 //将停止flag设置为true
-                currentParameter.IsStop = true;
+                CurrentParameter.IsStop = true;
             }
         }
 
@@ -33,7 +31,7 @@ namespace CSNovelCrawler.Plugin
         //{
         //    info.AddValue("Total", Total);
         //    info.AddValue("Total", Done);
-        //    info.AddValue("Total", Info);
+        //    info.AddValue("Total", taskInfo);
         //    info.AddValue("Total", currentParameter);
         //}
     }

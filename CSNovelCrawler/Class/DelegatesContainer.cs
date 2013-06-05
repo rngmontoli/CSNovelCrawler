@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
+using CSNovelCrawler.Interface;
 
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Class
 {
 
 	/// <summary>

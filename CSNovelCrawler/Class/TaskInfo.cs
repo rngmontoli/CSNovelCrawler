@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
+using CSNovelCrawler.Interface;
 
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Class
 {
     public class TaskInfo
     {
@@ -15,7 +10,7 @@ namespace CSNovelCrawler
         {
             Title = "Unknow";
             Author = "Unknow";
-            _progress = 0;
+            Progress = 0;
             TotalSection = 0;
             _taskid =Guid.NewGuid();
         }
@@ -27,8 +22,6 @@ namespace CSNovelCrawler
         {
             get
             {
-                if (_taskid == null)
-                    _taskid = Guid.NewGuid();
                 return _taskid;
             }
             set
@@ -56,7 +49,7 @@ namespace CSNovelCrawler
         /// <summary>
         /// 文章ID
         /// </summary>
-        public string TID { get; set; }
+        public string Tid { get; set; }
 
         /// <summary>
         /// 每一頁的章數
@@ -113,37 +106,37 @@ namespace CSNovelCrawler
         /// 关联的UI Item
         /// </summary>
         [XmlIgnore]
-        public Object UIItem { get; set; }
+        public Object UiItem { get; set; }
 
         /// <summary>
         /// 下载状态
         /// </summary>
         public DownloadStatus Status { get; set; }
 
-        private IPlugin _BasePlugin;
+        private IPlugin _basePlugin;
         /// <summary>
         /// 包装的BasePlugin对象
         /// </summary>
-        public IPlugin BasePlugin { get { return _BasePlugin; } }
+        public IPlugin BasePlugin { get { return _basePlugin; } }
 
-        private IDownloader _Downloader;
+        private IDownloader _downloader;
         /// <summary>
         /// 包装的Downloader对象
         /// </summary>
-        public IDownloader Downloader { get { return _Downloader; } }
+        public IDownloader Downloader { get { return _downloader; } }
 
         /// <summary>
         /// 销毁关联的IDownloader对象
         /// </summary>
         public void DisposeDownloader()
         {
-            _Downloader = null;
+            _downloader = null;
         }
 
-        internal double _progress;
-        public void SetPlugin(IPlugin Plugin)
+        internal double Progress;
+        public void SetPlugin(IPlugin plugin)
         {
-            _BasePlugin=Plugin;
+            _basePlugin=plugin;
         }
 
 
@@ -153,13 +146,13 @@ namespace CSNovelCrawler
         /// <returns></returns>
         public double GetProgress()
         {
-            if (_Downloader != null)
+            if (_downloader != null)
             {
-                _progress = (double)CurrentSection / (double)TotalSection;
-                if (_progress < 0) _progress = 0.00;
-                else if (_progress > 1.00) _progress = 1.00;
+                Progress = CurrentSection / (double)TotalSection;
+                if (Progress < 0) Progress = 0.00;
+                else if (Progress > 1.00) Progress = 1.00;
             }
-            return _progress;
+            return Progress;
         }
 
         /// <summary>
@@ -169,16 +162,16 @@ namespace CSNovelCrawler
         {
             if (BasePlugin == null)
             {
-                this.Status = DownloadStatus.出現錯誤;
+                Status = DownloadStatus.出現錯誤;
                 throw new Exception("Plugin Not Found");
             }
-            if (_Downloader==null)
+            if (_downloader==null)
             {
-                _Downloader = BasePlugin.CreateDownloader();
-                _Downloader.Info = this;
+                _downloader = BasePlugin.CreateDownloader();
+                _downloader.TaskInfo = this;
             }
            
-            return _Downloader.Analysis();
+            return _downloader.Analysis();
         }
 
         /// <summary>
@@ -188,19 +181,19 @@ namespace CSNovelCrawler
         {
             if (BasePlugin == null)
             {
-                this.Status = DownloadStatus.出現錯誤;
+                Status = DownloadStatus.出現錯誤;
                 throw new Exception("Plugin Not Found");
             }
-            if (_Downloader == null)
+            if (_downloader == null)
             {
-                _Downloader = BasePlugin.CreateDownloader();
-                _Downloader.Info = this;
+                _downloader = BasePlugin.CreateDownloader();
+                _downloader.TaskInfo = this;
             }
             //resourceDownloader = BasePlugin.CreateDownloader();
-            //resourceDownloader.Info = this;
+            //resourceDownloader.taskInfo = this;
 
 
-            return _Downloader.Download();
+            return _downloader.Download();
         }
 
         /// <summary>
@@ -208,8 +201,8 @@ namespace CSNovelCrawler
         /// </summary>
         public void Stop()
         {
-            if (_Downloader != null)
-                _Downloader.StopDownload();
+            if (_downloader != null)
+                _downloader.StopDownload();
         }
 
 

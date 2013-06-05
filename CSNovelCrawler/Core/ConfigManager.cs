@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace CSNovelCrawler.Core
@@ -12,13 +8,8 @@ namespace CSNovelCrawler.Core
     {
         private string _ConfigFolderPath { get{ return CoreManager.StartupPath; }}
         private string _ConfigFileName{ get{ return "config.xml";} }
-        private string _ConfigFullFileName { get { return Path.Combine(_ConfigFolderPath, _ConfigFileName); } }
+        private string ConfigFullFileName { get { return Path.Combine(_ConfigFolderPath, _ConfigFileName); } }
 
-
-        public ConfigManager()
-        {
-            //_ConfigFolderPath = CoreManager.StartupPath;
-        }
 
         public CustomSettings Settings { get; set; }
 
@@ -29,23 +20,14 @@ namespace CSNovelCrawler.Core
         /// </summary>
         public void SaveSettings()
         {
-            try
-            { //如果文件存在
+            //如果文件存在
             
-                using (FileStream oFileStream = new FileStream(_ConfigFullFileName, FileMode.Create))
-                {
-                    XmlSerializer oXmlSerializer = new XmlSerializer(typeof(CustomSettings));
-                    oXmlSerializer.Serialize(oFileStream, CoreManager.ConfigManager.Settings);
-                    oFileStream.Close();
-                }
-            
-            }
-            catch (Exception ex)
+            using (FileStream oFileStream = new FileStream(ConfigFullFileName, FileMode.Create))
             {
-
-                throw ex;
+                XmlSerializer oXmlSerializer = new XmlSerializer(typeof(CustomSettings));
+                oXmlSerializer.Serialize(oFileStream, CoreManager.ConfigManager.Settings);
+                oFileStream.Close();
             }
-           
         }
 
         /// <summary>
@@ -56,19 +38,19 @@ namespace CSNovelCrawler.Core
         {
             try
             {
-                CustomSettings TempSettings=null;
-                if (File.Exists(_ConfigFullFileName))
+                CustomSettings tempSettings=null;
+                if (File.Exists(ConfigFullFileName))
                 {
                     
-                    using (FileStream oFileStream = new FileStream(_ConfigFullFileName, FileMode.Open))
+                    using (FileStream oFileStream = new FileStream(ConfigFullFileName, FileMode.Open))
                     {
                         XmlSerializer oXmlSerializer = new XmlSerializer(typeof(CustomSettings));
-                        TempSettings = (CustomSettings)oXmlSerializer.Deserialize(oFileStream);
+                        tempSettings = (CustomSettings)oXmlSerializer.Deserialize(oFileStream);
                     }
                 }
 
-                if (TempSettings != null)
-                    CoreManager.ConfigManager.Settings = TempSettings;
+                if (tempSettings != null)
+                    CoreManager.ConfigManager.Settings = tempSettings;
                 else
                     throw new Exception();
             }

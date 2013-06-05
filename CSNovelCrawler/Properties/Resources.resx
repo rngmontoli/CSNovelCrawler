@@ -114,4 +114,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="FormMain_toolStripDel_Click_" xml:space="preserve">
+    <value>是否刪除選取的任務？</value>
+  </data>
+  <data name="FormMain_toolStripDel_Click_刪除任務" xml:space="preserve">
+    <value>刪除任務</value>
+  </data>
+  <data name="FormMain_toolStripStop_Click_是否停止選取的下載_" xml:space="preserve">
+    <value>是否停止選取的下載?</value>
+  </data>
+  <data name="FormMain_toolStripStop_Click_停止下載" xml:space="preserve">
+    <value>停止下載</value>
+  </data>
+  <data name="FormMain_BtnBrowseDir_Click_選擇你的下載資料夾" xml:space="preserve">
+    <value>選擇你的下載資料夾</value>
+  </data>
+  <data name="FormConfig_button1_Click_" xml:space="preserve">
+    <value>請設定預設下載資料夾：</value>
+  </data>
 </root>

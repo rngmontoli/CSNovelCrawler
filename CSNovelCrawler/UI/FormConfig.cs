@@ -1,13 +1,7 @@
 ﻿using CSNovelCrawler.Core;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSNovelCrawler.Properties;
 
 namespace CSNovelCrawler.UI
 {
@@ -29,10 +23,12 @@ namespace CSNovelCrawler.UI
         private void button1_Click(object sender, EventArgs e)
         {
             //选择文件夹
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.ShowNewFolderButton = true;
-            fbd.Description = "請設定預設下載資料夾：";
-            fbd.SelectedPath = txtSavePath.Text;
+            var fbd = new FolderBrowserDialog
+                {
+                    ShowNewFolderButton = true,
+                    Description = Resources.FormConfig_button1_Click_,
+                    SelectedPath = txtSavePath.Text
+                };
             if (fbd.ShowDialog() == DialogResult.OK)
                 txtSavePath.Text = fbd.SelectedPath;
         }
@@ -42,12 +38,12 @@ namespace CSNovelCrawler.UI
             CoreManager.ConfigManager.Settings.DefaultSaveFolder = txtSavePath.Text;
             CoreManager.ConfigManager.Settings.HideSysTray = chbSysTray.Checked;
             CoreManager.ConfigManager.SaveSettings();
-            this.Close();
+            Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         

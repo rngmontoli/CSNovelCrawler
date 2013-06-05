@@ -1,19 +1,13 @@
 ﻿using System;
 
-
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Class
 {
 	/// <summary>
 	/// UI委托包装类
 	/// </summary>
-	public class UIDelegateContainer : DelegateContainer
+	public class UiDelegateContainer : DelegateContainer
 	{
-		public UIDelegateContainer()			
-		{
-			
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// 任务开始
 		/// </summary>
 		public AcTaskDelegate Start { get; set; }

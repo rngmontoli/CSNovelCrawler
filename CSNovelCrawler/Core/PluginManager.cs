@@ -1,11 +1,9 @@
-﻿using CSNovelCrawler.Plugin;
+﻿using CSNovelCrawler.Class;
+using CSNovelCrawler.Interface;
+using CSNovelCrawler.Plugin;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace CSNovelCrawler.Core
@@ -23,10 +21,10 @@ namespace CSNovelCrawler.Core
 
         public PluginManager()
         {
-            _plugins = new Collection<IPlugin>() 
+            _plugins = new Collection<IPlugin>
                 { 
-                    new eynyPlugin(), 
-                    new ck101Plugin()
+                    new EynyPlugin(), 
+                    new Ck101Plugin()
                 };
             foreach (var plugin in _plugins)
             {
@@ -34,28 +32,29 @@ namespace CSNovelCrawler.Core
             }
 
         }
+
         /// <summary>
         /// 获取指定名称的插件
         /// </summary>
-        /// <param name="name">插件名称</param>
         /// <returns></returns>
-        public IPlugin GetPlugin(string Url)
+        public IPlugin GetPlugin(string url)
         {
 
 
-            if (!string.IsNullOrEmpty(Url))
+            if (!string.IsNullOrEmpty(url))
             {
-                foreach (var Plugin in CoreManager.PluginManager.Plugins)
+                foreach (var plugin in CoreManager.PluginManager.Plugins)
                 {
                     try
                     {
-                        if (Plugin.CheckUrl(Url)) //检查成功
+                        if (plugin.CheckUrl(url)) //检查成功
                         {
-                            return Plugin;
+                            return plugin;
                         }
                     }
                     catch (Exception ex)
                     {
+                        throw ex;
                     }
                 }
             }
@@ -106,7 +105,6 @@ namespace CSNovelCrawler.Core
         /// 读取插件配置
         /// </summary>
         /// <param name="plugin"></param>
-        /// <param name="startupPath"></param>
         private void LoadConfiguration(IPlugin plugin)
         {
             string path = GetSettingFilePath(plugin);
@@ -121,7 +119,8 @@ namespace CSNovelCrawler.Core
                     {
                         plugin.Configuration = (DictionaryExtension<string, string>)oFileStream.Deserialize(fs);
                     }
-                    catch { }
+                    catch (Exception)
+                    { }
                 }
             }
             plugin.Configuration = plugin.Configuration ?? new DictionaryExtension<string, string>();
@@ -138,7 +137,7 @@ namespace CSNovelCrawler.Core
         {
 
 
-            string path = Path.Combine(CoreManager.StartupPath, plugin.ToString()+".xml");
+            string path = Path.Combine(CoreManager.StartupPath, plugin+".xml");
 
             return path;
         }

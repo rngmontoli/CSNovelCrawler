@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSNovelCrawler.Class;
 
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Interface
 {
 
     /// <summary>
@@ -35,7 +30,7 @@ namespace CSNovelCrawler
         /// <summary>
         /// 获取或设置与此任务相关联的信息
         /// </summary>
-        TaskInfo Info { get; set; }
+        TaskInfo TaskInfo { get; set; }
         ///// <summary>
         ///// 此任务总长度
         ///// </summary>
@@ -47,7 +42,7 @@ namespace CSNovelCrawler
         /// <summary>
         /// 下載參數
         /// </summary>
-        DownloadParameter currentParameter { get; set; }
+        DownloadParameter CurrentParameter { get; set; }
 
 
         /// <summary>

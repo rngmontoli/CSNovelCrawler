@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+using CSNovelCrawler.Class;
 
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Interface
 {
     public interface IPlugin
     {
@@ -30,7 +27,7 @@ namespace CSNovelCrawler
         /// <summary>
         /// 插件支持的UI特性
         /// </summary>
-        Dictionary<String, Object> Feature { get; } //AutoAnswer(List<AutoAnswer>) ExampleUrl(String[]) ConfigurationForm(MethodInvoker)
+        Dictionary<String, Object> Feature { get;  } //AutoAnswer(List<AutoAnswer>) ExampleUrl(String[]) ConfigurationForm(MethodInvoker)
         /// <summary>
         /// 插件独立存储
         /// </summary>

@@ -1,24 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using CSNovelCrawler.Class;
+using CSNovelCrawler.Interface;
+
 namespace CSNovelCrawler.Plugin
 {
     [PluginInformation("eynyDownloader", "eyny.com插件", "Montoli", "1.0.0.0", "伊莉下載插件", "http://www.eyny.com/")]
-    public class eynyPlugin : IPlugin
+    public class EynyPlugin : IPlugin
     {
-        public eynyPlugin()
+        public EynyPlugin()
 		{
-            Feature = new Dictionary<string, object>();
+            Feature = new Dictionary<string, object>
+                {
+                    {"ConfigForm", new MethodInvoker(() => new EynySettingsForm(Configuration).ShowDialog())}
+                };
             //ConfigForm 属性设置窗口
-            Feature.Add("ConfigForm", new MethodInvoker(() =>
-            {
-                new eynySettingsForm(Configuration).ShowDialog();
-            }));
-        }
+		}
 
         public IDownloader CreateDownloader()
         {
-            return new eynyDownloader(this);
+            return new EynyDownloader(this);
         }
 
         public bool CheckUrl(string url)
@@ -29,10 +31,7 @@ namespace CSNovelCrawler.Plugin
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public string GetHash(string url)

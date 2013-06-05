@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace CSNovelCrawler.Core
@@ -10,7 +7,7 @@ namespace CSNovelCrawler.Core
     [Serializable]
     public class CustomSettings
     {
-        public string DefaultSaveFolder = System.Environment.CurrentDirectory;
+        public string DefaultSaveFolder = Environment.CurrentDirectory;
 
         public bool HideSysTray = true;
 

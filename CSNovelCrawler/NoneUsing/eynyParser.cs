@@ -18,12 +18,12 @@ namespace CSNovelCrawler
 
             
             
-            //TaskInfo Info = new TaskInfo();
-            //Info.Url = Url;
+            //TaskInfo taskInfo = new TaskInfo();
+            //taskInfo.Url = Url;
             //eynyDownloader eynyDown = new eynyDownloader();
 
             ////用HtmlAgilityPack分析
-            //HtmlAgilityPack.HtmlDocument HtmlRoot = eynyDown.GetHtmlDocument(Info.Url);
+            //HtmlAgilityPack.HtmlDocument HtmlRoot = eynyDown.GetHtmlDocument(taskInfo.Url);
 
 
             //////取作者跟書名
@@ -32,8 +32,8 @@ namespace CSNovelCrawler
             //Match m = r.Match(HtmlTitle);
             //if (m.Success)
             //{
-            //    Info.Author = m.Groups["Author"].Value;
-            //    Info.Title = m.Groups["Title"].Value;
+            //    taskInfo.Author = m.Groups["Author"].Value;
+            //    taskInfo.Title = m.Groups["Title"].Value;
             //}
            
             ////取總頁數
@@ -43,7 +43,7 @@ namespace CSNovelCrawler
             //m = r.Match(s);
             //if (m.Success)
             //{
-            //    Info.TotalPage = CommonTools.TryParse(m.Groups["TotalPage"].Value, 0);
+            //    taskInfo.TotalPage = CommonTools.TryParse(m.Groups["TotalPage"].Value, 0);
             //}
 
             ////取目前頁數
@@ -51,18 +51,18 @@ namespace CSNovelCrawler
             //m = r.Match(Url);
             //if (m.Success)
             //{
-            //    Info.CurrentPage = CommonTools.TryParse(m.Groups["CurrentPage"].Value, 0);
+            //    taskInfo.CurrentPage = CommonTools.TryParse(m.Groups["CurrentPage"].Value, 0);
             //}
             
-            //Info.PageSection = GetSection(HtmlRoot);
-            //Info.TotalSection = Info.PageSection*(Info.TotalPage-1)+
+            //taskInfo.PageSection = GetSection(HtmlRoot);
+            //taskInfo.TotalSection = taskInfo.PageSection*(taskInfo.TotalPage-1)+
             //    GetSection(
-            //        eynyDown.GetHtmlDocument(Regex.Replace(Url, @"(?!^(http:\/\/)(www\w*\.)eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", Info.TotalPage.ToString()))
+            //        eynyDown.GetHtmlDocument(Regex.Replace(Url, @"(?!^(http:\/\/)(www\w*\.)eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", taskInfo.TotalPage.ToString()))
             //   );
 
 
 
-            //return Info;
+            //return taskInfo;
         }
 
 

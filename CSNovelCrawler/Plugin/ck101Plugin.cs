@@ -1,14 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using CSNovelCrawler.Class;
+using CSNovelCrawler.Interface;
+
 namespace CSNovelCrawler.Plugin
 {
     [PluginInformation("ck101Downloader", "ck101.com插件", "Montoli", "1.0.0.0", "卡提諾下載插件", "http://ck101.com")]
-    public class ck101Plugin : IPlugin
+    public class Ck101Plugin : IPlugin
     {
-       
+        public Ck101Plugin()
+        {
+            Feature =new Dictionary<string, object>();
+        }
+
         public IDownloader CreateDownloader()
         {
-            return new ck101Downloader();
+            return new Ck101Downloader();
         }
 
         public bool CheckUrl(string url)
@@ -19,10 +26,7 @@ namespace CSNovelCrawler.Plugin
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public string GetHash(string url)

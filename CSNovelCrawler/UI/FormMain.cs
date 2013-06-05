@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Forms;
-using HtmlAgilityPack;
+using CSNovelCrawler.Class;
+using CSNovelCrawler.Interface;
 using System.Collections.ObjectModel;
 using System.Threading;
 using CSNovelCrawler.Core;
+using CSNovelCrawler.Properties;
 
 
 namespace CSNovelCrawler.UI
@@ -26,11 +18,12 @@ namespace CSNovelCrawler.UI
             InitializeComponent();
             CoreManager.Initialize();
             //CoreManager.TaskManager.preDelegates.Start= new AcTaskDelegate(Updatelsv);
-            CoreManager.TaskManager.preDelegates.Refresh = new AcTaskDelegate(RefreshTask);
+            CoreManager.TaskManager.PreDelegates.Refresh = RefreshTask;
             //啟動自動儲存任務
             CoreManager.TaskManager.StartSaveBackgroundWorker();
 
         }
+/*
         private void Test()
         {
             string Url = string.Format("http://www02.eyny.com/member.php?mod=logging&action=login&loginsubmit=yes&handlekey=login&loginhash=LiKaw&inajax=1");
@@ -87,6 +80,7 @@ namespace CSNovelCrawler.UI
 
             
         }
+*/
      
        
         private void Form1_Load(object sender, EventArgs e)
@@ -105,59 +99,59 @@ namespace CSNovelCrawler.UI
         {
 
             //如果需要在安全的线程上下文中执行
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new AcTaskDelegate(RefreshTask), e);
+                Invoke(new AcTaskDelegate(RefreshTask), e);
                 return;
             }
 
-            ParaRefresh r = (ParaRefresh)e;
+            var r = (ParaRefresh)e;
            
-            TaskInfo Info = r.SourceTask;
+            TaskInfo taskInfo = r.SourceTask;
 
             //如果任务被删除
-            if (!CoreManager.TaskManager.TaskInfos.Contains(Info))
+            if (!CoreManager.TaskManager.TaskInfos.Contains(taskInfo))
             {
                 ////移除UI项
-                if (lsv.Items.Contains((ListViewItem)Info.UIItem))
+                if (lsv.Items.Contains((ListViewItem)taskInfo.UiItem))
                 {
-                    lsv.Items.Remove((ListViewItem)Info.UIItem);
+                    lsv.Items.Remove((ListViewItem)taskInfo.UiItem);
                 }
                 return;
             }
             //如果ListView已有此任務
-            if (Info.UIItem != null)
+            if (taskInfo.UiItem != null)
             {
-                ListViewItem lvi = (ListViewItem)Info.UIItem;
-                UpdateListViewItem(lvi, Info);
+                var lvi = (ListViewItem)taskInfo.UiItem;
+                UpdateListViewItem(lvi, taskInfo);
             }
             else  //ListView不存在此任務
             {
                 //新建ListViewItem
-                ListViewItem lvi = new ListViewItem();
+                var lvi = new ListViewItem();
                 for (int i = 0; i < 6; i++)
                 {
                     lvi.SubItems.Add("");
                 }
                
-                UpdateListViewItem(lvi, Info);
-                lvi.Tag = Info.TaskId.ToString(); //设置TAG
-                Info.UIItem = lvi;
+                UpdateListViewItem(lvi, taskInfo);
+                lvi.Tag = taskInfo.TaskId.ToString(); //设置TAG
+                taskInfo.UiItem = lvi;
                 lsv.Items.Add(lvi);
             }
 
         }
 
-        private void UpdateListViewItem(ListViewItem lvi,TaskInfo Info)
+        private void UpdateListViewItem(ListViewItem lvi,TaskInfo taskInfo)
         {
 
-            lvi.SubItems[GetColumn("Status")].Text = Info.Status.ToString();
-            lvi.SubItems[GetColumn("Title")].Text = Info.Title.ToString();
-            lvi.SubItems[GetColumn("Progress")].Text = string.Format(@"{0:P}", Info.GetProgress());
-            lvi.SubItems[GetColumn("TotalSection")].Text = Info.TotalSection.ToString();
-            lvi.SubItems[GetColumn("EndSection")].Text = Info.EndSection.ToString();
-            lvi.SubItems[GetColumn("CurrentSection")].Text = Info.CurrentSection.ToString();
-            lvi.SubItems[GetColumn("Author")].Text = Info.Author.ToString(); 
+            lvi.SubItems[GetColumn("Status")].Text = taskInfo.Status.ToString();
+            lvi.SubItems[GetColumn("Title")].Text = taskInfo.Title.ToString(CultureInfo.InvariantCulture);
+            lvi.SubItems[GetColumn("Progress")].Text = string.Format(@"{0:P}", taskInfo.GetProgress());
+            lvi.SubItems[GetColumn("TotalSection")].Text = taskInfo.TotalSection.ToString(CultureInfo.InvariantCulture);
+            lvi.SubItems[GetColumn("EndSection")].Text = taskInfo.EndSection.ToString(CultureInfo.InvariantCulture);
+            lvi.SubItems[GetColumn("CurrentSection")].Text = taskInfo.CurrentSection.ToString(CultureInfo.InvariantCulture);
+            lvi.SubItems[GetColumn("Author")].Text = taskInfo.Author.ToString(CultureInfo.InvariantCulture); 
         }
 
         /// <summary>
@@ -179,11 +173,11 @@ namespace CSNovelCrawler.UI
         {
 
             Monitor.Enter(CoreManager.TaskManager.TaskInfosLock);
-            foreach (TaskInfo Info in CoreManager.TaskManager.TaskInfos)
+            foreach (TaskInfo taskInfo in CoreManager.TaskManager.TaskInfos)
             {
-                if (Info.Status == DownloadStatus.正在下載)
+                if (taskInfo.Status == DownloadStatus.正在下載)
                 {
-                    this.Invoke(new AcTaskDelegate(RefreshTask), new ParaRefresh(Info));
+                    Invoke(new AcTaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
                 }
             }
             Monitor.Exit(CoreManager.TaskManager.TaskInfosLock);
@@ -191,17 +185,17 @@ namespace CSNovelCrawler.UI
 
         private void toolStripNew_Click(object sender, EventArgs e)
         {
-            FormNew Form = new FormNew();
-            Form.Show();
+            var form = new FormNew();
+            form.Show();
         }
-        TaskInfo SelectedTaskInfo=null;
+        TaskInfo _selectedTaskInfo;
         private void lsv_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ListView lv =(ListView) sender;
+            var lv =(ListView) sender;
             DisableExtraOptions();
             if (lv.SelectedItems.Count > 0)
             {
-                SelectedTaskInfo = null;
+                _selectedTaskInfo = null;
                 //SelectedTaskInfos.Clear();
                 //取得最后一项
                 ListViewItem sItem = lsv.SelectedItems[lv.SelectedIndices.Count - 1];
@@ -209,16 +203,16 @@ namespace CSNovelCrawler.UI
                 if (lv.SelectedItems.Count == 1)
                 {
 
-                    TaskInfo Info = GetTask(new Guid((string)sItem.Tag));
+                    TaskInfo taskInfo = GetTask(new Guid((string)sItem.Tag));
                    
-                    txtBeginSection.Text = Info.BeginSection.ToString();
+                    txtBeginSection.Text = taskInfo.BeginSection.ToString(CultureInfo.InvariantCulture);
                     txtBeginSection.Enabled = true;
-                    txtEndSection.Text = Info.EndSection.ToString();
+                    txtEndSection.Text = taskInfo.EndSection.ToString(CultureInfo.InvariantCulture);
                     txtEndSection.Enabled = true;
-                    txtTitle.Text = Info.Title.ToString();
+                    txtTitle.Text = taskInfo.Title.ToString(CultureInfo.InvariantCulture);
                     txtTitle.Enabled = true;
-                    SelectedTaskInfo = Info;
-                    cbSaveDir.Text = Info.SaveDirectory.ToString();
+                    _selectedTaskInfo = taskInfo;
+                    cbSaveDir.Text = taskInfo.SaveDirectory.ToString(CultureInfo.InvariantCulture);
                     cbSaveDir.Enabled = true;
                     //task.SaveDirectory = new DirectoryInfo(CoreManager.ConfigManager.Settings.SavePath);
                 }
@@ -249,11 +243,13 @@ namespace CSNovelCrawler.UI
         private void BtnBrowseDir_Click(object sender, EventArgs e)
         {
             //选择文件夹
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.ShowNewFolderButton = true;
-            fbd.Description = "为您的下载选择一个目标文件夹：";
-            fbd.SelectedPath = cbSaveDir.Text;
-            
+            var fbd = new FolderBrowserDialog
+                {
+                    ShowNewFolderButton = true,
+                    Description = Resources.FormMain_BtnBrowseDir_Click_選擇你的下載資料夾,
+                    SelectedPath = cbSaveDir.Text
+                };
+
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 cbSaveDir.Text = fbd.SelectedPath;
@@ -262,16 +258,16 @@ namespace CSNovelCrawler.UI
         }
         private void UpdateTaskinfo()
         {
-            if (SelectedTaskInfo != null)
+            if (_selectedTaskInfo != null)
             {
-                TaskInfo Info = SelectedTaskInfo;
+                TaskInfo taskInfo = _selectedTaskInfo;
 
-                Info.BeginSection = CommonTools.TryParse(txtBeginSection.Text, 1);
-                Info.EndSection = CommonTools.TryParse(txtEndSection.Text, 1);
-                Info.Title = txtTitle.Text;
-                Info.SaveDirectory =cbSaveDir.Text;
-                //RefreshTask(new ParaRefresh(Info));
-                this.Invoke(new AcTaskDelegate(RefreshTask), new ParaRefresh(Info));
+                taskInfo.BeginSection = CommonTools.TryParse(txtBeginSection.Text, 1);
+                taskInfo.EndSection = CommonTools.TryParse(txtEndSection.Text, 1);
+                taskInfo.Title = txtTitle.Text;
+                taskInfo.SaveDirectory =cbSaveDir.Text;
+                //RefreshTask(new ParaRefresh(taskInfo));
+                Invoke(new AcTaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
             }
         }
 
@@ -287,8 +283,8 @@ namespace CSNovelCrawler.UI
             //開始下載所有選取的任務
             foreach (ListViewItem item in lsv.SelectedItems)
             {
-                TaskInfo Info = GetTask(new Guid((string)item.Tag));
-                CoreManager.TaskManager.StartTask(Info);
+                TaskInfo taskInfo = GetTask(new Guid((string)item.Tag));
+                CoreManager.TaskManager.StartTask(taskInfo);
             }
         }
 
@@ -297,8 +293,8 @@ namespace CSNovelCrawler.UI
             //重新分析所有選取的任務
             foreach (ListViewItem item in lsv.SelectedItems)
             {
-                TaskInfo Info = GetTask(new Guid((string)item.Tag));
-                CoreManager.TaskManager.AnalysisTask(Info);
+                TaskInfo taskInfo = GetTask(new Guid((string)item.Tag));
+                CoreManager.TaskManager.AnalysisTask(taskInfo);
             }
         }
 
@@ -306,19 +302,19 @@ namespace CSNovelCrawler.UI
         private void toolStripStop_Click(object sender, EventArgs e)
         {
 
-            if (MessageBox.Show("是否停止選取的下載?", "停止下載",
+            if (MessageBox.Show(Resources.FormMain_toolStripStop_Click_是否停止選取的下載_, Resources.FormMain_toolStripStop_Click_停止下載,
                  MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                 MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.No)
+                 MessageBoxDefaultButton.Button2) == DialogResult.No)
             {
                 return;
             }
             //停止選取的下載
             foreach (ListViewItem item in lsv.SelectedItems)
             {
-                TaskInfo Info = GetTask(new Guid((string)item.Tag));
-                if (Info.Status == DownloadStatus.正在下載)
+                TaskInfo taskInfo = GetTask(new Guid((string)item.Tag));
+                if (taskInfo.Status == DownloadStatus.正在下載)
                 {
-                    CoreManager.TaskManager.StopTask(Info);
+                    CoreManager.TaskManager.StopTask(taskInfo);
                 }
             }
 
@@ -326,14 +322,14 @@ namespace CSNovelCrawler.UI
 
         private void toolStripDel_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("是否刪除選取的任務？", "刪除任務",
+            if (MessageBox.Show(Resources.FormMain_toolStripDel_Click_, Resources.FormMain_toolStripDel_Click_刪除任務,
                  MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                 MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.No)
+                 MessageBoxDefaultButton.Button2) == DialogResult.No)
             {
                 return;
             }
 
-			Collection<TaskInfo> willbedeleted = new Collection<TaskInfo>();
+			var willbedeleted = new Collection<TaskInfo>();
 			foreach (ListViewItem item in lsv.SelectedItems)
 			{
 				TaskInfo task = GetTask(new Guid((string)item.Tag));
@@ -343,15 +339,15 @@ namespace CSNovelCrawler.UI
 			//取消选中所有任务
 			lsv.SelectedItems.Clear();
 
-			foreach (TaskInfo Info in willbedeleted)
+			foreach (TaskInfo taskInfo in willbedeleted)
 			{
-				CoreManager.TaskManager.DeleteTask(Info);
+				CoreManager.TaskManager.DeleteTask(taskInfo);
 			}
         }
 
         private void 設定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormConfig config = new FormConfig();
+            var config = new FormConfig();
             config.ShowDialog();
             config.Dispose();
             ////重新加载某些项目
@@ -364,8 +360,8 @@ namespace CSNovelCrawler.UI
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
+            Show();
+            WindowState = FormWindowState.Normal;
 
         }
 
@@ -375,20 +371,20 @@ namespace CSNovelCrawler.UI
             if (e.CloseReason == CloseReason.UserClosing && CoreManager.ConfigManager.Settings.HideSysTray)
             {
                 e.Cancel = true;
-                this.Hide();
+                Hide();
             }
             
         }
 
         private void ExitProgram()
         {
-            this.Cursor = Cursors.WaitCursor;
+            Cursor = Cursors.WaitCursor;
             //停止自動儲存
             CoreManager.TaskManager.EndSaveBackgroundWorker();
             //儲存所有任務
-            Thread t = new Thread(new ThreadStart(new MethodInvoker(CoreManager.TaskManager.SaveAllTasks)));
+            var t = new Thread(CoreManager.TaskManager.SaveAllTasks);
             t.Start();
-            this.Cursor = Cursors.Default;
+            Cursor = Cursors.Default;
             //釋放系統列資源
             notifyIcon1.Dispose();
 
@@ -405,9 +401,9 @@ namespace CSNovelCrawler.UI
 
         private void 插件管理ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPlugins Plugins = new FormPlugins();
-            Plugins.ShowDialog();
-            Plugins.Dispose();
+            var plugins = new FormPlugins();
+            plugins.ShowDialog();
+            plugins.Dispose();
         }
 
 

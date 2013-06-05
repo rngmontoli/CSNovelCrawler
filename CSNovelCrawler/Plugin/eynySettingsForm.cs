@@ -1,46 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSNovelCrawler.Class;
 
 
 namespace CSNovelCrawler.Plugin
 {
-    public partial class eynySettingsForm : Form
+    public partial class EynySettingsForm : Form
     {
-        private Dictionary<string, string> Configuration;
-        public eynySettingsForm(DictionaryExtension<string, string> Configuration)
+        private Dictionary<string, string> _configuration;
+        public EynySettingsForm(DictionaryExtension<string, string> configuration)
         {
-            this.Configuration = Configuration;
+            _configuration = configuration;
             InitializeComponent();
         }
 
         private void btnConfirm_Click(object sender, EventArgs e)
         {
-            EncryptAES.EncryptAES AES = new EncryptAES.EncryptAES();
+            EncryptAES.EncryptAES aes = new EncryptAES.EncryptAES();
 
-            string PostData = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0VJD4OQvxXfjIiLdhZYzqCuQdxFn2EI72/TmzTtaSLVChEVFd/A6wmBYvM1InsnchbSSPcrHulXtQLt/dpLyQ5i";
+            string postData = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0VJD4OQvxXfjIiLdhZYzqCuQdxFn2EI72/TmzTtaSLVChEVFd/A6wmBYvM1InsnchbSSPcrHulXtQLt/dpLyQ5i";
             if (!string.IsNullOrEmpty(txtPassword.Text.Trim()) 
                 && 
                 !string.IsNullOrEmpty(txtUserName.Text.Trim()))
             {
-                PostData = string.Format(AES.DecryptAES256(PostData), txtUserName.Text.Trim(), txtPassword.Text.Trim().Replace("+","%2B"));
-                PostData = AES.EncryptAES256(PostData);
+                postData = string.Format(aes.DecryptAES256(postData), txtUserName.Text.Trim(), txtPassword.Text.Trim().Replace("+","%2B"));
+                postData = aes.EncryptAES256(postData);
             }
 
-            Configuration["PostData"] = PostData;
+            _configuration["PostData"] = postData;
 
-            this.Close();
+            Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

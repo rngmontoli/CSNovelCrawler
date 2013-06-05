@@ -69,7 +69,6 @@
     <Compile Include="Class\DictionaryExtension.cs" />
     <Compile Include="Core\ConfigManager.cs" />
     <Compile Include="Core\CustomSettings.cs" />
-    <Compile Include="Interface\SerializableDictionary.cs" />
     <Compile Include="Plugin\abstractDownloader.cs" />
     <Compile Include="Plugin\eynySettingsForm.cs">
       <SubType>Form</SubType>

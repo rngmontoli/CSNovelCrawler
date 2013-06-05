@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Class
 {
     public class FileWrite
     {
-        public static void TxtWrire(string Txt, string fileName)
+        public static void TxtWrire(string txt, string fileName)
         {
             try
             {
                 // Create a new file 
                 using (StreamWriter sw = File.AppendText(fileName))
                 {
-                    sw.Write(Txt);
+                    sw.Write(txt);
                 }
 
             }
-            catch (Exception Ex)
+            catch (Exception ex)
             {
-                Console.WriteLine(Ex.ToString());
+                Console.WriteLine(ex.ToString());
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿namespace CSNovelCrawler.Plugin
 {
-    partial class eynySettingsForm
+    partial class EynySettingsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -99,7 +99,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUserName);
-            this.Name = "eynySettingsForm";
+            this.Name = "EynySettingsForm";
             this.Text = "eynySettingsForm";
             this.ResumeLayout(false);
             this.PerformLayout();

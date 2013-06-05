@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using CSNovelCrawler.Core;
+using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.UI
 {
@@ -28,7 +22,7 @@ namespace CSNovelCrawler.UI
                 if (types.Length > 0)
                 {
                     var attrib = (PluginInformationAttribute)types[0];
-                    var lvi = new ListViewItem(new string[]
+                    var lvi = new ListViewItem(new[]
                         {
                             attrib.FriendlyName,
                             attrib.Version.ToString(),
@@ -36,8 +30,7 @@ namespace CSNovelCrawler.UI
                             attrib.Describe,
                             attrib.SupportUrl,
                             attrib.Name
-                        });
-                    lvi.Tag = plugin;
+                        }) {Tag = plugin};
                     listView1.Items.Add(lvi);
                 }
             }
@@ -67,7 +60,7 @@ namespace CSNovelCrawler.UI
             var lvi = listView1.SelectedItems[0];
             var plugin = (IPlugin)lvi.Tag;
             var method = (Delegate)plugin.Feature["ConfigForm"];
-            this.Invoke(method);
+            Invoke(method);
             //保存设置
             CoreManager.PluginManager.SaveConfiguration(plugin);
         }

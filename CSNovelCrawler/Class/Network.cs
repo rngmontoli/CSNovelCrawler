@@ -1,29 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using HtmlAgilityPack;
 
-namespace CSNovelCrawler
+namespace CSNovelCrawler.Class
 {
     public class Network
     {
 
-        public static HtmlAgilityPack.HtmlDocument GetHtmlDocument(string HtmlSource)
+        public static HtmlDocument GetHtmlDocument(string htmlSource)
         {
-            HtmlAgilityPack.HtmlDocument HtmlRoot = new HtmlAgilityPack.HtmlDocument();
-            HtmlRoot.LoadHtml(HtmlSource);
-            return HtmlRoot;
+            HtmlDocument htmlRoot = new HtmlDocument();
+            htmlRoot.LoadHtml(htmlSource);
+            return htmlRoot;
         }
 
         /// <summary>
         /// 获取网页源代码
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="para"></param>
         /// <param name="encode"></param>
         /// <returns></returns>
         public static string GetHtmlSource( DownloadParameter para, System.Text.Encoding encode)
@@ -79,22 +76,18 @@ namespace CSNovelCrawler
                         }
                     }
                 }
-                catch (Exception ex) //发生错误
+                catch (Exception) //发生错误
                 {
                     //重试次数-1
                     remainTimes--;
                     //如果重试次数小于0，抛出错误
                     if (remainTimes < 0)
                     {
-                        needRedownload = false;
                         throw;
                     }
-                    else
-                    {
-                        //等待时间
-                        Thread.Sleep(1000);
-                        needRedownload = true;
-                    }
+                    //等待时间
+                    Thread.Sleep(1000);
+                    needRedownload = true;
                 }
             } while (needRedownload);
             return sline;
@@ -103,8 +96,9 @@ namespace CSNovelCrawler
         /// <summary>
         /// 取得网页源代码
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="para"></param>
         /// <param name="encode"></param>
+        /// <param name="proxy"></param>
         /// <returns></returns>
         public static string GetHtmlSource(DownloadParameter para, System.Text.Encoding encode, WebProxy proxy)
         {
