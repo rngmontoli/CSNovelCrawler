@@ -64,7 +64,7 @@ namespace CSNovelCrawler.Core
                 catch (Exception ex) //如果出现错误
                 {
                     Info.Status = DownloadStatus.出現錯誤;
-                    //preDelegates.Error(new ParaError(task, ex));
+                    this.preDelegates.Refresh(new ParaRefresh(Info));
                 }
 
             });
@@ -93,7 +93,7 @@ namespace CSNovelCrawler.Core
                 catch (Exception ex) //如果出现错误
                 {
                     Info.Status = DownloadStatus.出現錯誤;
-                    //preDelegates.Error(new ParaError(task, ex));
+                    this.preDelegates.Refresh(new ParaRefresh(Info));
                 }
 
             });
@@ -137,7 +137,7 @@ namespace CSNovelCrawler.Core
                     {
                         Thread.Sleep(500);
                         timeout -= 500;
-                        if (timeout < 0) //如果到时仍未停止
+                        if (timeout < 0 || Info.HasStopped) //如果到时仍未停止
                         {
                             Info.Status = DownloadStatus.任務暫停;
                             break;
@@ -165,20 +165,30 @@ namespace CSNovelCrawler.Core
 
             ThreadPool.QueueUserWorkItem(new WaitCallback((o) =>
             {
-                while (Info.Status == DownloadStatus.正在停止 || Info.Status == DownloadStatus.正在下載)
+                try
                 {
-                    Thread.Sleep(50);
-                }
+                    while (Info.Status == DownloadStatus.正在停止 || Info.Status == DownloadStatus.正在下載)
+                    {
+                        Thread.Sleep(50);
+                    }
 
-                //从任务列表中删除任务
-                if (Info.Status != DownloadStatus.正在刪除)
-                {
+                    ////从任务列表中删除任务
+                    //if (Info.Status != DownloadStatus.正在刪除)
+                    //{
                     TaskInfos.Remove(Info);
+                    //}
+                    //刷新信息
+                    preDelegates.Refresh(new ParaRefresh(Info));
+                }
+                catch (Exception ex)
+                {
+                    
+                    Info.Status = DownloadStatus.出現錯誤;
+                    this.preDelegates.Refresh(new ParaRefresh(Info));
                 }
                
 
-                //刷新信息
-                preDelegates.Refresh(new ParaRefresh(Info));
+                
             }));
         }
 

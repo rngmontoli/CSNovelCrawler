@@ -121,13 +121,15 @@ namespace CSNovelCrawler
             //將剛剛取得的cookie加上去
             webReq.CookieContainer = para.Cookies;
 
-            webReq.Proxy = proxy;
+            //webReq.Proxy = proxy;
             return GetHtmlSource(webReq, encode);
         }
        
 
 
     }
+
+
     /// <summary>
     /// 下载参数
     /// </summary>

@@ -18,7 +18,7 @@ namespace CSNovelCrawler.Plugin
 
         public IDownloader CreateDownloader()
         {
-            return new eynyDownloader();
+            return new eynyDownloader(this);
         }
 
         public bool CheckUrl(string url)

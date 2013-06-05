@@ -64,6 +64,11 @@ namespace CSNovelCrawler
         public int PageSection { get; set; }
 
         /// <summary>
+        /// 是否已停止下载(可以在下载过程中进行设置，用来控制下载过程的停止)
+        /// </summary>
+        public bool HasStopped { get; set; }
+
+        /// <summary>
         /// 總章數
         /// </summary>
         public int TotalSection { get; set; }

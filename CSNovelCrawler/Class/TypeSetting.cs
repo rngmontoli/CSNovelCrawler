@@ -26,7 +26,7 @@ namespace CSNovelCrawler
         {
             txt = Regex.Replace(txt, @"(^\s+)", string.Empty,RegexOptions.Multiline);
             txt = Regex.Replace(txt, @"^(?=\S+)", @"　　", RegexOptions.Multiline);
-            txt = Regex.Replace(txt, @"\r\n", "\r\n\r\n", RegexOptions.Multiline);
+            txt = Regex.Replace(txt, @"$", "\r\n\r\n", RegexOptions.Multiline);
         }
     }
 }

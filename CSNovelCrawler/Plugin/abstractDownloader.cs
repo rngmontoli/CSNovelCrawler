@@ -11,42 +11,7 @@ namespace CSNovelCrawler.Plugin
     {
         public TaskInfo Info { get; set; }
 
-        /// <summary>
-        /// 文件总长度
-        /// </summary>
-        public int Total
-        {
-            get
-            {
-                if (Info != null)
-                {
-                    return Info.EndSection - Info.BeginSection;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 文件总长度
-        /// </summary>
-        public int Done
-        {
-            get
-            {
-                if (Info != null)
-                {
-                    return Info.CurrentSection - Info.BeginSection;
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-        }
-
+      
         public DownloadParameter currentParameter { get; set; }
 
         public abstract bool Analysis();

@@ -37,9 +37,6 @@ namespace CSNovelCrawler.Plugin
         public override bool Analysis()
         {
             
-            
-            //eynyDownloader eynyDown = new eynyDownloader(Info);
-
             //用HtmlAgilityPack分析
             HtmlAgilityPack.HtmlDocument HtmlRoot = GetHtmlDocument(Info.Url);
 
@@ -50,8 +47,8 @@ namespace CSNovelCrawler.Plugin
             Match m = r.Match(HtmlTitle);
             if (m.Success)
             {
-                Info.Author = m.Groups["Author"].Value;
-                Info.Title = m.Groups["Title"].Value;
+                Info.Author = m.Groups["Author"].Value.Trim();
+                Info.Title = m.Groups["Title"].Value.Trim();
             }
 
             //取總頁數
@@ -93,19 +90,13 @@ namespace CSNovelCrawler.Plugin
         /// <returns></returns>
         public int GetSection(HtmlAgilityPack.HtmlDocument HtmlRoot)
         {
-            ////*[@id="postlist"]
-            ////*[@id="pid88637015"]/tbody/tr[2]/td
             return HtmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]").Count();
         }
         
-
         public override bool Download()
         {
-            
-            if (currentParameter != null)
-            {
-                currentParameter.IsStop = false;
-            }
+            currentParameter.IsStop = false;
+
             Regex r = new Regex(@"(?<Head>^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?<Tail>-\w+\.html)");
             Match m = r.Match(Info.Url);
             string UrlHead = string.Empty, UrlTail = string.Empty;
@@ -114,66 +105,96 @@ namespace CSNovelCrawler.Plugin
                 UrlHead = m.Groups["Head"].Value;
                 UrlTail = m.Groups["Tail"].Value;
             }
-            StringBuilder SB = new StringBuilder();
 
-            string fileName = Info.SaveFilePath;
-                //string.Format(@"C:\Users\Montoli\Desktop\{0}.txt",Info.Title+Info.Author);
+
             HtmlAgilityPack.HtmlDocument HtmlRoot = null;
             HtmlNodeCollection nodeHeaders = null;
-            //Info.CurrentSection = Info.BeginSection;
             int NewCurrentPage = 0;
             int LastPage = 0;
+            //排版插件
             var TypeSetting = new Collection<ITypeSetting>() 
                 { 
                     new RemoveSpecialCharacters(), 
                     new UniformFormat()
                 };
+            int NumberErrors = 0;//記錄錯誤次數
+
             for (; Info.BeginSection <= Info.EndSection && !currentParameter.IsStop; Info.BeginSection++)
             {
-
+                //要下載的頁數
                 NewCurrentPage = (Info.BeginSection + Info.PageSection - 1) / Info.PageSection;
 
-                if (LastPage != NewCurrentPage)
+                if (LastPage != NewCurrentPage)//之前下載的頁數跟當前要下載的頁數
                 {
-                    LastPage = NewCurrentPage;
-                    string findpost = string.Empty;
-                    if (LastPage == 1)
-                    {
-                        findpost="?&r=findpost";
-                    }
-                    HtmlRoot = GetHtmlDocument(UrlHead + LastPage.ToString() + UrlTail + findpost);
-                }
+                    LastPage = NewCurrentPage;//記錄下載頁數，下次如果一樣就不用重抓
+                    string Url = UrlHead + LastPage.ToString() + UrlTail;//組合網址
 
-                int PartSection = Info.BeginSection - ((LastPage - 1) * Info.PageSection) - 1;
-
-                if (HtmlRoot != null)
-                {
-                    if (LastPage != 1)
+                    if (LastPage == 1)//卡提諾第一頁的特別處理
                     {
-                        nodeHeaders = HtmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
-                    }
-                    else
-                    {
-                        nodeHeaders = HtmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
-                    }
-                }
-
-                if (nodeHeaders != null)
-                {
-
-                    string TempTxt=nodeHeaders[PartSection].InnerText;
-                    foreach (var item in TypeSetting)
-                    {
-                        try
+                        switch (NumberErrors%2)//常常取不到完整資料，用兩個網址取
                         {
-                            item.Set(ref TempTxt);
+                            case 0:
+                                Url = string.Format("http://ck101.com/forum.php?mod=viewthread&tid={0}&r=findpost&page=1", Info.TID);
+                                break;
+
+                            case 1:
+                                Url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", Info.TID);
+                                break;
                         }
-                        catch { }
                     }
-                    FileWrite.TxtWrire(TempTxt, fileName);
-                    
+
+                    HtmlRoot = GetHtmlDocument(Url);//取得Html文件
+
+                    if (HtmlRoot != null)
+                    {
+                        if (LastPage != 1)
+                        {
+                            nodeHeaders = HtmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                        }
+                        else
+                        {
+                            nodeHeaders = HtmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                        }
+                    }
                 }
+
+                
+
+                try
+                {
+                    //計算要取的區塊在第幾個
+                    int PartSection = Info.BeginSection - ((LastPage - 1) * Info.PageSection) - 1;
+                    if (nodeHeaders != null)
+                    {
+                        string TempTxt = string.Empty;
+
+
+                        TempTxt = nodeHeaders[PartSection].InnerText;
+
+
+                        foreach (var item in TypeSetting)
+                        {
+
+                            item.Set(ref TempTxt);
+
+                        }
+                        FileWrite.TxtWrire(TempTxt, Info.SaveFilePath);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //發生錯誤，當前區塊重取
+                    Info.BeginSection--;
+                    NumberErrors++;
+                    LastPage = 0;
+
+                    continue;
+                }
+
+                Info.HasStopped = currentParameter.IsStop;
             }
+
             bool finish = false;
             if (Info.CurrentSection == Info.EndSection)
             {

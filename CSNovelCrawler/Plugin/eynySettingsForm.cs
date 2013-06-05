@@ -24,12 +24,12 @@ namespace CSNovelCrawler.Plugin
         {
             EncryptAES.EncryptAES AES = new EncryptAES.EncryptAES();
 
-            string PostData = string.Empty;
+            string PostData = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0VJD4OQvxXfjIiLdhZYzqCuQdxFn2EI72/TmzTtaSLVChEVFd/A6wmBYvM1InsnchbSSPcrHulXtQLt/dpLyQ5i";
             if (!string.IsNullOrEmpty(txtPassword.Text.Trim()) 
                 && 
                 !string.IsNullOrEmpty(txtUserName.Text.Trim()))
             {
-                PostData = string.Format("formhash=3b765c67&referer=http%3A%2F%2Fwww02.eyny.com%2F&loginfield=username&username={0}&password={1}&questionid=0&answer=&cookietime=2592000", txtUserName.Text.Trim(), txtPassword.Text.Trim());
+                PostData = string.Format(AES.DecryptAES256(PostData), txtUserName.Text.Trim(), txtPassword.Text.Trim().Replace("+","%2B"));
                 PostData = AES.EncryptAES256(PostData);
             }
 
