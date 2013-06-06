@@ -1,4 +1,6 @@
-﻿using CSNovelCrawler.Core;
+﻿using System.Globalization;
+using CSNovelCrawler.Class;
+using CSNovelCrawler.Core;
 using System;
 using System.Windows.Forms;
 using CSNovelCrawler.Properties;
@@ -18,6 +20,7 @@ namespace CSNovelCrawler.UI
             txtSavePath.Text = CoreManager.ConfigManager.Settings.DefaultSaveFolder;
 
             chbSysTray.Checked = CoreManager.ConfigManager.Settings.HideSysTray;
+            txtSubTime.Text = CoreManager.ConfigManager.Settings.SubscribeTime.ToString(CultureInfo.InvariantCulture);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -37,6 +40,7 @@ namespace CSNovelCrawler.UI
         {
             CoreManager.ConfigManager.Settings.DefaultSaveFolder = txtSavePath.Text;
             CoreManager.ConfigManager.Settings.HideSysTray = chbSysTray.Checked;
+            CoreManager.ConfigManager.Settings.SubscribeTime = CommonTools.TryParse(txtSubTime.Text,10);
             CoreManager.ConfigManager.SaveSettings();
             Close();
         }
@@ -45,6 +49,7 @@ namespace CSNovelCrawler.UI
         {
             Close();
         }
+
 
         
     }

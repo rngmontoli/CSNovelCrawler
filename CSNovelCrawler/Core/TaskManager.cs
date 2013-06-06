@@ -33,7 +33,7 @@ namespace CSNovelCrawler.Core
                     Url = url
                 };
             taskInfo.SetPlugin(plugin);
-            taskInfo.Status = DownloadStatus.任務分析中;
+            taskInfo.Status = DownloadStatus.TaskAnalysis;
 
             //向任務集合增加新任務
             Monitor.Enter(TaskInfosLock);
@@ -51,18 +51,18 @@ namespace CSNovelCrawler.Core
             {
                 try
                 {
-                    taskInfo.Status = DownloadStatus.任務分析中;
+                    taskInfo.Status = DownloadStatus.TaskAnalysis;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
-                   
+
 
                     if (taskInfo.Analysis())
                     {
-                        taskInfo.Status = DownloadStatus.分析完畢;
+                        taskInfo.Status = DownloadStatus.AnalysisComplete;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
                     else
                     {
-                        taskInfo.Status = DownloadStatus.分析失敗;
+                        taskInfo.Status = DownloadStatus.AnalysisFailed;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
 
@@ -70,34 +70,100 @@ namespace CSNovelCrawler.Core
                 catch (Exception ex)
                 {
                     CoreManager.LoggingManager.Debug(ex.ToString());
-                    taskInfo.Status = DownloadStatus.出現錯誤;
+                    taskInfo.Status = DownloadStatus.Error;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     CoreManager.LoggingManager.Debug(ex.ToString());
                 }
 
             }) {IsBackground = true};
-            
             t.Start();
-            //重新整理UI
-            PreDelegates.Refresh(new ParaRefresh(taskInfo));
+            
+        }
+        /// <summary>
+        /// 切換訂閱任務
+        /// </summary>
+        /// <param name="taskInfo"></param>
+        public void SwitchSubscribe(TaskInfo taskInfo)
+        {
+            var t = new Thread(() =>
+            {
+                try
+                {
+                    taskInfo.Subscribe = !taskInfo.Subscribe;
+                }
+                catch (Exception ex)
+                {
+                    CoreManager.LoggingManager.Debug(ex.ToString());
+                    taskInfo.Status = DownloadStatus.Error;
+
+                }
+                //重新整理UI
+                PreDelegates.Refresh(new ParaRefresh(taskInfo));
+
+            }) { IsBackground = true };
+
+            t.Start();
+            
         }
 
+        /// <summary>
+        /// 訂閱任務排程
+        /// </summary>
+        public void SubscribeTask()
+        {
+            
+            
+           
+            var t = new Thread(() =>
+            {
+                foreach (var taskInfo in TaskInfos.FindAll(taskInfo => 
+                    taskInfo.Subscribe && 
+                    taskInfo.Status != DownloadStatus.Downloading
+                    ))
+                {
+                    if (taskInfo.CurrentSection >= taskInfo.TotalSection)
+                        return;
+                    taskInfo.Status = DownloadStatus.SubscribeCheck;
+                    PreDelegates.Refresh(new ParaRefresh(taskInfo));
+
+                    if (taskInfo.Analysis())
+                    {
+                        if (taskInfo.TotalSection>taskInfo.CurrentSection)
+                        {
+                            taskInfo.Status = DownloadStatus.SubscribeUpdate;
+                            PreDelegates.Refresh(new ParaRefresh(taskInfo));
+                            StartTask(taskInfo);
+                        }
+                    }
+                }
+                
+            }) { IsBackground = true };
+
+            t.Start();
+
+        }
+
+
+        /// <summary>
+        /// 開始任務
+        /// </summary>
+        /// <param name="taskInfo"></param>
         public void StartTask(TaskInfo taskInfo)
         {
             var t = new Thread(() =>
             {
                 try
                 {
-                    taskInfo.Status = DownloadStatus.正在下載;
+                    taskInfo.Status = DownloadStatus.Downloading;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     if (taskInfo.Start())
                     {
-                        taskInfo.Status = DownloadStatus.下載完成;
+                        taskInfo.Status = DownloadStatus.DownloadComplete;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
                     else
                     {
-                        taskInfo.Status = DownloadStatus.下載失敗;
+                        taskInfo.Status = DownloadStatus.Downloadblocked;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
 
@@ -105,15 +171,13 @@ namespace CSNovelCrawler.Core
                 catch (Exception ex)
                 {
                     CoreManager.LoggingManager.Debug(ex.ToString());
-                    taskInfo.Status = DownloadStatus.出現錯誤;
+                    taskInfo.Status = DownloadStatus.Error;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
                 }
 
             }) {IsBackground = true};
-
             t.Start();
-            //重新整理UI
-            PreDelegates.Refresh(new ParaRefresh(taskInfo));
+            
         }
         /// <summary>
         /// 停止任務
@@ -125,12 +189,12 @@ namespace CSNovelCrawler.Core
             switch (taskInfo.Status)
             {
               
-                case DownloadStatus.正在下載:
-                    taskInfo.Status = DownloadStatus.正在停止;
+                case DownloadStatus.Downloading:
+                    taskInfo.Status = DownloadStatus.Stopping;
                     
                     break;
                 default:
-                    taskInfo.Status = DownloadStatus.任務暫停;
+                    taskInfo.Status = DownloadStatus.TaskPause;
                     return;
             }
 
@@ -139,7 +203,7 @@ namespace CSNovelCrawler.Core
             //停止任務
             taskInfo.Stop();
 
-            if (taskInfo.Status != DownloadStatus.任務暫停)
+            if (taskInfo.Status != DownloadStatus.TaskPause)
             {
                 //啟動新執行緒等待任務完全停止
                 var t = new Thread(() =>
@@ -147,7 +211,7 @@ namespace CSNovelCrawler.Core
                         //等待時間 (10秒)
                         int timeout = 10000;
                         //等待停止
-                        while (taskInfo.Status == DownloadStatus.正在停止)
+                        while (taskInfo.Status == DownloadStatus.Stopping)
                         {
                             Thread.Sleep(500);
                             timeout -= 500;
@@ -157,7 +221,7 @@ namespace CSNovelCrawler.Core
                             }
                         }
 
-                        taskInfo.Status = DownloadStatus.任務暫停;
+                        taskInfo.Status = DownloadStatus.TaskPause;
                         //重新整理UI
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }) {IsBackground = true};
@@ -180,7 +244,7 @@ namespace CSNovelCrawler.Core
                 {
                     try
                     {
-                        while (taskInfo.Status == DownloadStatus.正在停止 || taskInfo.Status == DownloadStatus.正在下載)
+                        while (taskInfo.Status == DownloadStatus.Stopping || taskInfo.Status == DownloadStatus.Downloading)
                         {
                             Thread.Sleep(50);
                         }
@@ -193,10 +257,44 @@ namespace CSNovelCrawler.Core
                     catch (Exception ex)
                     {
                         CoreManager.LoggingManager.Debug(ex.ToString());
-                        taskInfo.Status = DownloadStatus.出現錯誤;
+                        taskInfo.Status = DownloadStatus.Error;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
                 });
+        }
+
+        /// <summary>
+        /// 結束並儲存所有任務
+        /// </summary>
+        public void BreakAndSaveAllTasks()
+        {
+
+            var t = new Thread(() =>
+            {
+
+
+                try
+                {
+                    GC.KeepAlive(TaskInfos);
+                    EndSaveBackgroundWorker();
+                    foreach (var taskInfo in TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.Downloading))
+                        StopTask(taskInfo);
+                    while (TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.Stopping).Count > 0)
+                    {
+                        Thread.Sleep(50);
+                    }
+
+                    SaveAllTasks();
+                    PreDelegates.Exit();
+
+                }
+                catch (Exception ex)
+                {
+                    CoreManager.LoggingManager.Debug(ex.ToString());
+
+                }
+            }) { IsBackground = true };
+            t.Start();
         }
 
 
@@ -214,37 +312,6 @@ namespace CSNovelCrawler.Core
         }
 
 
-        /// <summary>
-        /// 結束並儲存所有任務
-        /// </summary>
-        public void BreakAndSaveAllTasks()
-        {
-
-
-
-                try
-                {
-                    GC.KeepAlive(TaskInfos);
-                    EndSaveBackgroundWorker();
-                    foreach (var taskInfo in TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.正在下載))
-                        StopTask(taskInfo);
-                    while (TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.正在停止).Count > 0)
-                    {
-                        Thread.Sleep(500);
-                    }
-
-                    SaveAllTasks();
-
-                   
-                }
-                catch (Exception ex)
-                {
-                    CoreManager.LoggingManager.Debug(ex.ToString());
-
-                }
-
-
-        }
 
         private bool _bgWorkerContinue;
         private Timer _bgWorker;

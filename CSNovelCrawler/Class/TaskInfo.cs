@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using CSNovelCrawler.Interface;
+using System.ComponentModel;
 
 namespace CSNovelCrawler.Class
 {
@@ -13,6 +14,7 @@ namespace CSNovelCrawler.Class
             Progress = 0;
             TotalSection = 0;
             _taskid =Guid.NewGuid();
+            Subscribe = false;
         }
         private Guid _taskid;
         /// <summary>
@@ -30,6 +32,12 @@ namespace CSNovelCrawler.Class
             }
         }
 
+        public bool Subscribe { get; set; }
+
+        public string GetSubscribe()
+        {
+            return Subscribe ? "O" : "X";
+        }
         /// <summary>
         /// 標題
         /// </summary>
@@ -102,6 +110,16 @@ namespace CSNovelCrawler.Class
         /// </summary>
         public string Url { get; set; }
 
+        public string GetDownloadStatus()
+        {
+            var type = typeof(DownloadStatus);
+            var memInfo = type.GetMember(Status.ToString());
+            var attributes = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute),
+                false);
+            var description = ((DescriptionAttribute)attributes[0]).Description;
+            return description;
+        }
+
         /// <summary>
         /// 關聯的Ui Object
         /// </summary>
@@ -146,12 +164,11 @@ namespace CSNovelCrawler.Class
         /// <returns></returns>
         public double GetProgress()
         {
-            if (_downloader != null)
-            {
+           
                 Progress = CurrentSection / (double)TotalSection;
                 if (Progress < 0) Progress = 0.00;
                 else if (Progress > 1.00) Progress = 1.00;
-            }
+            
             return Progress;
         }
 
@@ -162,7 +179,7 @@ namespace CSNovelCrawler.Class
         {
             if (BasePlugin == null)
             {
-                Status = DownloadStatus.出現錯誤;
+                Status = DownloadStatus.Error;
                 throw new Exception("Plugin Not Found");
             }
             if (_downloader==null)
@@ -174,6 +191,8 @@ namespace CSNovelCrawler.Class
             return _downloader.Analysis();
         }
 
+      
+
         /// <summary>
         /// 開始任務
         /// </summary>
@@ -181,7 +200,7 @@ namespace CSNovelCrawler.Class
         {
             if (BasePlugin == null)
             {
-                Status = DownloadStatus.出現錯誤;
+                Status = DownloadStatus.Error;
                 throw new Exception("Plugin Not Found");
             }
             if (_downloader == null)

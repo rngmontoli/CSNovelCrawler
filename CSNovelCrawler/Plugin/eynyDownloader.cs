@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using CSNovelCrawler.Class;
-using CSNovelCrawler.Core;
 using CSNovelCrawler.Interface;
 using EncryptAES;
 using HtmlAgilityPack;
@@ -102,8 +101,10 @@ namespace CSNovelCrawler.Plugin
                 GetSection(
                     GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", TaskInfo.TotalPage.ToString(CultureInfo.InvariantCulture)))
                );
-            TaskInfo.BeginSection = 1;
-            TaskInfo.EndSection = TaskInfo.TotalSection;
+            if (TaskInfo.BeginSection == 0)
+            { TaskInfo.BeginSection = 1; }
+            if (TaskInfo.EndSection == 0)
+            { TaskInfo.EndSection = TaskInfo.TotalSection; }
             return true;
         }
 

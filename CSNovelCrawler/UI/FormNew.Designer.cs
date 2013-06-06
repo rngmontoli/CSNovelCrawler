@@ -39,9 +39,7 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(379, 96);
             this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "http://ck101.com/thread-1848378-1-1.html\nhttp://ck101.com/thread-1667427-1-1.html" +
-    "\nhttp://ck101.com/thread-1873654-1-1.html\nhttp://ck101.com/thread-845259-1-1.htm" +
-    "l";
+            this.richTextBox1.Text = "";
             // 
             // button1
             // 

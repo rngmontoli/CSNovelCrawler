@@ -35,23 +35,29 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.退出程式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripNew = new System.Windows.Forms.ToolStripButton();
+            this.SubscribeTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSubscription = new System.Windows.Forms.ToolStripButton();
             this.toolStripStart = new System.Windows.Forms.ToolStripButton();
             this.toolStripStop = new System.Windows.Forms.ToolStripButton();
             this.toolStripAnalysis = new System.Windows.Forms.ToolStripButton();
             this.toolStripDel = new System.Windows.Forms.ToolStripButton();
-            this.toolStripOther = new System.Windows.Forms.ToolStripDropDownButton();
-            this.設定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.插件管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.新增網址ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.其他ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.設定ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.插件管理ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.開啟檔案所在位置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new CSNovelCrawler.UI.SplitContainerEx();
             this.lsv = new System.Windows.Forms.ListView();
+            this.Subscribe = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Title = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Author = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Progress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.EndSection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CurrentSection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EndSection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TotalSection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -63,8 +69,11 @@
             this.txtEndSection = new System.Windows.Forms.TextBox();
             this.BtnBrowseDir = new System.Windows.Forms.Button();
             this.cbSaveDir = new System.Windows.Forms.ComboBox();
+            this.開啟檔案ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -102,15 +111,20 @@
             this.退出程式ToolStripMenuItem.Text = "退出程式";
             this.退出程式ToolStripMenuItem.Click += new System.EventHandler(this.退出程式ToolStripMenuItem_Click);
             // 
-            // toolStripNew
+            // SubscribeTimer
             // 
-            this.toolStripNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripNew.Image = ((System.Drawing.Image)(resources.GetObject("toolStripNew.Image")));
-            this.toolStripNew.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripNew.Name = "toolStripNew";
-            this.toolStripNew.Size = new System.Drawing.Size(60, 22);
-            this.toolStripNew.Text = "新增網址";
-            this.toolStripNew.Click += new System.EventHandler(this.toolStripNew_Click);
+            this.SubscribeTimer.Enabled = true;
+            this.SubscribeTimer.Tick += new System.EventHandler(this.SubscribeTimer_Tick);
+            // 
+            // toolStripSubscription
+            // 
+            this.toolStripSubscription.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripSubscription.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSubscription.Image")));
+            this.toolStripSubscription.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSubscription.Name = "toolStripSubscription";
+            this.toolStripSubscription.Size = new System.Drawing.Size(36, 22);
+            this.toolStripSubscription.Text = "訂閱";
+            this.toolStripSubscription.Click += new System.EventHandler(this.toolStripSubscription_Click);
             // 
             // toolStripStart
             // 
@@ -152,53 +166,82 @@
             this.toolStripDel.Text = "刪除";
             this.toolStripDel.Click += new System.EventHandler(this.toolStripDel_Click);
             // 
-            // toolStripOther
-            // 
-            this.toolStripOther.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripOther.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.設定ToolStripMenuItem,
-            this.插件管理ToolStripMenuItem});
-            this.toolStripOther.Image = ((System.Drawing.Image)(resources.GetObject("toolStripOther.Image")));
-            this.toolStripOther.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripOther.Name = "toolStripOther";
-            this.toolStripOther.Size = new System.Drawing.Size(45, 22);
-            this.toolStripOther.Text = "其他";
-            // 
-            // 設定ToolStripMenuItem
-            // 
-            this.設定ToolStripMenuItem.Name = "設定ToolStripMenuItem";
-            this.設定ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.設定ToolStripMenuItem.Text = "設定";
-            this.設定ToolStripMenuItem.Click += new System.EventHandler(this.設定ToolStripMenuItem_Click);
-            // 
-            // 插件管理ToolStripMenuItem
-            // 
-            this.插件管理ToolStripMenuItem.Name = "插件管理ToolStripMenuItem";
-            this.插件管理ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.插件管理ToolStripMenuItem.Text = "插件管理";
-            this.插件管理ToolStripMenuItem.Click += new System.EventHandler(this.插件管理ToolStripMenuItem_Click);
-            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripNew,
+            this.toolStripSubscription,
             this.toolStripStart,
             this.toolStripStop,
             this.toolStripAnalysis,
-            this.toolStripDel,
-            this.toolStripOther});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStripDel});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(719, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.新增網址ToolStripMenuItem,
+            this.其他ToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(719, 24);
+            this.menuStrip1.TabIndex = 4;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // 新增網址ToolStripMenuItem
+            // 
+            this.新增網址ToolStripMenuItem.Name = "新增網址ToolStripMenuItem";
+            this.新增網址ToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.新增網址ToolStripMenuItem.Text = "新增網址";
+            this.新增網址ToolStripMenuItem.Click += new System.EventHandler(this.新增網址ToolStripMenuItem_Click);
+            // 
+            // 其他ToolStripMenuItem
+            // 
+            this.其他ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.設定ToolStripMenuItem1,
+            this.插件管理ToolStripMenuItem1});
+            this.其他ToolStripMenuItem.Name = "其他ToolStripMenuItem";
+            this.其他ToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.其他ToolStripMenuItem.Text = "其他";
+            // 
+            // 設定ToolStripMenuItem1
+            // 
+            this.設定ToolStripMenuItem1.Name = "設定ToolStripMenuItem1";
+            this.設定ToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
+            this.設定ToolStripMenuItem1.Text = "設定";
+            this.設定ToolStripMenuItem1.Click += new System.EventHandler(this.設定ToolStripMenuItem1_Click);
+            // 
+            // 插件管理ToolStripMenuItem1
+            // 
+            this.插件管理ToolStripMenuItem1.Name = "插件管理ToolStripMenuItem1";
+            this.插件管理ToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
+            this.插件管理ToolStripMenuItem1.Text = "插件管理";
+            this.插件管理ToolStripMenuItem1.Click += new System.EventHandler(this.插件管理ToolStripMenuItem1_Click);
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.開啟檔案ToolStripMenuItem,
+            this.開啟檔案所在位置ToolStripMenuItem});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(185, 70);
+            // 
+            // 開啟檔案所在位置ToolStripMenuItem
+            // 
+            this.開啟檔案所在位置ToolStripMenuItem.Name = "開啟檔案所在位置ToolStripMenuItem";
+            this.開啟檔案所在位置ToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.開啟檔案所在位置ToolStripMenuItem.Text = "開啟檔案所在資料夾";
+            this.開啟檔案所在位置ToolStripMenuItem.Click += new System.EventHandler(this.開啟檔案所在資料夾ToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Cursor = System.Windows.Forms.Cursors.Default;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 49);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -211,30 +254,38 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer1.Panel2MinSize = 0;
-            this.splitContainer1.Size = new System.Drawing.Size(719, 405);
-            this.splitContainer1.SplitterDistance = 249;
+            this.splitContainer1.Size = new System.Drawing.Size(719, 381);
+            this.splitContainer1.SplitterDistance = 234;
             this.splitContainer1.SplitterWidth = 9;
             this.splitContainer1.TabIndex = 3;
             // 
             // lsv
             // 
             this.lsv.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Subscribe,
             this.Status,
             this.Title,
             this.Author,
             this.Progress,
-            this.EndSection,
             this.CurrentSection,
+            this.EndSection,
             this.TotalSection});
+            this.lsv.ContextMenuStrip = this.contextMenuStrip2;
             this.lsv.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lsv.FullRowSelect = true;
             this.lsv.Location = new System.Drawing.Point(0, 0);
             this.lsv.Name = "lsv";
-            this.lsv.Size = new System.Drawing.Size(719, 249);
+            this.lsv.Size = new System.Drawing.Size(719, 234);
             this.lsv.TabIndex = 0;
             this.lsv.UseCompatibleStateImageBehavior = false;
             this.lsv.View = System.Windows.Forms.View.Details;
             this.lsv.SelectedIndexChanged += new System.EventHandler(this.lsv_SelectedIndexChanged);
+            // 
+            // Subscribe
+            // 
+            this.Subscribe.Tag = "Subscribe";
+            this.Subscribe.Text = "訂閱";
+            this.Subscribe.Width = 40;
             // 
             // Status
             // 
@@ -260,19 +311,17 @@
             this.Progress.Text = "進度";
             this.Progress.Width = 70;
             // 
-            // EndSection
-            // 
-            this.EndSection.DisplayIndex = 5;
-            this.EndSection.Tag = "EndSection";
-            this.EndSection.Text = "結束位置";
-            this.EndSection.Width = 70;
-            // 
             // CurrentSection
             // 
-            this.CurrentSection.DisplayIndex = 4;
             this.CurrentSection.Tag = "CurrentSection";
             this.CurrentSection.Text = "目前位置";
             this.CurrentSection.Width = 70;
+            // 
+            // EndSection
+            // 
+            this.EndSection.Tag = "EndSection";
+            this.EndSection.Text = "結束位置";
+            this.EndSection.Width = 70;
             // 
             // TotalSection
             // 
@@ -404,6 +453,13 @@
             this.cbSaveDir.Size = new System.Drawing.Size(372, 20);
             this.cbSaveDir.TabIndex = 3;
             // 
+            // 開啟檔案ToolStripMenuItem
+            // 
+            this.開啟檔案ToolStripMenuItem.Name = "開啟檔案ToolStripMenuItem";
+            this.開啟檔案ToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.開啟檔案ToolStripMenuItem.Text = "開啟檔案";
+            this.開啟檔案ToolStripMenuItem.Click += new System.EventHandler(this.開啟檔案ToolStripMenuItem_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -411,6 +467,9 @@
             this.ClientSize = new System.Drawing.Size(719, 430);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "FormMain";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
@@ -418,6 +477,9 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.contextMenuStrip2.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -454,15 +516,22 @@
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 退出程式ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripNew;
+        private System.Windows.Forms.ColumnHeader Subscribe;
+        private System.Windows.Forms.Timer SubscribeTimer;
+        private System.Windows.Forms.ToolStripButton toolStripSubscription;
         private System.Windows.Forms.ToolStripButton toolStripStart;
         private System.Windows.Forms.ToolStripButton toolStripStop;
         private System.Windows.Forms.ToolStripButton toolStripAnalysis;
         private System.Windows.Forms.ToolStripButton toolStripDel;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripOther;
-        private System.Windows.Forms.ToolStripMenuItem 設定ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 插件管理ToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 新增網址ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 其他ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 設定ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 插件管理ToolStripMenuItem1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem 開啟檔案所在位置ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 開啟檔案ToolStripMenuItem;
 
     }
 }

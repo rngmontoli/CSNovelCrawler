@@ -11,6 +11,7 @@ namespace CSNovelCrawler.Core
 
         public bool HideSysTray = true;
 
+        public int SubscribeTime =10;
 
         [XmlArray("Folders")]
         [XmlArrayItem("Folder")]

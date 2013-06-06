@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using CSNovelCrawler.Core;
 using HtmlAgilityPack;
 using System;
 using System.Collections.ObjectModel;
@@ -76,8 +75,13 @@ namespace CSNovelCrawler.Plugin
                 GetSection(
                     GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", TaskInfo.TotalPage.ToString(CultureInfo.InvariantCulture)))
                );
-            TaskInfo.BeginSection = 1;
-            TaskInfo.EndSection = TaskInfo.TotalSection;
+
+
+            if (TaskInfo.BeginSection == 0)
+            { TaskInfo.BeginSection = 1; }
+            if (TaskInfo.EndSection == 0)
+            { TaskInfo.EndSection = TaskInfo.TotalSection; }
+           
             return true;
 
             

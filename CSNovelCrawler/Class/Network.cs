@@ -71,7 +71,7 @@ namespace CSNovelCrawler.Class
                     }
                     else
                     {
-                        using (StreamReader reader = new StreamReader(res.GetResponseStream(), encode))
+                        using (var reader = new StreamReader(res.GetResponseStream(), encode))
                         {
                             sline = reader.ReadToEnd();
                         }
@@ -79,13 +79,13 @@ namespace CSNovelCrawler.Class
                 }
                 catch (Exception ex) 
                 {
-                    CoreManager.LoggingManager.Debug(ex.ToString());
+                    //CoreManager.LoggingManager.Debug(ex.ToString());
                     //重試次數-1
                     remainTimes--;
                     //如果重試次數小於0，拋出錯誤
                     if (remainTimes < 0)
                     {
-                        throw;
+                        CoreManager.LoggingManager.Debug(ex.ToString());
                     }
                     //重試等待時間
                     Thread.Sleep(1000);

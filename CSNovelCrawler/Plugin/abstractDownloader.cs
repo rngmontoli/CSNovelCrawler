@@ -26,13 +26,6 @@ namespace CSNovelCrawler.Plugin
                 CurrentParameter.IsStop = true;
             }
         }
-
-        //public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-        //{
-        //    info.AddValue("Total", Total);
-        //    info.AddValue("Total", Done);
-        //    info.AddValue("Total", taskInfo);
-        //    info.AddValue("Total", currentParameter);
-        //}
+       
     }
 }

@@ -34,6 +34,9 @@
             this.btnConfirm = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.chbSysTray = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtSubTime = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtSavePath
@@ -65,7 +68,7 @@
             // 
             // btnConfirm
             // 
-            this.btnConfirm.Location = new System.Drawing.Point(180, 103);
+            this.btnConfirm.Location = new System.Drawing.Point(180, 148);
             this.btnConfirm.Name = "btnConfirm";
             this.btnConfirm.Size = new System.Drawing.Size(75, 23);
             this.btnConfirm.TabIndex = 5;
@@ -75,7 +78,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(261, 103);
+            this.btnCancel.Location = new System.Drawing.Point(261, 148);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -86,18 +89,46 @@
             // chbSysTray
             // 
             this.chbSysTray.AutoSize = true;
-            this.chbSysTray.Location = new System.Drawing.Point(12, 71);
+            this.chbSysTray.Location = new System.Drawing.Point(12, 116);
             this.chbSysTray.Name = "chbSysTray";
             this.chbSysTray.Size = new System.Drawing.Size(144, 16);
             this.chbSysTray.TabIndex = 6;
             this.chbSysTray.Text = "關閉時，縮小到系統列";
             this.chbSysTray.UseVisualStyleBackColor = true;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(10, 65);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(77, 12);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "訂閱更新週期";
+            // 
+            // txtSubTime
+            // 
+            this.txtSubTime.Location = new System.Drawing.Point(93, 62);
+            this.txtSubTime.Name = "txtSubTime";
+            this.txtSubTime.Size = new System.Drawing.Size(45, 22);
+            this.txtSubTime.TabIndex = 8;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(146, 65);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "分鐘";
+            // 
             // FormConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(344, 180);
+            this.ClientSize = new System.Drawing.Size(349, 225);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtSubTime);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.chbSysTray);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConfirm);
@@ -122,5 +153,8 @@
         private System.Windows.Forms.Button btnConfirm;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox chbSysTray;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtSubTime;
+        private System.Windows.Forms.Label label3;
     }
 }
