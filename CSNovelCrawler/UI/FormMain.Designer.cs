@@ -176,7 +176,7 @@
             this.toolStripDel});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(719, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(752, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -187,7 +187,7 @@
             this.其他ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(719, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(752, 24);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -261,8 +261,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer1.Panel2MinSize = 0;
-            this.splitContainer1.Size = new System.Drawing.Size(719, 381);
-            this.splitContainer1.SplitterDistance = 234;
+            this.splitContainer1.Size = new System.Drawing.Size(752, 393);
+            this.splitContainer1.SplitterDistance = 241;
             this.splitContainer1.SplitterWidth = 9;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -282,7 +282,7 @@
             this.lsv.FullRowSelect = true;
             this.lsv.Location = new System.Drawing.Point(0, 0);
             this.lsv.Name = "lsv";
-            this.lsv.Size = new System.Drawing.Size(719, 234);
+            this.lsv.Size = new System.Drawing.Size(752, 241);
             this.lsv.TabIndex = 0;
             this.lsv.UseCompatibleStateImageBehavior = false;
             this.lsv.View = System.Windows.Forms.View.Details;
@@ -304,7 +304,7 @@
             // 
             this.Title.Tag = "Title";
             this.Title.Text = "名稱";
-            this.Title.Width = 215;
+            this.Title.Width = 225;
             // 
             // Author
             // 
@@ -464,10 +464,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(719, 430);
+            this.ClientSize = new System.Drawing.Size(752, 442);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "FormMain";
