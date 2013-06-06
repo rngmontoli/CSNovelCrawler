@@ -73,7 +73,7 @@ namespace CSNovelCrawler.Core
             }
             catch (Exception ex)
             {
-                CoreManager.LoggingManager.Debug(ex.ToString());
+                CoreManager.LogManager.Debug(ex.ToString());
                 return false;
             }
 
@@ -99,7 +99,7 @@ namespace CSNovelCrawler.Core
                     }
                     catch (Exception ex)
                     {
-                        CoreManager.LoggingManager.Debug(ex.ToString());
+                        CoreManager.LogManager.Debug(ex.ToString());
                     }
                 }
             }

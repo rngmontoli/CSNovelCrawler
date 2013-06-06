@@ -48,6 +48,7 @@
             this.設定ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.插件管理ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.開啟檔案ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.開啟檔案所在位置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new CSNovelCrawler.UI.SplitContainerEx();
             this.lsv = new System.Windows.Forms.ListView();
@@ -69,7 +70,6 @@
             this.txtEndSection = new System.Windows.Forms.TextBox();
             this.BtnBrowseDir = new System.Windows.Forms.Button();
             this.cbSaveDir = new System.Windows.Forms.ComboBox();
-            this.開啟檔案ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -227,7 +227,14 @@
             this.開啟檔案ToolStripMenuItem,
             this.開啟檔案所在位置ToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(185, 70);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(185, 48);
+            // 
+            // 開啟檔案ToolStripMenuItem
+            // 
+            this.開啟檔案ToolStripMenuItem.Name = "開啟檔案ToolStripMenuItem";
+            this.開啟檔案ToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.開啟檔案ToolStripMenuItem.Text = "開啟檔案";
+            this.開啟檔案ToolStripMenuItem.Click += new System.EventHandler(this.開啟檔案ToolStripMenuItem_Click);
             // 
             // 開啟檔案所在位置ToolStripMenuItem
             // 
@@ -453,13 +460,6 @@
             this.cbSaveDir.Size = new System.Drawing.Size(372, 20);
             this.cbSaveDir.TabIndex = 3;
             // 
-            // 開啟檔案ToolStripMenuItem
-            // 
-            this.開啟檔案ToolStripMenuItem.Name = "開啟檔案ToolStripMenuItem";
-            this.開啟檔案ToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.開啟檔案ToolStripMenuItem.Text = "開啟檔案";
-            this.開啟檔案ToolStripMenuItem.Click += new System.EventHandler(this.開啟檔案ToolStripMenuItem_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -471,7 +471,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "FormMain";
-            this.Text = "Form1";
+            this.Text = "CSNovelCrawler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.contextMenuStrip1.ResumeLayout(false);

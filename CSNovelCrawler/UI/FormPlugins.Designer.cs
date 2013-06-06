@@ -108,7 +108,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormPlugins";
-            this.Text = "FormPlugins";
+            this.Text = "插件";
             this.Load += new System.EventHandler(this.FormPlugins_Load);
             this.ResumeLayout(false);
 

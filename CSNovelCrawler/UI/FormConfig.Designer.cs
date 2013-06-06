@@ -37,6 +37,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtSubTime = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.chbWatchClipboard = new System.Windows.Forms.CheckBox();
+            this.chbLogging = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtSavePath
@@ -68,7 +70,7 @@
             // 
             // btnConfirm
             // 
-            this.btnConfirm.Location = new System.Drawing.Point(180, 148);
+            this.btnConfirm.Location = new System.Drawing.Point(183, 187);
             this.btnConfirm.Name = "btnConfirm";
             this.btnConfirm.Size = new System.Drawing.Size(75, 23);
             this.btnConfirm.TabIndex = 5;
@@ -78,7 +80,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(261, 148);
+            this.btnCancel.Location = new System.Drawing.Point(264, 187);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -121,14 +123,36 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "分鐘";
             // 
+            // chbWatchClipboard
+            // 
+            this.chbWatchClipboard.AutoSize = true;
+            this.chbWatchClipboard.Location = new System.Drawing.Point(12, 138);
+            this.chbWatchClipboard.Name = "chbWatchClipboard";
+            this.chbWatchClipboard.Size = new System.Drawing.Size(84, 16);
+            this.chbWatchClipboard.TabIndex = 6;
+            this.chbWatchClipboard.Text = "監視剪貼簿";
+            this.chbWatchClipboard.UseVisualStyleBackColor = true;
+            // 
+            // chbLogging
+            // 
+            this.chbLogging.AutoSize = true;
+            this.chbLogging.Location = new System.Drawing.Point(12, 160);
+            this.chbLogging.Name = "chbLogging";
+            this.chbLogging.Size = new System.Drawing.Size(96, 16);
+            this.chbLogging.TabIndex = 6;
+            this.chbLogging.Text = "記錄錯誤日誌";
+            this.chbLogging.UseVisualStyleBackColor = true;
+            // 
             // FormConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 225);
+            this.ClientSize = new System.Drawing.Size(351, 222);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtSubTime);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.chbLogging);
+            this.Controls.Add(this.chbWatchClipboard);
             this.Controls.Add(this.chbSysTray);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConfirm);
@@ -138,7 +162,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormConfig";
-            this.Text = "FormConfig";
+            this.Text = "設定";
             this.Load += new System.EventHandler(this.FormConfig_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -156,5 +180,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtSubTime;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox chbWatchClipboard;
+        private System.Windows.Forms.CheckBox chbLogging;
     }
 }

@@ -20,8 +20,12 @@ namespace CSNovelCrawler.UI
                 if (!string.IsNullOrEmpty(url.Trim()))
                 {
                     IPlugin plugin = CoreManager.PluginManager.GetPlugin(url);
-                    TaskInfo taskInfo = CoreManager.TaskManager.AddTask(plugin, url);
-                    CoreManager.TaskManager.AnalysisTask(taskInfo);
+                    if (plugin != null)
+                    {
+                        TaskInfo taskInfo = CoreManager.TaskManager.AddTask(plugin, url);
+                        CoreManager.TaskManager.AnalysisTask(taskInfo);
+                    }
+
                 }
             }
             Close();

@@ -22,11 +22,11 @@ namespace CSNovelCrawler.Core
         {
 
             
-            using (FileStream oFileStream = new FileStream(ConfigFullFileName, FileMode.Create))
+            using (var oFileStream = new FileStream(ConfigFullFileName, FileMode.Create))
             {
-                XmlSerializer oXmlSerializer = new XmlSerializer(typeof(CustomSettings));
+                var oXmlSerializer = new XmlSerializer(typeof(CustomSettings));
                 oXmlSerializer.Serialize(oFileStream, CoreManager.ConfigManager.Settings);
-                oFileStream.Close();
+                
             }
         }
 
@@ -42,9 +42,9 @@ namespace CSNovelCrawler.Core
                 if (File.Exists(ConfigFullFileName))
                 {
                     
-                    using (FileStream oFileStream = new FileStream(ConfigFullFileName, FileMode.Open))
+                    using (var oFileStream = new FileStream(ConfigFullFileName, FileMode.Open))
                     {
-                        XmlSerializer oXmlSerializer = new XmlSerializer(typeof(CustomSettings));
+                        var oXmlSerializer = new XmlSerializer(typeof(CustomSettings));
                         tempSettings = (CustomSettings)oXmlSerializer.Deserialize(oFileStream);
                     }
                 }
@@ -52,13 +52,15 @@ namespace CSNovelCrawler.Core
                 if (tempSettings != null)
                     CoreManager.ConfigManager.Settings = tempSettings;
                 else
-                    throw new Exception();
+                {
+                    CoreManager.ConfigManager.Settings = new CustomSettings();
+                    SaveSettings();
+                }
+                   
             }
             catch(Exception ex)
             {
-                CoreManager.LoggingManager.Debug(ex.ToString());
-                CoreManager.ConfigManager.Settings = new CustomSettings();
-                SaveSettings();
+                CoreManager.LogManager.Debug(ex.ToString());
             }
         }
 

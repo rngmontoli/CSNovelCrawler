@@ -19,7 +19,7 @@ namespace CSNovelCrawler.Class
             }
             catch (Exception ex)
             {
-                CoreManager.LoggingManager.Debug(ex.ToString());
+                CoreManager.LogManager.Debug(ex.ToString());
             }
         }
     }

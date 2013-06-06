@@ -13,7 +13,7 @@ namespace CSNovelCrawler.Class
 
         public static HtmlDocument GetHtmlDocument(string htmlSource)
         {
-            HtmlDocument htmlRoot = new HtmlDocument();
+            var htmlRoot = new HtmlDocument();
             htmlRoot.LoadHtml(htmlSource);
             return htmlRoot;
         }
@@ -39,57 +39,63 @@ namespace CSNovelCrawler.Class
         {
             string sline = "";
             bool needRedownload = false;
-            int remainTimes = 3;
+            int remainTimes = 5;
             
             do
             {
                 try
                 {
                     //接收 HTTP 回應
-                    HttpWebResponse res = (HttpWebResponse)request.GetResponse();
-                    if (res.ContentEncoding == "gzip")
+                    var res = (HttpWebResponse)request.GetResponse();
+                    var responseStream = res.GetResponseStream();
+                    if (responseStream == null) throw new Exception();
+                    StreamReader reader;
+                    switch (res.ContentEncoding)
                     {
-                        //Gzip解壓縮
-                        using (GZipStream gzip = new GZipStream(res.GetResponseStream(), CompressionMode.Decompress))
-                        {
-                            using (StreamReader reader = new StreamReader(gzip, encode))
+                        case "gzip":
+                            //Gzip解壓縮
+                            using (var gzip = new GZipStream(responseStream, CompressionMode.Decompress))
                             {
+                                reader = new StreamReader(gzip, encode);
+
                                 sline = reader.ReadToEnd();
+
                             }
-                        }
-                    }
-                    else if (res.ContentEncoding == "deflate")
-                    {
-                        //deflate解壓縮
-                        using (DeflateStream deflate = new DeflateStream(res.GetResponseStream(), CompressionMode.Decompress))
-                        {
-                            using (StreamReader reader = new StreamReader(deflate, encode))
+                            break;
+                        case "deflate":
+                            //deflate解壓縮
+                            using (var deflate = new DeflateStream(responseStream, CompressionMode.Decompress))
                             {
+                                reader = new StreamReader(deflate, encode);
+
                                 sline = reader.ReadToEnd();
+
                             }
-                        }
-                    }
-                    else
-                    {
-                        using (var reader = new StreamReader(res.GetResponseStream(), encode))
-                        {
+                            break;
+                        default:
+                            reader = new StreamReader(responseStream, encode);
+                        
                             sline = reader.ReadToEnd();
-                        }
+                            break;
                     }
+
                 }
                 catch (Exception ex) 
                 {
-                    //CoreManager.LoggingManager.Debug(ex.ToString());
+                    //重試等待時間
+                    Thread.Sleep(1000);
+                    needRedownload = true;
+                  
                     //重試次數-1
                     remainTimes--;
                     //如果重試次數小於0，拋出錯誤
                     if (remainTimes < 0)
                     {
-                        CoreManager.LoggingManager.Debug(ex.ToString());
+                        needRedownload = false;
+                        CoreManager.LogManager.Debug(ex.ToString());
+                        
                     }
-                    //重試等待時間
-                    Thread.Sleep(1000);
-                    needRedownload = true;
+                   
                 }
             } while (needRedownload);
             return sline;
@@ -106,10 +112,10 @@ namespace CSNovelCrawler.Class
         {
 
             //再來建立你要取得的Request
-            HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(para.Url);
-            //webReq.ContentType = "application/x-www-form-urlencoded";
-            //webReq.Accept = "text/html, application/xhtml+xml, */*";
-            //webReq.Headers.Set("Accept-Language", "zh-TW");
+            var webReq = (HttpWebRequest)WebRequest.Create(para.Url);
+            webReq.ContentType = "application/x-www-form-urlencoded";
+            webReq.Accept = "text/html, application/xhtml+xml, */*";
+            webReq.Headers.Set("Accept-Language", "zh-TW");
             webReq.UserAgent = para.UserAgent;
             webReq.Headers.Set("Accept-Encoding", "gzip, deflate");
             //webReq.Host = "www09.eyny.com";

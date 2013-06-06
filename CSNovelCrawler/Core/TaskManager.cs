@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-
 using System.Threading;
 using System.Xml.Serialization;
 using CSNovelCrawler.Class;
@@ -10,12 +9,15 @@ using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Core
 {
-    public class TaskManager
+    public class TaskManager:IDisposable
     {
+        
         //存放任務
         public List<TaskInfo> TaskInfos = new List<TaskInfo>();
-        //TaskInfos的全域鎖定
+        //TaskInfos新增刪除鎖定
         public object TaskInfosLock = new object();
+        //SaveLock鎖定
+        public object SaveTaskLock = new object();
         public DelegateContainer PreDelegates = new DelegateContainer();
 
         /// <summary>
@@ -29,7 +31,7 @@ namespace CSNovelCrawler.Core
             //建立TaskInfo物件
             var taskInfo = new TaskInfo
                 {
-                    SaveDirectory = CoreManager.ConfigManager.Settings.DefaultSaveFolder,
+                    SaveDirectoryName = CoreManager.ConfigManager.Settings.DefaultSaveFolder,
                     Url = url
                 };
             taskInfo.SetPlugin(plugin);
@@ -69,10 +71,10 @@ namespace CSNovelCrawler.Core
                 }
                 catch (Exception ex)
                 {
-                    CoreManager.LoggingManager.Debug(ex.ToString());
+                    CoreManager.LogManager.Debug(ex.ToString());
                     taskInfo.Status = DownloadStatus.Error;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
-                    CoreManager.LoggingManager.Debug(ex.ToString());
+                    CoreManager.LogManager.Debug(ex.ToString());
                 }
 
             }) {IsBackground = true};
@@ -93,7 +95,7 @@ namespace CSNovelCrawler.Core
                 }
                 catch (Exception ex)
                 {
-                    CoreManager.LoggingManager.Debug(ex.ToString());
+                    CoreManager.LogManager.Debug(ex.ToString());
                     taskInfo.Status = DownloadStatus.Error;
 
                 }
@@ -170,7 +172,7 @@ namespace CSNovelCrawler.Core
                 }
                 catch (Exception ex)
                 {
-                    CoreManager.LoggingManager.Debug(ex.ToString());
+                    CoreManager.LogManager.Debug(ex.ToString());
                     taskInfo.Status = DownloadStatus.Error;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
                 }
@@ -248,15 +250,15 @@ namespace CSNovelCrawler.Core
                         {
                             Thread.Sleep(50);
                         }
-
+                        Monitor.Enter(TaskInfosLock);
                         TaskInfos.Remove(taskInfo);
-
+                        Monitor.Exit(TaskInfosLock);
                         //重新整理UI
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
                     catch (Exception ex)
                     {
-                        CoreManager.LoggingManager.Debug(ex.ToString());
+                        CoreManager.LogManager.Debug(ex.ToString());
                         taskInfo.Status = DownloadStatus.Error;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
@@ -275,11 +277,11 @@ namespace CSNovelCrawler.Core
 
                 try
                 {
-                    GC.KeepAlive(TaskInfos);
+                    
                     EndSaveBackgroundWorker();
                     foreach (var taskInfo in TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.Downloading))
                         StopTask(taskInfo);
-                    while (TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.Stopping).Count > 0)
+                    while (TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.Stopping || taskInfo.Status == DownloadStatus.Downloadblocked).Count > 0)
                     {
                         Thread.Sleep(50);
                     }
@@ -290,7 +292,7 @@ namespace CSNovelCrawler.Core
                 }
                 catch (Exception ex)
                 {
-                    CoreManager.LoggingManager.Debug(ex.ToString());
+                    CoreManager.LogManager.Debug(ex.ToString());
 
                 }
             }) { IsBackground = true };
@@ -361,14 +363,14 @@ namespace CSNovelCrawler.Core
         /// </summary>
         public void SaveAllTasks()
         {
-            
-            using (FileStream oFileStream = new FileStream(TaskFullFileName, FileMode.Create))
+            Monitor.Enter(SaveTaskLock);
+            using (var oFileStream = new FileStream(TaskFullFileName, FileMode.Create))
             {
-                XmlSerializer oXmlSerializer = new XmlSerializer(typeof(List<TaskInfo>));
+                var oXmlSerializer = new XmlSerializer(typeof(List<TaskInfo>));
                 oXmlSerializer.Serialize(oFileStream, TaskInfos);
-                oFileStream.Close();
+              
             }
-            
+            Monitor.Exit(SaveTaskLock);
           
         }
 
@@ -378,14 +380,14 @@ namespace CSNovelCrawler.Core
         public void LoadAllTasks()
         {
 
-            //如果文件存在
+            //如果檔案存在
             if (File.Exists(TaskFullFileName))
             {
-                using (FileStream oFileStream = new FileStream(TaskFullFileName, FileMode.Open))
+                using (var oFileStream = new FileStream(TaskFullFileName, FileMode.Open))
                 {
-                    XmlSerializer oXmlSerializer = new XmlSerializer(typeof(List<TaskInfo>));
+                    var oXmlSerializer = new XmlSerializer(typeof(List<TaskInfo>));
                     TaskInfos = (List<TaskInfo>)oXmlSerializer.Deserialize(oFileStream);
-                    oFileStream.Close();
+                   
                 }
             }
 
@@ -398,9 +400,22 @@ namespace CSNovelCrawler.Core
                 }
             }
         }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose managed resources
+                _bgWorker.Dispose();
+                TaskInfos.Clear();
+            }
+            // free native resources
+        }
 
-
-       
-
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
     }
 }

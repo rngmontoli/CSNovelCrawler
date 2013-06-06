@@ -1,6 +1,5 @@
-﻿using System.IO;
-using log4net;
-using log4net.Config;
+﻿
+
 
 namespace CSNovelCrawler.Core
 {
@@ -25,7 +24,7 @@ namespace CSNovelCrawler.Core
         public static ConfigManager ConfigManager { get; private set; }
 
 
-        public static ILog LoggingManager = LogManager.GetLogger(typeof(Program));
+        public static LogManager LogManager { get; private set; }
 
         /// <summary>
         /// 初始化核心
@@ -33,12 +32,14 @@ namespace CSNovelCrawler.Core
         public static void Initialize()
         {
             StartupPath = System.Environment.CurrentDirectory;
+            LogManager = new LogManager();
             ConfigManager = new ConfigManager();
             ConfigManager.LoadSettings();
             PluginManager = new PluginManager();
             TaskManager = new TaskManager();
+           
             TaskManager.LoadAllTasks();
-            XmlConfigurator.Configure(new FileInfo(Path.Combine(StartupPath, "LogConfig.xml")));
+            //XmlConfigurator.Configure(new FileInfo(Path.Combine(StartupPath, "LogConfig.xml")));
 
         }
     }

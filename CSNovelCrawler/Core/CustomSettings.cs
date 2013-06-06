@@ -8,8 +8,9 @@ namespace CSNovelCrawler.Core
     public class CustomSettings
     {
         public string DefaultSaveFolder = Environment.CurrentDirectory;
-
+        public bool WatchClipboard = true;
         public bool HideSysTray = true;
+        public bool Logging = false;
 
         public int SubscribeTime =10;
 

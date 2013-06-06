@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CSNovelCrawler.Class;
 using CSNovelCrawler.Interface;
@@ -22,7 +23,6 @@ namespace CSNovelCrawler.UI
             //啟動自動儲存任務
             CoreManager.TaskManager.StartSaveBackgroundWorker();
             SubscribeTimer.Interval = CoreManager.ConfigManager.Settings.SubscribeTime*60000;
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -109,15 +109,15 @@ namespace CSNovelCrawler.UI
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-
-            //Monitor.Enter(CoreManager.TaskManager.TaskInfosLock);
+            Invoke(new SysDelegate(WatchClipboard));
+            
             foreach (var taskInfo in 
                 CoreManager.TaskManager.TaskInfos.FindAll(taskInfo => taskInfo.Status == DownloadStatus.Downloading))
             {
                 Invoke(new TaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
                 
             }
-            //Monitor.Exit(CoreManager.TaskManager.TaskInfosLock);
+            
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace CSNovelCrawler.UI
                     txtTitle.Text = taskInfo.Title.ToString(CultureInfo.InvariantCulture);
                     txtTitle.Enabled = true;
                     _selectedTaskInfo = taskInfo;
-                    cbSaveDir.Text = taskInfo.SaveDirectory.ToString(CultureInfo.InvariantCulture);
+                    cbSaveDir.Text = taskInfo.SaveDirectoryName.ToString(CultureInfo.InvariantCulture);
                     cbSaveDir.Enabled = true;
                     
                 }
@@ -199,7 +199,7 @@ namespace CSNovelCrawler.UI
                 taskInfo.BeginSection = CommonTools.TryParse(txtBeginSection.Text, 1);
                 taskInfo.EndSection = CommonTools.TryParse(txtEndSection.Text, 1);
                 taskInfo.Title = txtTitle.Text;
-                taskInfo.SaveDirectory =cbSaveDir.Text;
+                taskInfo.SaveDirectoryName =cbSaveDir.Text;
                 Invoke(new TaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
             }
         }
@@ -253,7 +253,8 @@ namespace CSNovelCrawler.UI
 
         private void toolStripStop_Click(object sender, EventArgs e)
         {
-
+            if (lsv.SelectedItems.Count==0)
+                return;
             if (MessageBox.Show(Resources.FormMain_toolStripStop_Click_是否停止選取的下載_, Resources.FormMain_toolStripStop_Click_停止下載,
                  MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                  MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -274,6 +275,8 @@ namespace CSNovelCrawler.UI
 
         private void toolStripDel_Click(object sender, EventArgs e)
         {
+            if (lsv.SelectedItems.Count == 0)
+                return;
             if (MessageBox.Show(Resources.FormMain_toolStripDel_Click_, Resources.FormMain_toolStripDel_Click_刪除任務,
                  MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                  MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -397,7 +400,7 @@ namespace CSNovelCrawler.UI
             {
                 var sItem = lsv.SelectedItems[0];
                 var taskInfo = GetTask(new Guid((string)sItem.Tag));
-                System.Diagnostics.Process.Start(taskInfo.SaveDirectory);
+                System.Diagnostics.Process.Start(taskInfo.SaveDirectoryName);
             }
 
         }
@@ -408,22 +411,64 @@ namespace CSNovelCrawler.UI
             {
                 var sItem = lsv.SelectedItems[0];
                 var taskInfo = GetTask(new Guid((string)sItem.Tag));
-                System.Diagnostics.Process.Start(taskInfo.SaveFilePath);
+                System.Diagnostics.Process.Start(taskInfo.SaveFullPath);
             }
         }
 
 
-      
-   
-       
 
 
 
-     
-        
-    
-    
-        
+        //上次取得的文字
+        private string _lastText;
+
+        /// <summary>
+        /// 監視剪貼簿
+        /// </summary>
+        private void WatchClipboard()
+        {
+            
+            //不監視剪貼簿
+            if (!CoreManager.ConfigManager.Settings.WatchClipboard)
+                return;
+
+            //如果已被釋放
+            if (IsDisposed || Disposing)
+                return;
+
+            //剪貼簿中是Text
+            if (!Clipboard.ContainsText(TextDataFormat.Text))
+                return;
+
+            string clipboardText = Clipboard.GetText().Trim();
+
+            if (string.IsNullOrEmpty(clipboardText))
+                return;
+
+            if (clipboardText.Equals(_lastText, StringComparison.CurrentCultureIgnoreCase))
+                return;
+            _lastText = clipboardText;
+
+            var r = new Regex(@"(?<Url>(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\/~\+#]*[\w\-\@?^=%&amp;\/~\+#])?)");
+            var m = r.Matches(_lastText);
+            foreach (Match match in m)
+            {
+                string url = match.Groups["Url"].Value;
+                IPlugin plugin = CoreManager.PluginManager.GetPlugin(url);
+                if (plugin != null)
+                {
+                    TaskInfo taskInfo = CoreManager.TaskManager.AddTask(plugin, url);
+                    CoreManager.TaskManager.AnalysisTask(taskInfo);
+                }
+
+            }
+            
+
+            
+
+            
+
+        }
     }
 
 }

@@ -7,8 +7,10 @@ using System;
 
 namespace CSNovelCrawler.Class
 {
+    [SerializableAttribute]
     public class DictionaryExtension<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {
+
 
         public System.Xml.Schema.XmlSchema GetSchema()
         {

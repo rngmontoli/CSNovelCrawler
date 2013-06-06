@@ -176,11 +176,11 @@ namespace CSNovelCrawler.Plugin
                             item.Set(ref tempTxt);
 
                         }
-                        FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFilePath);
+                        FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath);
 
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //CoreManager.LoggingManager.Debug(ex.ToString());
                     //發生錯誤，當前區塊重取

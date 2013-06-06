@@ -72,7 +72,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormNew";
-            this.Text = "FormNew";
+            this.Text = "增加任務";
             this.ResumeLayout(false);
 
         }

@@ -88,7 +88,7 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // eynySettingsForm
+            // EynySettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -100,7 +100,7 @@
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.txtUserName);
             this.Name = "EynySettingsForm";
-            this.Text = "eynySettingsForm";
+            this.Text = "伊莉設定";
             this.ResumeLayout(false);
             this.PerformLayout();
 

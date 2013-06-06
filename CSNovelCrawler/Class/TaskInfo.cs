@@ -13,30 +13,20 @@ namespace CSNovelCrawler.Class
             Author = "Unknow";
             Progress = 0;
             TotalSection = 0;
-            _taskid =Guid.NewGuid();
+            TaskId =Guid.NewGuid();
             Subscribe = false;
         }
-        private Guid _taskid;
+
         /// <summary>
         /// 任務的GUID
         /// </summary>
-        public Guid TaskId
-        {
-            get
-            {
-                return _taskid;
-            }
-            set
-            {
-                _taskid = value;
-            }
-        }
+        public Guid TaskId { get; set; }
 
         public bool Subscribe { get; set; }
 
         public string GetSubscribe()
         {
-            return Subscribe ? "O" : "X";
+            return Subscribe ? "※" : "";
         }
         /// <summary>
         /// 標題
@@ -92,16 +82,16 @@ namespace CSNovelCrawler.Class
         /// <summary>
         /// 儲存目錄
         /// </summary>
-        public string SaveDirectory { get; set; }
+        public string SaveDirectoryName { get; set; }
 
         /// <summary>
         /// 完整路徑
         /// </summary>
-        public string SaveFilePath
+        public string SaveFullPath
         {
             get
             {
-                return string.Format("{0}\\{1}.txt" ,SaveDirectory , Title);
+                return string.Format("{0}\\{1}.txt" ,SaveDirectoryName , Title);
             }
         }
 
@@ -164,11 +154,14 @@ namespace CSNovelCrawler.Class
         /// <returns></returns>
         public double GetProgress()
         {
-           
+            Progress = 0;
+            if (TotalSection != 0)
+            {
                 Progress = CurrentSection / (double)TotalSection;
                 if (Progress < 0) Progress = 0.00;
                 else if (Progress > 1.00) Progress = 1.00;
-            
+            }
+
             return Progress;
         }
 

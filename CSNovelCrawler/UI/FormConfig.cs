@@ -18,7 +18,8 @@ namespace CSNovelCrawler.UI
         {
             CoreManager.ConfigManager.LoadSettings();
             txtSavePath.Text = CoreManager.ConfigManager.Settings.DefaultSaveFolder;
-
+            chbWatchClipboard.Checked = CoreManager.ConfigManager.Settings.WatchClipboard;
+            chbLogging.Checked = CoreManager.ConfigManager.Settings.Logging;
             chbSysTray.Checked = CoreManager.ConfigManager.Settings.HideSysTray;
             txtSubTime.Text = CoreManager.ConfigManager.Settings.SubscribeTime.ToString(CultureInfo.InvariantCulture);
         }
@@ -40,6 +41,8 @@ namespace CSNovelCrawler.UI
         {
             CoreManager.ConfigManager.Settings.DefaultSaveFolder = txtSavePath.Text;
             CoreManager.ConfigManager.Settings.HideSysTray = chbSysTray.Checked;
+            CoreManager.ConfigManager.Settings.WatchClipboard = chbWatchClipboard.Checked;
+            CoreManager.ConfigManager.Settings.Logging = chbLogging.Checked;
             CoreManager.ConfigManager.Settings.SubscribeTime = CommonTools.TryParse(txtSubTime.Text,10);
             CoreManager.ConfigManager.SaveSettings();
             Close();
