@@ -140,10 +140,16 @@ namespace CSNovelCrawler.Core
                             PreDelegates.Refresh(new ParaRefresh(taskInfo));
                             StartTask(taskInfo);
                         }
+                        else
+                        {
+
+                            taskInfo.Status = DownloadStatus.SubscribeNoneUpdate;
+                            PreDelegates.Refresh(new ParaRefresh(taskInfo));
+                        }
                     }
                     else
                     {
-                        taskInfo.Status = DownloadStatus.SubscribeNoneUpdate;
+                        taskInfo.Status = DownloadStatus.AnalysisFailed;
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
                     
