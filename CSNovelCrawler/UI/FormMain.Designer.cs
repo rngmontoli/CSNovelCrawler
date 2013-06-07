@@ -60,16 +60,18 @@
             this.CurrentSection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EndSection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TotalSection = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.FailTimes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtBeginSection = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.txtTitle = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtEndSection = new System.Windows.Forms.TextBox();
-            this.BtnBrowseDir = new System.Windows.Forms.Button();
             this.cbSaveDir = new System.Windows.Forms.ComboBox();
+            this.txtEndSection = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtBeginSection = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.BtnBrowseDir = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -276,7 +278,8 @@
             this.Progress,
             this.CurrentSection,
             this.EndSection,
-            this.TotalSection});
+            this.TotalSection,
+            this.FailTimes});
             this.lsv.ContextMenuStrip = this.contextMenuStrip2;
             this.lsv.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lsv.FullRowSelect = true;
@@ -304,53 +307,62 @@
             // 
             this.Title.Tag = "Title";
             this.Title.Text = "名稱";
-            this.Title.Width = 225;
+            this.Title.Width = 157;
             // 
             // Author
             // 
             this.Author.Tag = "Author";
             this.Author.Text = "作者";
-            this.Author.Width = 125;
+            this.Author.Width = 100;
             // 
             // Progress
             // 
             this.Progress.Tag = "Progress";
             this.Progress.Text = "進度";
-            this.Progress.Width = 70;
             // 
             // CurrentSection
             // 
             this.CurrentSection.Tag = "CurrentSection";
-            this.CurrentSection.Text = "目前位置";
-            this.CurrentSection.Width = 70;
+            this.CurrentSection.Text = "目前已下載";
+            this.CurrentSection.Width = 80;
             // 
             // EndSection
             // 
             this.EndSection.Tag = "EndSection";
-            this.EndSection.Text = "結束位置";
-            this.EndSection.Width = 70;
+            this.EndSection.Text = "欲下載到";
+            this.EndSection.Width = 80;
             // 
             // TotalSection
             // 
             this.TotalSection.Tag = "TotalSection";
-            this.TotalSection.Text = "總區塊";
-            this.TotalSection.Width = 70;
+            this.TotalSection.Text = "總共可下載";
+            this.TotalSection.Width = 80;
+            // 
+            // FailTimes
+            // 
+            this.FailTimes.Tag = "FailTimes";
+            this.FailTimes.Text = "重試次數";
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.ColumnCount = 7;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 106F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 127F));
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.txtBeginSection, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.txtTitle, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.txtEndSection, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.BtnBrowseDir, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.cbSaveDir, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.cbSaveDir, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.txtEndSection, 4, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label3, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.txtBeginSection, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label5, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.BtnBrowseDir, 6, 2);
             this.tableLayoutPanel1.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -359,7 +371,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(582, 128);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(508, 128);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // label1
@@ -381,40 +393,19 @@
             this.label2.Font = new System.Drawing.Font("新細明體", 10F);
             this.label2.Location = new System.Drawing.Point(3, 30);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 30);
+            this.label2.Size = new System.Drawing.Size(35, 30);
             this.label2.TabIndex = 0;
-            this.label2.Text = "起始位置";
+            this.label2.Text = "下載";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txtBeginSection
-            // 
-            this.txtBeginSection.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtBeginSection.Location = new System.Drawing.Point(105, 35);
-            this.txtBeginSection.Margin = new System.Windows.Forms.Padding(5);
-            this.txtBeginSection.Name = "txtBeginSection";
-            this.txtBeginSection.Size = new System.Drawing.Size(372, 22);
-            this.txtBeginSection.TabIndex = 1;
-            this.txtBeginSection.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UpdateTaskinfo_KeyUp);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label3.Font = new System.Drawing.Font("新細明體", 10F);
-            this.label3.Location = new System.Drawing.Point(3, 60);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 30);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "結束位置";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtTitle
             // 
+            this.tableLayoutPanel1.SetColumnSpan(this.txtTitle, 5);
             this.txtTitle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTitle.Location = new System.Drawing.Point(105, 5);
+            this.txtTitle.Location = new System.Drawing.Point(80, 5);
             this.txtTitle.Margin = new System.Windows.Forms.Padding(5);
             this.txtTitle.Name = "txtTitle";
-            this.txtTitle.Size = new System.Drawing.Size(372, 22);
+            this.txtTitle.Size = new System.Drawing.Size(296, 22);
             this.txtTitle.TabIndex = 1;
             this.txtTitle.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UpdateTaskinfo_KeyUp);
             // 
@@ -423,42 +414,74 @@
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Left;
             this.label4.Font = new System.Drawing.Font("新細明體", 10F);
-            this.label4.Location = new System.Drawing.Point(3, 90);
+            this.label4.Location = new System.Drawing.Point(3, 60);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(63, 38);
+            this.label4.Size = new System.Drawing.Size(63, 30);
             this.label4.TabIndex = 0;
             this.label4.Text = "儲存位置";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // cbSaveDir
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.cbSaveDir, 5);
+            this.cbSaveDir.FormattingEnabled = true;
+            this.cbSaveDir.Location = new System.Drawing.Point(80, 67);
+            this.cbSaveDir.Margin = new System.Windows.Forms.Padding(5, 7, 5, 5);
+            this.cbSaveDir.Name = "cbSaveDir";
+            this.cbSaveDir.Size = new System.Drawing.Size(296, 20);
+            this.cbSaveDir.TabIndex = 3;
+            // 
             // txtEndSection
             // 
-            this.txtEndSection.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtEndSection.Location = new System.Drawing.Point(105, 65);
+            this.txtEndSection.Location = new System.Drawing.Point(210, 35);
             this.txtEndSection.Margin = new System.Windows.Forms.Padding(5);
             this.txtEndSection.Name = "txtEndSection";
-            this.txtEndSection.Size = new System.Drawing.Size(372, 22);
+            this.txtEndSection.Size = new System.Drawing.Size(60, 22);
             this.txtEndSection.TabIndex = 1;
             this.txtEndSection.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UpdateTaskinfo_KeyUp);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Font = new System.Drawing.Font("新細明體", 10F);
+            this.label3.Location = new System.Drawing.Point(178, 30);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(24, 30);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "到";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // txtBeginSection
+            // 
+            this.txtBeginSection.Location = new System.Drawing.Point(110, 35);
+            this.txtBeginSection.Margin = new System.Windows.Forms.Padding(5);
+            this.txtBeginSection.Name = "txtBeginSection";
+            this.txtBeginSection.Size = new System.Drawing.Size(60, 22);
+            this.txtBeginSection.TabIndex = 1;
+            this.txtBeginSection.KeyUp += new System.Windows.Forms.KeyEventHandler(this.UpdateTaskinfo_KeyUp);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Right;
+            this.label5.Font = new System.Drawing.Font("新細明體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label5.Location = new System.Drawing.Point(79, 30);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(23, 30);
+            this.label5.TabIndex = 4;
+            this.label5.Text = " 從";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // BtnBrowseDir
             // 
-            this.BtnBrowseDir.Location = new System.Drawing.Point(485, 93);
+            this.BtnBrowseDir.Location = new System.Drawing.Point(384, 63);
             this.BtnBrowseDir.Name = "BtnBrowseDir";
             this.BtnBrowseDir.Size = new System.Drawing.Size(75, 23);
             this.BtnBrowseDir.TabIndex = 2;
             this.BtnBrowseDir.Text = "選擇";
             this.BtnBrowseDir.UseVisualStyleBackColor = true;
             this.BtnBrowseDir.Click += new System.EventHandler(this.BtnBrowseDir_Click);
-            // 
-            // cbSaveDir
-            // 
-            this.cbSaveDir.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbSaveDir.FormattingEnabled = true;
-            this.cbSaveDir.Location = new System.Drawing.Point(105, 97);
-            this.cbSaveDir.Margin = new System.Windows.Forms.Padding(5, 7, 5, 5);
-            this.cbSaveDir.Name = "cbSaveDir";
-            this.cbSaveDir.Size = new System.Drawing.Size(372, 20);
-            this.cbSaveDir.TabIndex = 3;
             // 
             // FormMain
             // 
@@ -504,16 +527,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox txtBeginSection;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtTitle;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtEndSection;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Button BtnBrowseDir;
         private System.Windows.Forms.ComboBox cbSaveDir;
         private System.Windows.Forms.ColumnHeader Author;
-        private System.Windows.Forms.ColumnHeader EndSection;
         private System.Windows.Forms.ColumnHeader CurrentSection;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
@@ -534,6 +554,11 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem 開啟檔案所在位置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 開啟檔案ToolStripMenuItem;
+        private System.Windows.Forms.TextBox txtBeginSection;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button BtnBrowseDir;
+        private System.Windows.Forms.ColumnHeader EndSection;
+        private System.Windows.Forms.ColumnHeader FailTimes;
 
     }
 }

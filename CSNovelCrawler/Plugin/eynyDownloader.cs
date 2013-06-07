@@ -64,13 +64,24 @@ namespace CSNovelCrawler.Plugin
 
         public override bool Analysis()
         {
+            //取TID
+            Regex r = new Regex(@"^http:\/\/\w*\.eyny.com\/thread-(?<TID>\d+)-(?<CurrentPage>\d+)-\w+\.html");
+            Match m = r.Match(TaskInfo.Url);
+            if (m.Success)
+            {
+                //taskInfo.CurrentPage = CommonTools.TryParse(m.Groups["CurrentPage"].Value, 0);
+                TaskInfo.Tid = m.Groups["TID"].Value;
+            }
+            TaskInfo.Url= Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)",
+                          "1");
+
             //用HtmlAgilityPack分析
             HtmlDocument htmlRoot = GetHtmlDocument(TaskInfo.Url);
 
             //取作者跟書名
             string htmlTitle = htmlRoot.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
-            Regex r = new Regex(@"(?<Author>\S+)\s*-\s*【(?<Title>\S+)】");
-            Match m = r.Match(htmlTitle);
+             r = new Regex(@"(?<Author>\S+)\s*-\s*【(?<Title>\S+)】");
+             m = r.Match(htmlTitle);
             if (m.Success)
             {
                 TaskInfo.Author = m.Groups["Author"].Value;
@@ -87,14 +98,7 @@ namespace CSNovelCrawler.Plugin
                 TaskInfo.TotalPage = CommonTools.TryParse(m.Groups["TotalPage"].Value, 0);
             }
 
-            //取TID
-            r = new Regex(@"^http:\/\/\w*\.eyny.com\/thread-(?<TID>\d+)-(?<CurrentPage>\d+)-\w+\.html");
-            m = r.Match(TaskInfo.Url);
-            if (m.Success)
-            {
-                //taskInfo.CurrentPage = CommonTools.TryParse(m.Groups["CurrentPage"].Value, 0);
-                TaskInfo.Tid = m.Groups["TID"].Value;
-            }
+            
 
             TaskInfo.PageSection = GetSection(htmlRoot);
             TaskInfo.TotalSection = TaskInfo.PageSection * (TaskInfo.TotalPage - 1) +
@@ -135,8 +139,7 @@ namespace CSNovelCrawler.Plugin
                     new RemoveSpecialCharacters(), 
                     new UniformFormat()
                 };
-            int numberErrors=0;
-
+            
 
 
             for (; TaskInfo.BeginSection <= TaskInfo.EndSection && !CurrentParameter.IsStop; TaskInfo.BeginSection++)
@@ -161,27 +164,29 @@ namespace CSNovelCrawler.Plugin
                 {
                     //計算要取的區塊在第幾個
                     int partSection = TaskInfo.BeginSection - ((lastPage - 1) * TaskInfo.PageSection) - 1;
-                    if (nodeHeaders != null)
+                    if (nodeHeaders == null)
                     {
-                        string tempTxt = nodeHeaders[partSection].InnerText;
+                        throw new Exception("下載資料為空的");
+                    }
+                    string tempTxt = nodeHeaders[partSection].InnerText;
 
 
-                        foreach (var item in typeSetting)
-                        {
+                    foreach (var item in typeSetting)
+                    {
 
-                            item.Set(ref tempTxt);
-
-                        }
-                        FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath);
+                        item.Set(ref tempTxt);
 
                     }
+                    FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath);
+
+                    
                 }
                 catch (Exception)
                 {
                     //CoreManager.LoggingManager.Debug(ex.ToString());
                     //發生錯誤，當前區塊重取
                     TaskInfo.BeginSection--;
-                    numberErrors++;
+                    TaskInfo.FailTimes++;
                     lastPage = 0;
 
                     continue;

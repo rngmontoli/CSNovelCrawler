@@ -136,6 +136,7 @@ namespace CSNovelCrawler.Core
                     {
                         if (taskInfo.TotalSection>taskInfo.CurrentSection)
                         {
+                            taskInfo.EndSection = taskInfo.TotalSection;
                             taskInfo.Status = DownloadStatus.SubscribeUpdate;
                             PreDelegates.Refresh(new ParaRefresh(taskInfo));
                             StartTask(taskInfo);

@@ -106,7 +106,7 @@ namespace CSNovelCrawler.UI
             }
         }
 
-        bool mCollpased = false;
+        bool mCollpased;
         /// <summary>
         /// 是否为折叠状态
         /// </summary>
@@ -115,7 +115,7 @@ namespace CSNovelCrawler.UI
             get { return mCollpased; }
         }
 
-        Rectangle mRect = new Rectangle();
+        Rectangle _mRect;
         /// <summary>
         /// 控制器绘制区域
         /// </summary>
@@ -125,19 +125,19 @@ namespace CSNovelCrawler.UI
             {
                 if (this.Orientation == Orientation.Horizontal)
                 {
-                    mRect.X = this.Width <= 80 ? 0 : this.Width / 2 - 40;
-                    mRect.Y = this.SplitterDistance;
-                    mRect.Width = 80;
-                    mRect.Height = 9;
+                    _mRect.X = this.Width <= 80 ? 0 : this.Width / 2 - 40;
+                    _mRect.Y = this.SplitterDistance;
+                    _mRect.Width = 80;
+                    _mRect.Height = 9;
                 }
                 else
                 {
-                    mRect.X = this.SplitterDistance;
-                    mRect.Y = this.Height <= 80 ? 0 : this.Height / 2 - 40;
-                    mRect.Width = 9;
-                    mRect.Height = 80;
+                    _mRect.X = this.SplitterDistance;
+                    _mRect.Y = this.Height <= 80 ? 0 : this.Height / 2 - 40;
+                    _mRect.Width = 9;
+                    _mRect.Height = 80;
                 }
-                return mRect;
+                return _mRect;
             }
         }
 

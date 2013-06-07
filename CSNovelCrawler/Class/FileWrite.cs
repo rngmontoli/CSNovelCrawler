@@ -10,7 +10,19 @@ namespace CSNovelCrawler.Class
         {
             try
             {
-                // Create a new file 
+                if (string.IsNullOrEmpty(fileName))
+                    throw new FileLoadException("目錄存取有誤");
+
+                string directoryName = Path.GetDirectoryName(fileName);
+
+                if (string.IsNullOrEmpty(directoryName))
+                    throw new FileLoadException("目錄存取有誤");
+
+                if (!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+
                 using (StreamWriter sw = File.AppendText(fileName))
                 {
                     sw.Write(txt);

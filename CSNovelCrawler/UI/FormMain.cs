@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
+
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CSNovelCrawler.Class;
@@ -23,15 +27,24 @@ namespace CSNovelCrawler.UI
             //啟動自動儲存任務
             CoreManager.TaskManager.StartSaveBackgroundWorker();
             SubscribeTimer.Interval = CoreManager.ConfigManager.Settings.SubscribeTime*60000;
+            if (!splitContainer1.IsCollpased) splitContainer1.CollpaseOrExpand();
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+           
+            
+
             //載入任務到UI
             foreach (TaskInfo task in CoreManager.TaskManager.TaskInfos)
             {
                 RefreshTask(new ParaRefresh(task));
             }
+            
+            Text = @"CSNovelCrawler v"+ FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+
         }
 
         //重新整理UI
@@ -63,13 +76,26 @@ namespace CSNovelCrawler.UI
             if (taskInfo.UiItem != null)
             {
                 var lvi = (ListViewItem)taskInfo.UiItem;
+                if (lvi.Selected)
+                {
+                    if (taskInfo.Status == DownloadStatus.Downloading)
+                    {
+                        DisableExtraOptions();
+                    }
+                    else
+                    {
+                        EnabledExtraOptions();
+                    }
+                    txtBeginSection.Text = taskInfo.BeginSection.ToString(CultureInfo.InvariantCulture);
+                    txtEndSection.Text = taskInfo.EndSection.ToString(CultureInfo.InvariantCulture);
+                }
                 UpdateListViewItem(lvi, taskInfo);
             }
             else  //ListView不存在此任務
             {
                 //建立ListViewItem
                 var lvi = new ListViewItem();
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 9; i++)
                 {
                     lvi.SubItems.Add("");
                 }
@@ -91,7 +117,8 @@ namespace CSNovelCrawler.UI
             lvi.SubItems[(int)LsvColumn.TotalSection].Text = taskInfo.TotalSection.ToString(CultureInfo.InvariantCulture);
             lvi.SubItems[(int)LsvColumn.EndSection].Text = taskInfo.EndSection.ToString(CultureInfo.InvariantCulture);
             lvi.SubItems[(int)LsvColumn.CurrentSection].Text = taskInfo.CurrentSection.ToString(CultureInfo.InvariantCulture);
-            lvi.SubItems[(int)LsvColumn.Author].Text = taskInfo.Author.ToString(CultureInfo.InvariantCulture); 
+            lvi.SubItems[(int)LsvColumn.Author].Text = taskInfo.Author.ToString(CultureInfo.InvariantCulture);
+            lvi.SubItems[(int)LsvColumn.FailTimes].Text = taskInfo.FailTimes.ToString(CultureInfo.InvariantCulture); 
         }
         public enum LsvColumn
         {
@@ -103,6 +130,7 @@ namespace CSNovelCrawler.UI
             CurrentSection,
             EndSection,
             TotalSection,
+            FailTimes
 
         }
         
@@ -126,44 +154,56 @@ namespace CSNovelCrawler.UI
         TaskInfo _selectedTaskInfo;
         private void lsv_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!splitContainer1.IsCollpased) splitContainer1.CollpaseOrExpand();
             var lv =(ListView) sender;
             DisableExtraOptions();
+            ClearExtraOptions();
             if (lv.SelectedItems.Count > 0)
             {
                 _selectedTaskInfo = null;
 
                 if (lv.SelectedItems.Count == 1)
                 {
+                    if (splitContainer1.IsCollpased) splitContainer1.CollpaseOrExpand();
                     ListViewItem sItem = lsv.SelectedItems[0];
-
                     TaskInfo taskInfo = GetTask(new Guid((string)sItem.Tag));
-                   
                     txtBeginSection.Text = taskInfo.BeginSection.ToString(CultureInfo.InvariantCulture);
-                    txtBeginSection.Enabled = true;
                     txtEndSection.Text = taskInfo.EndSection.ToString(CultureInfo.InvariantCulture);
-                    txtEndSection.Enabled = true;
                     txtTitle.Text = taskInfo.Title.ToString(CultureInfo.InvariantCulture);
-                    txtTitle.Enabled = true;
-                    _selectedTaskInfo = taskInfo;
                     cbSaveDir.Text = taskInfo.SaveDirectoryName.ToString(CultureInfo.InvariantCulture);
-                    cbSaveDir.Enabled = true;
+                    _selectedTaskInfo = taskInfo;
+                    if (taskInfo.Status!=DownloadStatus.Downloading)
+                    {
+                        EnabledExtraOptions();
+                    }
                     
                 }
             }
             
         }
 
+        private void EnabledExtraOptions()
+        {
+            txtBeginSection.Enabled = true;
+            txtEndSection.Enabled = true;
+            txtTitle.Enabled = true;
+            cbSaveDir.Enabled = true;
+        }
 
         private void DisableExtraOptions()
         {
-                txtBeginSection.Text = string.Empty;
+
                 txtBeginSection.Enabled = false;
-                txtEndSection.Text = string.Empty;
                 txtEndSection.Enabled = false;
-                txtTitle.Text = string.Empty;
                 txtTitle.Enabled = false;
-                cbSaveDir.Text = string.Empty;
                 cbSaveDir.Enabled = false;
+        }
+        private void ClearExtraOptions()
+        {
+            txtBeginSection.Text = string.Empty;
+            txtEndSection.Text = string.Empty;
+            txtTitle.Text = string.Empty;
+            cbSaveDir.Text = string.Empty;
         }
 
         /// <summary>
@@ -377,6 +417,7 @@ namespace CSNovelCrawler.UI
         {
             var form = new FormNew();
             form.Show();
+           
         }
 
         private void 設定ToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -384,7 +425,7 @@ namespace CSNovelCrawler.UI
             var config = new FormConfig();
             config.ShowDialog();
             config.Dispose();
-          
+            SubscribeTimer.Interval = CoreManager.ConfigManager.Settings.SubscribeTime * 60000;
         }
 
         private void 插件管理ToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -400,18 +441,26 @@ namespace CSNovelCrawler.UI
             {
                 var sItem = lsv.SelectedItems[0];
                 var taskInfo = GetTask(new Guid((string)sItem.Tag));
-                System.Diagnostics.Process.Start(taskInfo.SaveDirectoryName);
+                if (Directory.Exists(taskInfo.SaveDirectoryName))
+                {
+                    Process.Start(taskInfo.SaveDirectoryName);
+                }
             }
 
         }
 
         private void 開啟檔案ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lsv.SelectedItems.Count==1)
+            if (lsv.SelectedItems.Count == 1)
             {
                 var sItem = lsv.SelectedItems[0];
                 var taskInfo = GetTask(new Guid((string)sItem.Tag));
-                System.Diagnostics.Process.Start(taskInfo.SaveFullPath);
+                if (File.Exists(taskInfo.SaveFullPath))
+                {
+
+                    Process.Start(taskInfo.SaveFullPath);
+                }
+
             }
         }
 
@@ -462,11 +511,11 @@ namespace CSNovelCrawler.UI
                 }
 
             }
-            
 
-            
 
-            
+
+
+
 
         }
     }

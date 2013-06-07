@@ -39,7 +39,7 @@ namespace CSNovelCrawler.Class
         {
             string sline = "";
             bool needRedownload = false;
-            int remainTimes = 5;
+            int remainTimes = 3;
             
             do
             {
@@ -83,7 +83,7 @@ namespace CSNovelCrawler.Class
                 catch (Exception ex) 
                 {
                     //重試等待時間
-                    Thread.Sleep(1000);
+                    Thread.Sleep(3000);
                     needRedownload = true;
                   
                     //重試次數-1
@@ -95,6 +95,7 @@ namespace CSNovelCrawler.Class
                         CoreManager.LogManager.Debug(ex.ToString());
                         
                     }
+                    
                    
                 }
             } while (needRedownload);

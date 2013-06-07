@@ -29,6 +29,13 @@ namespace CSNovelCrawler.Class
             return Subscribe ? "※" : "";
         }
         /// <summary>
+        /// 失敗次數
+        /// </summary>
+        [XmlIgnore]
+        public int FailTimes { get; set; }
+
+
+        /// <summary>
         /// 標題
         /// </summary>
         public string Title { get; set; }

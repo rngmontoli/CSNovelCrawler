@@ -35,14 +35,30 @@ namespace CSNovelCrawler.Plugin
         public override bool Analysis()
         {
             
+            
+
+
+            //取TID
+            Regex r = new Regex(@"^http:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-(?<CurrentPage>\d+)-\w+\.html");
+            Match m = r.Match(TaskInfo.Url);
+            if (m.Success)
+            {
+                //taskInfo.CurrentPage = CommonTools.TryParse(m.Groups["CurrentPage"].Value, 0);
+                TaskInfo.Tid = m.Groups["TID"].Value;
+            }
+
+            TaskInfo.Url = string.Format("http://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
+                                       
+               
+
             //用HtmlAgilityPack分析
             HtmlDocument htmlRoot = GetHtmlDocument(TaskInfo.Url);
 
 
             ////取作者跟書名
             string htmlTitle = htmlRoot.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
-            Regex r = new Regex(@"(?<Title>.+)\s*作者\W\s*(?<Author>\S+)");
-            Match m = r.Match(htmlTitle);
+             r = new Regex(@"(?<Title>.+)\s*作者\W\s*(?<Author>\S+)");
+             m = r.Match(htmlTitle);
             if (m.Success)
             {
                 TaskInfo.Author = m.Groups["Author"].Value.Trim();
@@ -59,14 +75,7 @@ namespace CSNovelCrawler.Plugin
                 TaskInfo.TotalPage = CommonTools.TryParse(m.Groups["TotalPage"].Value, 0);
             }
 
-            //取TID
-            r = new Regex(@"^http:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-(?<CurrentPage>\d+)-\w+\.html");
-            m = r.Match(TaskInfo.Url);
-            if (m.Success)
-            {
-                //taskInfo.CurrentPage = CommonTools.TryParse(m.Groups["CurrentPage"].Value, 0);
-                TaskInfo.Tid = m.Groups["TID"].Value;
-            }
+            
 
             TaskInfo.PageSection = GetSection(
                     GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", (TaskInfo.TotalPage - 1).ToString(CultureInfo.InvariantCulture)))
@@ -79,9 +88,9 @@ namespace CSNovelCrawler.Plugin
 
             if (TaskInfo.BeginSection == 0)
             { TaskInfo.BeginSection = 1; }
-            if (TaskInfo.EndSection == 0)
+            if (TaskInfo.EndSection == 0 )
             { TaskInfo.EndSection = TaskInfo.TotalSection; }
-           
+            
             return true;
 
             
@@ -118,7 +127,7 @@ namespace CSNovelCrawler.Plugin
                     new RemoveSpecialCharacters(), 
                     new UniformFormat()
                 };
-            int numberErrors = 0;//記錄錯誤次數
+            
 
             for (; TaskInfo.BeginSection <= TaskInfo.EndSection && !CurrentParameter.IsStop; TaskInfo.BeginSection++)
             {
@@ -132,7 +141,7 @@ namespace CSNovelCrawler.Plugin
 
                     if (lastPage == 1)//卡提諾第一頁的特別處理
                     {
-                        switch (numberErrors%2)//常常取不到完整資料，用兩個網址取
+                        switch (TaskInfo.FailTimes%2)//常常取不到完整資料，用兩個網址取
                         {
                             case 0:
                                 url = string.Format("http://ck101.com/forum.php?mod=viewthread&tid={0}&r=findpost&page=1", TaskInfo.Tid);
@@ -165,9 +174,12 @@ namespace CSNovelCrawler.Plugin
                 {
                     //計算要取的區塊在第幾個
                     int partSection = TaskInfo.BeginSection - ((lastPage - 1) * TaskInfo.PageSection) - 1;
-                    if (nodeHeaders != null)
+                    if (nodeHeaders == null)
                     {
-                        string tempTxt = nodeHeaders[partSection].InnerText;
+                        throw new Exception("下載資料為空的");
+                    }
+
+                    string tempTxt = nodeHeaders[partSection].InnerText;
 
 
                         foreach (var item in typeSetting)
@@ -178,14 +190,14 @@ namespace CSNovelCrawler.Plugin
                         }
                         FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath);
 
-                    }
+                    
                 }
                 catch (Exception)
                 {
                     //CoreManager.LoggingManager.Debug(ex.ToString());
                     //發生錯誤，當前區塊重取
                     TaskInfo.BeginSection--;
-                    numberErrors++;
+                    TaskInfo.FailTimes++;
                     lastPage = 0;
 
                     continue;
