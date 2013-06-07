@@ -43,7 +43,7 @@ namespace CSNovelCrawler.UI
             CoreManager.ConfigManager.Settings.HideSysTray = chbSysTray.Checked;
             CoreManager.ConfigManager.Settings.WatchClipboard = chbWatchClipboard.Checked;
             CoreManager.ConfigManager.Settings.Logging = chbLogging.Checked;
-            CoreManager.ConfigManager.Settings.SubscribeTime = CommonTools.TryParse(txtSubTime.Text,10);
+            CoreManager.ConfigManager.Settings.SubscribeTime = CommonTools.TryParse(txtSubTime.Text, 10) < 1 ? 10 : CommonTools.TryParse(txtSubTime.Text, 10);
             CoreManager.ConfigManager.SaveSettings();
             Close();
         }

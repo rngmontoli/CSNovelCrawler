@@ -23,10 +23,10 @@ namespace CSNovelCrawler.Plugin
 
             ServicePointManager.Expect100Continue = false;
 
-            string postdata = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0WBD7ARSRyDoyl8n0HpXAPIEuJgubT+X9mDY0ncZ5Tl7IjD7xFtsoIPo69qjcdqRQlqzRZDscqED++/VRu1n6EbKqcyOisxN23RpROXOhKPGVs13Drn2bZBC0gh31EHXI0=";
+            string postdata = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0WBD7ARSRyDoyl8n0HpXAPIEuJgubT+X9mDY0ncZ5Tl7BnTKl0gJ79WwfclPChuPPU+S3MhyyLx2M/ugEgjDm8BrG7dRNRcXhzMBU6PhqqGLwASVuRjwg4wSvdORanK3GA=";
             if (plugin.Configuration.ContainsKey("PostData"))
             {
-                if (string.IsNullOrEmpty(plugin.Configuration["PostData"]))
+                if (!string.IsNullOrEmpty(plugin.Configuration["PostData"].Trim()))
                 {
                     postdata = plugin.Configuration["PostData"];
                 }

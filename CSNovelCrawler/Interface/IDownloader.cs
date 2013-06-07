@@ -33,7 +33,9 @@ namespace CSNovelCrawler.Interface
         [Description("檢查訂閱")]
         SubscribeCheck,
         [Description("更新訂閱")]
-        SubscribeUpdate
+        SubscribeUpdate,
+        [Description("訂閱無更新")]
+        SubscribeNoneUpdate
     }
 
     

@@ -120,11 +120,15 @@ namespace CSNovelCrawler.Core
             {
                 foreach (var taskInfo in TaskInfos.FindAll(taskInfo => 
                     taskInfo.Subscribe && 
-                    taskInfo.Status != DownloadStatus.Downloading
+                    taskInfo.Status != DownloadStatus.Downloading&&
+                    taskInfo.Status != DownloadStatus.SubscribeCheck&&
+                    taskInfo.Status != DownloadStatus.SubscribeUpdate &&
+                    taskInfo.Status != DownloadStatus.Error
+
                     ))
                 {
-                    if (taskInfo.CurrentSection >= taskInfo.TotalSection)
-                        return;
+                    //if (taskInfo.CurrentSection >= taskInfo.TotalSection)
+                    //    return;
                     taskInfo.Status = DownloadStatus.SubscribeCheck;
                     PreDelegates.Refresh(new ParaRefresh(taskInfo));
 
@@ -137,6 +141,12 @@ namespace CSNovelCrawler.Core
                             StartTask(taskInfo);
                         }
                     }
+                    else
+                    {
+                        taskInfo.Status = DownloadStatus.SubscribeNoneUpdate;
+                        PreDelegates.Refresh(new ParaRefresh(taskInfo));
+                    }
+                    
                 }
                 
             }) { IsBackground = true };

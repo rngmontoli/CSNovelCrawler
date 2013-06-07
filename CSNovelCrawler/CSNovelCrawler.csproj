@@ -70,6 +70,9 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon .ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EncryptAES">
       <HintPath>..\..\EncryptAES\EncryptAES\bin\Debug\EncryptAES.dll</HintPath>
@@ -196,8 +199,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NoneUsing\" />
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="favicon .ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
