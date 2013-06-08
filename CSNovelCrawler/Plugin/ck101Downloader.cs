@@ -178,17 +178,15 @@ namespace CSNovelCrawler.Plugin
                     {
                         throw new Exception("下載資料為空的");
                     }
-
+                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "ignore_js_op");
+                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "i");
                     string tempTxt = nodeHeaders[partSection].InnerText;
 
-
-                        foreach (var item in typeSetting)
-                        {
-
-                            item.Set(ref tempTxt);
-
-                        }
-                        FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath);
+                    foreach (var item in typeSetting)
+                    {
+                        item.Set(ref tempTxt);
+                    }
+                    FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath, TaskInfo.TextEncoding);
 
                     
                 }

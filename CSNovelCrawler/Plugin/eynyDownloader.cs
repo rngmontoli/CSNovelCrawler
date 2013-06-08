@@ -157,6 +157,7 @@ namespace CSNovelCrawler.Plugin
                     if (htmlRoot != null)
                     {
                         nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[1]/td[2]/div[2]/div[2]/div[1]/table[1]/tr[1]/td[1]");
+                        
                     }
                 }
 
@@ -168,6 +169,9 @@ namespace CSNovelCrawler.Plugin
                     {
                         throw new Exception("下載資料為空的");
                     }
+                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "div");
+                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "ignore_js_op");
+                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "i");
                     string tempTxt = nodeHeaders[partSection].InnerText;
 
 
@@ -177,7 +181,7 @@ namespace CSNovelCrawler.Plugin
                         item.Set(ref tempTxt);
 
                     }
-                    FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath);
+                    FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath,TaskInfo.TextEncoding);
 
                     
                 }

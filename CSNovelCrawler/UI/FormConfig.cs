@@ -22,6 +22,10 @@ namespace CSNovelCrawler.UI
             chbLogging.Checked = CoreManager.ConfigManager.Settings.Logging;
             chbSysTray.Checked = CoreManager.ConfigManager.Settings.HideSysTray;
             txtSubTime.Text = CoreManager.ConfigManager.Settings.SubscribeTime.ToString(CultureInfo.InvariantCulture);
+            rbUnicode.Checked = CoreManager.ConfigManager.Settings.TextEncoding == rbUnicode.Tag.ToString();
+            rbUTF8.Checked = CoreManager.ConfigManager.Settings.TextEncoding == rbUTF8.Tag.ToString();
+
+          
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -44,6 +48,9 @@ namespace CSNovelCrawler.UI
             CoreManager.ConfigManager.Settings.WatchClipboard = chbWatchClipboard.Checked;
             CoreManager.ConfigManager.Settings.Logging = chbLogging.Checked;
             CoreManager.ConfigManager.Settings.SubscribeTime = CommonTools.TryParse(txtSubTime.Text, 10) < 1 ? 10 : CommonTools.TryParse(txtSubTime.Text, 10);
+            CoreManager.ConfigManager.Settings.TextEncoding = rbUnicode.Checked
+                                                                  ? rbUnicode.Tag.ToString()
+                                                                  : rbUTF8.Checked ? rbUTF8.Tag.ToString():"utf-16";
             CoreManager.ConfigManager.SaveSettings();
             Close();
         }

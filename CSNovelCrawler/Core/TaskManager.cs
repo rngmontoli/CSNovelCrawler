@@ -32,10 +32,12 @@ namespace CSNovelCrawler.Core
             var taskInfo = new TaskInfo
                 {
                     SaveDirectoryName = CoreManager.ConfigManager.Settings.DefaultSaveFolder,
-                    Url = url
+                    Url = url,
+                    TextEncoding = System.Text.Encoding.GetEncoding(CoreManager.ConfigManager.Settings.TextEncoding),
+                    Status = DownloadStatus.TaskAnalysis
                 };
             taskInfo.SetPlugin(plugin);
-            taskInfo.Status = DownloadStatus.TaskAnalysis;
+            
 
             //向任務集合增加新任務
             Monitor.Enter(TaskInfosLock);

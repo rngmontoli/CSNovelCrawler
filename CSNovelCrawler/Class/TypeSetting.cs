@@ -11,7 +11,6 @@ namespace CSNovelCrawler.Class
     {
         public void Set(ref string txt)
         {
-            txt = Regex.Replace(txt, "google_.*", string.Empty);
             txt = Regex.Replace(txt, "&nbsp;", string.Empty);
             txt = Regex.Replace(txt, "&#65279;", string.Empty);
         }

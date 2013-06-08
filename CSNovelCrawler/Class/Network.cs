@@ -13,9 +13,34 @@ namespace CSNovelCrawler.Class
 
         public static HtmlDocument GetHtmlDocument(string htmlSource)
         {
+
             var htmlRoot = new HtmlDocument();
             htmlRoot.LoadHtml(htmlSource);
+
             return htmlRoot;
+        }
+
+        public static void RemoveSubHtmlNode(HtmlNode curHtmlNode, string subNodeToRemove)
+        {
+            
+            try
+            {
+                var foundAllSub = curHtmlNode.SelectNodes(subNodeToRemove);
+                if (foundAllSub != null)
+                {
+                    foreach (HtmlNode subNode in foundAllSub)
+                    {
+                        curHtmlNode.RemoveChild(subNode);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            //return curHtmlNode;
         }
 
         /// <summary>

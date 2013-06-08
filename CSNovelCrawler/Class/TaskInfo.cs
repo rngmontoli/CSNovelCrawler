@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Xml.Serialization;
 using CSNovelCrawler.Interface;
 using System.ComponentModel;
@@ -34,6 +35,14 @@ namespace CSNovelCrawler.Class
         [XmlIgnore]
         public int FailTimes { get; set; }
 
+        private Encoding _textEncoding;
+
+        [XmlIgnore]
+        public Encoding TextEncoding { 
+            get { return _textEncoding ?? (_textEncoding = FileWrite.GetFileEncoding(SaveFullPath)); }
+            set { _textEncoding = value; }
+        
+        }
 
         /// <summary>
         /// 標題

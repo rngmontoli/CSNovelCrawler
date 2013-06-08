@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace CSNovelCrawler.Core
@@ -11,7 +12,7 @@ namespace CSNovelCrawler.Core
         public bool WatchClipboard = true;
         public bool HideSysTray = true;
         public bool Logging = false;
-
+        public string TextEncoding = Encoding.Unicode.BodyName;
         public int SubscribeTime =10;
 
         [XmlArray("Folders")]
