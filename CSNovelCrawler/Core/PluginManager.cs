@@ -29,7 +29,8 @@ namespace CSNovelCrawler.Core
                     new BiqugePiugin(),
                     new LknovelPlugin(),
                     new RanwenPlugin(),
-                    new HjwzwPlugin()
+                    new HjwzwPlugin(),
+                    new EightnovelPlugin()
                     
                 };
             foreach (var plugin in _plugins)

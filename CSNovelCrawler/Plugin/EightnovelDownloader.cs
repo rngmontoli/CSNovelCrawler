@@ -9,9 +9,9 @@ using System.Globalization;
 
 namespace CSNovelCrawler.Plugin
 {
-    public class RanwenDownloader : AbstractDownloader
+    public class EightnovelDownloader : AbstractDownloader
     {
-        public RanwenDownloader()
+        public EightnovelDownloader()
         {
             CurrentParameter = new DownloadParameter
                 {
@@ -19,12 +19,10 @@ namespace CSNovelCrawler.Plugin
                 };
         }
 
-
-
         public HtmlDocument GetHtmlDocument(string url)
         {
             CurrentParameter.Url = url;
-            return Network.GetHtmlDocument(Network.GetHtmlSource(CurrentParameter, Encoding.GetEncoding("GBK")));
+            return Network.GetHtmlDocument(Network.GetHtmlSource(CurrentParameter, Encoding.GetEncoding("BIG5")));
         }
 
         /// <summary>
@@ -34,31 +32,36 @@ namespace CSNovelCrawler.Plugin
         {
 
             //取TID
-            Regex r = new Regex(@"(^http:\/\/\w*\.*ranwen.net\/info_(?<TID>\d+))|(^http:\/\/\w*\.*ranwen.net(\/files)*(\/article)*\/\d+\/(?<TID>\d+))");
+            Regex r = new Regex(@"^http:\/\/\w*\.*8novel.com(\/books)*(\/novelbook_)(?<TID>\d+)");
             Match m = r.Match(TaskInfo.Url);
             if (m.Success)
             {
                 TaskInfo.Tid = m.Groups["TID"].Value;
             }
 
-            TaskInfo.Url = string.Format("http://www.ranwen.net/files/article/{0}/{1}/index.html", (CommonTools.TryParse(TaskInfo.Tid, 0) / 1000).ToString(CultureInfo.InvariantCulture), TaskInfo.Tid);
+            TaskInfo.Url = string.Format("http://8novel.com/books/novelbook_{0}.html", TaskInfo.Tid);
 
-
+            
 
             //用HtmlAgilityPack分析
             HtmlDocument htmlRoot = GetHtmlDocument(TaskInfo.Url);
-
+            //*[@id="form1"]/div[3]/table[7]/tbody/tr[1]/td/h1
 
             ////取作者跟書名
-            TaskInfo.Title =
-               htmlRoot.DocumentNode.SelectSingleNode("/html/html/body/h1")
-                        .InnerText;
-            TaskInfo.Author =
-                htmlRoot.DocumentNode.SelectSingleNode("/html/html/body/div[3]").InnerText.Substring(3);
+            TaskInfo.Title = htmlRoot.DocumentNode.SelectSingleNode("/body/table[2]/tr[2]/td[3]/table[2]/tr/td[2]/table/tr[1]/td[2]/font[1]").InnerText;
+            TaskInfo.Author = htmlRoot.DocumentNode.SelectSingleNode("/body/table[2]/tr[2]/td[3]/table[2]/tr/td[2]/table/tr[2]/td/font[1]").InnerText;
+
 
             
-      
-            
+            //var htmlTitle = htmlRoot.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
+            //r = new Regex(@"(?<Title>\S+)?\/(?<Author>\S+)\/");
+            //m = r.Match(htmlTitle);
+            //if (m.Success)
+            //{
+            //    TaskInfo.Author = m.Groups["Author"].Value.Trim();
+                
+            //}
+
             TaskInfo.TotalSection = SectionNames.Count;
 
 
@@ -77,15 +80,15 @@ namespace CSNovelCrawler.Plugin
 
         }
 
-        private List<int> _sectionNames;
+        private List<string> _sectionNames;
 
-        private List<int> SectionNames
+        private List<string> SectionNames
         {
             get
             {
                 if (_sectionNames == null || _sectionNames.Count == 0)
                 {
-                    _sectionNames=new List<int>();
+                    _sectionNames=new List<string>();
                     GetTotalSection();
 
                 }
@@ -100,17 +103,17 @@ namespace CSNovelCrawler.Plugin
         public void GetTotalSection()
         {
             HtmlDocument htmlRoot = GetHtmlDocument(TaskInfo.Url);
-            Regex r = new Regex(@"<a href=\S(?<SectionName>\d+)\.html\S");
-            MatchCollection matchs = r.Matches(htmlRoot.DocumentNode.SelectSingleNode("//*[@id=\"defaulthtml4\"]/table").InnerHtml);
+            Regex r = new Regex(@"<a href=\S(\/readbook)*\/(?<SectionName>\d+\/\d+\/\d+)");
+            MatchCollection matchs = r.Matches(htmlRoot.DocumentNode.SelectSingleNode("/body/table[2]/tr[2]/td[3]/table[3]").InnerHtml);
             foreach (Match m in matchs)
             {
-                int temp = CommonTools.TryParse(m.Groups["SectionName"].Value, 0);
+                string temp = m.Groups["SectionName"].Value.Trim();
                 if (!_sectionNames.Contains(temp))
                 {
                     _sectionNames.Add(temp);
                 }
             }
-            _sectionNames.Sort();
+            //_sectionNames.Sort();
         }
 
         public override bool Download()
@@ -121,37 +124,36 @@ namespace CSNovelCrawler.Plugin
 
 
 
-
           
 
             //排版插件
             var typeSetting = new Collection<ITypeSetting>
-                { new BrRegex(),
+                { 
+                    new BrRegex(),
                     new HtmlDecode(),
                     new UniformFormat(),
-                    new Traditional()
+                    
+                    
                 };
 
 
             for (; TaskInfo.BeginSection <= TaskInfo.EndSection && !CurrentParameter.IsStop; TaskInfo.BeginSection++)
             {
-                string url = string.Format("http://www.ranwen.net/files/article/{0}/{1}/{2}.html", 
-                    (CommonTools.TryParse(TaskInfo.Tid, 0) / 1000).ToString(CultureInfo.InvariantCulture), 
-                    TaskInfo.Tid,
-                    SectionNames[TaskInfo.CurrentSection].ToString(CultureInfo.InvariantCulture));//組合網址
+                
 
-                HtmlDocument htmlRoot = GetHtmlDocument(url);
 
+    
+                
                 try
                 {
+                    string url = string.Format("http://8novel.com/readbook/{0}.html",
+                    SectionNames[TaskInfo.CurrentSection].ToString(CultureInfo.InvariantCulture));//組合網址
 
-                    string tempTextFile = htmlRoot.DocumentNode.SelectSingleNode("//*[@id=\"bgdiv\"]/table[2]/tbody/tr[1]/td/div[1]/h1").InnerText
-                    +"\r\n";
-
-                    var node=htmlRoot.DocumentNode.SelectSingleNode("//*[@id=\"content\"]");
-                    Network.RemoveSubHtmlNode(node, "div");
-
-                    tempTextFile += node.InnerHtml+ "\r\n";
+                    HtmlDocument htmlRoot = GetHtmlDocument(url);
+                    var htmlNode = htmlRoot.DocumentNode.SelectSingleNode("//*[@id=\"contentview\"]/tr[2]/td[2]/table[4]");
+     
+                    string tempTextFile = htmlNode.SelectSingleNode("tr[1]/td[1]").InnerText + "\r\n" + htmlNode.SelectSingleNode("tr[2]/td[1]/div/p").InnerHtml;
+                       
                     foreach (var item in typeSetting)
                     {
                         item.Set(ref tempTextFile);
@@ -178,3 +180,4 @@ namespace CSNovelCrawler.Plugin
         }
     }
 }
+

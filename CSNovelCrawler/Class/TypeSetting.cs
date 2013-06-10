@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using System.Web;
 
 namespace CSNovelCrawler.Class
 {
@@ -22,22 +23,22 @@ namespace CSNovelCrawler.Class
         }
     }
 
-    public class RemoveSpecialCharacters:ITypeSetting
-    {
-        public void Set(ref string txt)
-        {
-            txt = Regex.Replace(txt, "&quot;", "\"");
-            txt = Regex.Replace(txt, "&nbsp;", " ");
-            txt = Regex.Replace(txt, "&#65279;", string.Empty);
-        }
-    }
+    //public class RemoveSpecialCharacters:ITypeSetting
+    //{
+    //    public void Set(ref string txt)
+    //    {
+    //        txt = Regex.Replace(txt, "&quot;", "\"");
+    //        txt = Regex.Replace(txt, "&nbsp;", " ");
+    //        txt = Regex.Replace(txt, "&#65279;", string.Empty);
+    //    }
+    //}
     public class UniformFormat : ITypeSetting
     {
         public void Set(ref string txt)
         {
             txt = Regex.Replace(txt, @"(^\s+)", string.Empty,RegexOptions.Multiline);
             txt = Regex.Replace(txt, @"^(?=\S+)", @"　　", RegexOptions.Multiline);
-            txt = Regex.Replace(txt, @"[\r\n]*$[\r\n]*", "\r\n\r\n", RegexOptions.Multiline);
+            txt = Regex.Replace(txt, @"[\r|\n]*$[\r|\n]*", "\r\n\r\n", RegexOptions.Multiline);
         }
     }
 
@@ -46,6 +47,14 @@ namespace CSNovelCrawler.Class
         public void Set(ref string txt)
         {
              txt = CharSetConverter.ToTraditional(txt);
+        }
+    }
+
+    public class HtmlDecode : ITypeSetting
+    {
+        public void Set(ref string txt)
+        {
+             txt = Regex.Replace(txt, @"&#\d+;", m => HttpUtility.HtmlDecode(m.Value));
         }
     }
 

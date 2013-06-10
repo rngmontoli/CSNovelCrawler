@@ -128,7 +128,7 @@ namespace CSNovelCrawler.Plugin
             var typeSetting = new Collection<ITypeSetting>
                 { 
                     
-                    new RemoveSpecialCharacters(),
+                    new HtmlDecode(),
                     new UniformFormat(),
                     new HjwzwRegex()
                 };

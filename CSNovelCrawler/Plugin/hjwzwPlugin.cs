@@ -6,7 +6,7 @@ using CSNovelCrawler.Interface;
 namespace CSNovelCrawler.Plugin
 {
 
-    [PluginInformation("hjwzwDownloader", "hjwzw.com插件", "Montoli", "1.0.0.0", "黃金屋下載插件", "http://www.biquge.com")]
+    [PluginInformation("hjwzwDownloader", "hjwzw.com插件", "Montoli", "1.0.1.0", "黃金屋下載插件", "http://www.biquge.com")]
     public class HjwzwPlugin : IPlugin
     {
         public HjwzwPlugin()

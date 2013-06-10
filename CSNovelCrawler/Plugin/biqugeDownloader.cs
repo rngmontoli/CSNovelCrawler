@@ -131,7 +131,7 @@ namespace CSNovelCrawler.Plugin
             //排版插件
             var typeSetting = new Collection<ITypeSetting>
                 {  new BrRegex(),
-                    new RemoveSpecialCharacters(),
+                    new HtmlDecode(),
                     new UniformFormat(),
                     new Traditional()
                 };

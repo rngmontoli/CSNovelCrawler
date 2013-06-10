@@ -6,7 +6,7 @@ using CSNovelCrawler.Interface;
 namespace CSNovelCrawler.Plugin
 {
 
-    [PluginInformation("LknovelDownloader", "lknovel.lightnovel.cn插件", "Montoli", "1.1.0.0", "轻之国度轻小说文库下載插件", "http://lknovel.lightnovel.cn/")]
+    [PluginInformation("LknovelDownloader", "lknovel.lightnovel.cn插件", "Montoli", "1.0.1.0", "轻之国度轻小说文库下載插件", "http://lknovel.lightnovel.cn/")]
     public class LknovelPlugin : IPlugin
     {
         public LknovelPlugin()
