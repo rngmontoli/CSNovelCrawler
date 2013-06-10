@@ -54,7 +54,7 @@ namespace CSNovelCrawler.Class
     {
         public void Set(ref string txt)
         {
-             txt = Regex.Replace(txt, @"&#\d+;", m => HttpUtility.HtmlDecode(m.Value));
+            txt = Regex.Replace(txt, @"&#?\w+;", m => HttpUtility.HtmlDecode(m.Value));
         }
     }
 
