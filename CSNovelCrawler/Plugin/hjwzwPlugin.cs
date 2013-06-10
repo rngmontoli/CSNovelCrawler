@@ -5,22 +5,23 @@ using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Plugin
 {
-    [PluginInformation("ck101Downloader", "ck101.com插件", "Montoli", "1.0.0.1", "卡提諾下載插件", "http://ck101.com")]
-    public class Ck101Plugin : IPlugin
+
+    [PluginInformation("hjwzwDownloader", "hjwzw.com插件", "Montoli", "1.0.0.0", "黃金屋下載插件", "http://www.biquge.com")]
+    public class HjwzwPlugin : IPlugin
     {
-        public Ck101Plugin()
+        public HjwzwPlugin()
         {
             Extensions =new Dictionary<string, object>();
         }
 
         public IDownloader CreateDownloader()
         {
-            return new Ck101Downloader();
+            return new HjwzwDownloader();
         }
 
         public bool CheckUrl(string url)
         {
-            Regex r = new Regex(@"(^http:\/\/\w*\.*ck101.com\/thread-\d+-\d+-\w+\.html)");
+            Regex r = new Regex(@"^http:\/\/\w*\.*hjwzw.com(\/Book)*(\/Chapter)*\/(?<TID>\d+)");
             Match m = r.Match(url);
             if (m.Success)
             {
@@ -31,12 +32,12 @@ namespace CSNovelCrawler.Plugin
 
         public string GetHash(string url)
         {
-            Regex r = new Regex(@"(^http:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-\d+-\w+\.html)");
+            Regex r = new Regex(@"^http:\/\/\w*\.*hjwzw.com(\/Book)*(\/Chapter)*\/(?<TID>\d+)");
             Match m = r.Match(url);
             if (m.Success)
             {
 
-                return "ck101" + m.Groups["TID"].Value;
+                return "hjwzw" + m.Groups["TID"].Value;
             }
             return null;
         }

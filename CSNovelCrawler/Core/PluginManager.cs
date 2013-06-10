@@ -25,7 +25,12 @@ namespace CSNovelCrawler.Core
             _plugins = new List<IPlugin>
                 { 
                     new EynyPlugin(), 
-                    new Ck101Plugin()
+                    new Ck101Plugin(),
+                    new BiqugePiugin(),
+                    new LknovelPlugin(),
+                    new RanwenPlugin(),
+                    new HjwzwPlugin()
+                    
                 };
             foreach (var plugin in _plugins)
             {

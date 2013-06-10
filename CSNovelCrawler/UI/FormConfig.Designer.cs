@@ -98,7 +98,7 @@
             this.chbSysTray.Name = "chbSysTray";
             this.chbSysTray.Size = new System.Drawing.Size(144, 16);
             this.chbSysTray.TabIndex = 6;
-            this.chbSysTray.Text = "關閉時，縮小到系統列";
+            this.chbSysTray.Text = "最小化時縮小到系統列";
             this.chbSysTray.UseVisualStyleBackColor = true;
             // 
             // label2

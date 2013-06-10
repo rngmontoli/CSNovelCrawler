@@ -5,22 +5,22 @@ using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Plugin
 {
-    [PluginInformation("ck101Downloader", "ck101.com插件", "Montoli", "1.0.0.1", "卡提諾下載插件", "http://ck101.com")]
-    public class Ck101Plugin : IPlugin
+    [PluginInformation("biqugeDownloader", "biquge.com插件", "Montoli", "1.0.0.1", "笔趣阁下載插件", "http://www.biquge.com")]
+    public class BiqugePiugin : IPlugin
     {
-        public Ck101Plugin()
+        public BiqugePiugin()
         {
             Extensions =new Dictionary<string, object>();
         }
 
         public IDownloader CreateDownloader()
         {
-            return new Ck101Downloader();
+            return new BiqugeDownloader();
         }
 
         public bool CheckUrl(string url)
         {
-            Regex r = new Regex(@"(^http:\/\/\w*\.*ck101.com\/thread-\d+-\d+-\w+\.html)");
+            Regex r = new Regex(@"^http:\/\/\w*\.*biquge.com\/(?<TID>\d+_\d+)");
             Match m = r.Match(url);
             if (m.Success)
             {
@@ -31,12 +31,12 @@ namespace CSNovelCrawler.Plugin
 
         public string GetHash(string url)
         {
-            Regex r = new Regex(@"(^http:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-\d+-\w+\.html)");
+            Regex r = new Regex(@"^http:\/\/\w*\.*biquge.com\/(?<TID>\d+_\d+)");
             Match m = r.Match(url);
             if (m.Success)
             {
 
-                return "ck101" + m.Groups["TID"].Value;
+                return "biquge" + m.Groups["TID"].Value;
             }
             return null;
         }

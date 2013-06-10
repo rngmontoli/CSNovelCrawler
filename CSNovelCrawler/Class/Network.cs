@@ -148,7 +148,7 @@ namespace CSNovelCrawler.Class
             webReq.KeepAlive = true;
             //將剛剛取得的cookie加上去
             webReq.CookieContainer = para.Cookies;
-
+            webReq.Timeout = 30000;
             //webReq.Proxy = proxy;
             return GetHtmlSource(webReq, encode);
         }

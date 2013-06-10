@@ -132,46 +132,57 @@ namespace CSNovelCrawler.Plugin
             for (; TaskInfo.BeginSection <= TaskInfo.EndSection && !CurrentParameter.IsStop; TaskInfo.BeginSection++)
             {
                 //要下載的頁數
-                int newCurrentPage = (TaskInfo.BeginSection + TaskInfo.PageSection - 1) / TaskInfo.PageSection;
-
-                if (lastPage != newCurrentPage)//之前下載的頁數跟當前要下載的頁數
-                {
-                    lastPage = newCurrentPage;//記錄下載頁數，下次如果一樣就不用重抓
-                    string url = urlHead + lastPage.ToString(CultureInfo.InvariantCulture) + urlTail;//組合網址
-
-                    if (lastPage == 1)//卡提諾第一頁的特別處理
-                    {
-                        switch (TaskInfo.FailTimes%2)//常常取不到完整資料，用兩個網址取
-                        {
-                            case 0:
-                                url = string.Format("http://ck101.com/forum.php?mod=viewthread&tid={0}&r=findpost&page=1", TaskInfo.Tid);
-                                break;
-
-                            case 1:
-                                url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
-                                break;
-                        }
-                    }
-
-                    HtmlDocument htmlRoot = GetHtmlDocument(url);
-
-                    if (htmlRoot != null)
-                    {
-                        if (lastPage != 1)
-                        {
-                            nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
-                        }
-                        else
-                        {
-                            nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
-                        }
-                    }
-                }
-
                 
 
                 try
                 {
+                    int newCurrentPage = (TaskInfo.BeginSection + TaskInfo.PageSection - 1) / TaskInfo.PageSection;
+
+                    if (lastPage != newCurrentPage)//之前下載的頁數跟當前要下載的頁數
+                    {
+                        lastPage = newCurrentPage;//記錄下載頁數，下次如果一樣就不用重抓
+                        string url = urlHead + lastPage.ToString(CultureInfo.InvariantCulture) + urlTail;//組合網址
+
+                        if (lastPage == 1)//卡提諾第一頁的特別處理
+                        {
+                            switch (TaskInfo.FailTimes % 2)//常常取不到完整資料，用兩個網址取
+                            {
+                                case 0:
+                                    url = string.Format("http://ck101.com/forum.php?mod=viewthread&tid={0}&r=findpost&page=1", TaskInfo.Tid);
+                                    break;
+
+                                case 1:
+                                    url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
+                                    break;
+                            }
+                        }
+
+                        HtmlDocument htmlRoot = GetHtmlDocument(url);
+
+                        if (htmlRoot != null)
+                        {
+                            if (lastPage != 1)
+                            {
+                                nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                            }
+                            else
+                            {
+                                //"//*[@id=\"postlist\"]/div[3]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]"
+                                nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                                if (nodeHeaders.Count == 1)
+                                {
+                                    foreach (var node in htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div[3]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]"))
+                                    {
+                                        nodeHeaders.Add(node);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+
+
+
                     //計算要取的區塊在第幾個
                     int partSection = TaskInfo.BeginSection - ((lastPage - 1) * TaskInfo.PageSection) - 1;
                     if (nodeHeaders == null)
@@ -188,7 +199,7 @@ namespace CSNovelCrawler.Plugin
                     }
                     FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath, TaskInfo.TextEncoding);
 
-                    
+
                 }
                 catch (Exception)
                 {

@@ -88,17 +88,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\CharSetConverter.cs" />
     <Compile Include="Class\DictionaryExtension.cs" />
     <Compile Include="Core\ConfigManager.cs" />
     <Compile Include="Core\CustomSettings.cs" />
     <Compile Include="Core\LogManager.cs" />
     <Compile Include="Plugin\abstractDownloader.cs" />
+    <Compile Include="Plugin\biqugeDownloader.cs" />
+    <Compile Include="Plugin\biqugePiugin.cs" />
     <Compile Include="Plugin\eynySettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Plugin\eynySettingsForm.Designer.cs">
       <DependentUpon>eynySettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Plugin\hjwzwDownloader.cs" />
+    <Compile Include="Plugin\hjwzwPlugin.cs" />
+    <Compile Include="Plugin\lknovelDownloader.cs" />
+    <Compile Include="Plugin\lknovelPlugin.cs" />
+    <Compile Include="Plugin\ranwenDownloader.cs" />
+    <Compile Include="Plugin\ranwenPlugin.cs" />
     <Compile Include="UI\FormConfig.cs">
       <SubType>Form</SubType>
     </Compile>

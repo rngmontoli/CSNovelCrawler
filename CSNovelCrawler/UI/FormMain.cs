@@ -348,32 +348,7 @@ namespace CSNovelCrawler.UI
 
         }
 
-        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            switch (e.CloseReason)
-            {
-                case CloseReason.UserClosing:
-                    e.Cancel = true;
-                    if (CoreManager.ConfigManager.Settings.HideSysTray)
-                    {
-                        
-                        
-                        notifyIcon1.Visible = true;
-                        Invoke(new MethodInvoker(() => notifyIcon1.ShowBalloonTip(1500, "縮小到系統列", "連點圖示開啟視窗，或是按右鍵退出", ToolTipIcon.Info)));
-                        
-                        Hide();
-                        break;
-                    }
-                    Cursor = Cursors.WaitCursor;
-                    CoreManager.TaskManager.BreakAndSaveAllTasks();
-                    break;
-
-                case CloseReason.ApplicationExitCall:
-                    break;
-
-            } 
-            
-        }
+        
 
      
 
@@ -397,11 +372,7 @@ namespace CSNovelCrawler.UI
 
 
 
-        private void 退出程式ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            CoreManager.TaskManager.BreakAndSaveAllTasks();
-        }
+      
 
         private void toolStripSubscription_Click(object sender, EventArgs e)
         {
@@ -517,6 +488,44 @@ namespace CSNovelCrawler.UI
 
 
 
+        }
+
+
+        private void 退出程式ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            switch (e.CloseReason)
+            {
+                case CloseReason.UserClosing:
+                    e.Cancel = true;
+                    Cursor = Cursors.WaitCursor;
+                    CoreManager.TaskManager.BreakAndSaveAllTasks();
+                    break;
+
+                case CloseReason.ApplicationExitCall:
+                    break;
+
+            }
+
+        }
+        private void FormMain_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                if (CoreManager.ConfigManager.Settings.HideSysTray)
+                {
+
+
+                    notifyIcon1.Visible = true;
+                    Invoke(new MethodInvoker(() => notifyIcon1.ShowBalloonTip(1500, "縮小到系統列", "連點圖示開啟視窗，或是按右鍵退出", ToolTipIcon.Info)));
+
+                    Hide();
+                }
+            }
         }
     }
 

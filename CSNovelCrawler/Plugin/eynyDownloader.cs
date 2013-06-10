@@ -144,25 +144,27 @@ namespace CSNovelCrawler.Plugin
 
             for (; TaskInfo.BeginSection <= TaskInfo.EndSection && !CurrentParameter.IsStop; TaskInfo.BeginSection++)
             {
-                //要下載的頁數
-                int newCurrentPage = (TaskInfo.BeginSection + TaskInfo.PageSection - 1) / TaskInfo.PageSection;
-
-                if (lastPage != newCurrentPage)//之前下載的頁數跟當前要下載的頁數
-                {
-                    lastPage = newCurrentPage;//記錄下載頁數，下次如果一樣就不用重抓
-                    string url = urlHead + lastPage + urlTail;//組合網址
-
-                    HtmlDocument htmlRoot = GetHtmlDocument(url);
-
-                    if (htmlRoot != null)
-                    {
-                        nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[1]/td[2]/div[2]/div[2]/div[1]/table[1]/tr[1]/td[1]");
-                        
-                    }
-                }
+                
 
                 try
                 {
+                    //要下載的頁數
+                    int newCurrentPage = (TaskInfo.BeginSection + TaskInfo.PageSection - 1) / TaskInfo.PageSection;
+
+                    if (lastPage != newCurrentPage)//之前下載的頁數跟當前要下載的頁數
+                    {
+                        lastPage = newCurrentPage;//記錄下載頁數，下次如果一樣就不用重抓
+                        string url = urlHead + lastPage + urlTail;//組合網址
+
+                        HtmlDocument htmlRoot = GetHtmlDocument(url);
+
+                        if (htmlRoot != null)
+                        {
+                            nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[1]/td[2]/div[2]/div[2]/div[1]/table[1]/tr[1]/td[1]");
+
+                        }
+                    }
+
                     //計算要取的區塊在第幾個
                     int partSection = TaskInfo.BeginSection - ((lastPage - 1) * TaskInfo.PageSection) - 1;
                     if (nodeHeaders == null)
