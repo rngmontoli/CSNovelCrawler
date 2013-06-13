@@ -18,6 +18,7 @@ namespace CSNovelCrawler.Plugin
             CurrentParameter = new DownloadParameter
                 {
                 UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
+                Timeout = 10000
             };
         }
     
@@ -145,13 +146,15 @@ namespace CSNovelCrawler.Plugin
 
                         if (lastPage == 1)//卡提諾第一頁的特別處理
                         {
-                            switch (TaskInfo.FailTimes % 2)//常常取不到完整資料，用兩個網址取
+                            switch (TaskInfo.FailTimes % 2)//常常取不到完整資料，用多個網址取
                             {
                                 case 0:
-                                    url = string.Format("http://ck101.com/forum.php?mod=viewthread&tid={0}&r=findpost&page=1", TaskInfo.Tid);
+                                    url = string.Format("http://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
                                     break;
-
                                 case 1:
+                                    url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
+                                    break;
+                                case 2:
                                     url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
                                     break;
                             }
@@ -168,15 +171,35 @@ namespace CSNovelCrawler.Plugin
                             else
                             {
                                 //"//*[@id=\"postlist\"]/div[3]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]"
-                                nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
-                                if (nodeHeaders.Count == 1)
-                                {
-                                    foreach (var node in htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div[3]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]"))
-                                    {
-                                        nodeHeaders.Add(node);
-                                    }
+                               // nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
 
+                                switch (TaskInfo.FailTimes % 3)//常常取不到完整資料，用多個網址取
+                                {
+                                    case 0:
+                                        var html = htmlRoot.DocumentNode.SelectSingleNode("//*[@id=\"postlist\"]").InnerHtml;
+                                        html +=
+                                            GetHtmlDocument(
+                                                string.Format("http://ck101.com/forum.php?mod=threadlazydata&tid={0}",
+                                                              TaskInfo.Tid)).DocumentNode.InnerHtml;
+                                        htmlRoot.LoadHtml(html);
+                                        nodeHeaders = htmlRoot.DocumentNode.SelectNodes("/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                                        break;
+                                    default:
+
+                                        nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                                        break;
                                 }
+                                
+                                
+                               
+                                 if (nodeHeaders.Count == 1)
+                                 {
+                                     foreach (var node in htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div[3]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]"))
+                                     {
+                                         nodeHeaders.Add(node);
+                                     }
+
+                                 }
                             }
                         }
                     }

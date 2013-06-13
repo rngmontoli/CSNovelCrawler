@@ -149,6 +149,11 @@ namespace CSNovelCrawler.Class
             //將剛剛取得的cookie加上去
             webReq.CookieContainer = para.Cookies;
             webReq.Timeout = 30000;
+            if (para.Timeout != 0)
+            {
+                webReq.Timeout = para.Timeout;
+            }
+            
             //webReq.Proxy = proxy;
             return GetHtmlSource(webReq, encode);
         }
@@ -191,5 +196,7 @@ namespace CSNovelCrawler.Class
         /// 读取或设置下载请求所使用的User-Agent值
         /// </summary>
         public string UserAgent { get; set; }
+
+        public int Timeout { get; set; }
     }
 }
