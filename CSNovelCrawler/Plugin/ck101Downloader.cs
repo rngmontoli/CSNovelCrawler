@@ -189,6 +189,7 @@ namespace CSNovelCrawler.Plugin
                     {
                         throw new Exception("下載資料為空的");
                     }
+                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "div");
                     Network.RemoveSubHtmlNode(nodeHeaders[partSection], "ignore_js_op");
                     Network.RemoveSubHtmlNode(nodeHeaders[partSection], "i");
                     string tempTxt = nodeHeaders[partSection].InnerText;
