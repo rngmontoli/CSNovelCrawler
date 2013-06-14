@@ -68,25 +68,28 @@ namespace CSNovelCrawler.Plugin
 
             //取總頁數
             HtmlNodeCollection nodeHeaders2 = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"pgt\"]/table/tr/td[1]/div/div/a");
-            string s = nodeHeaders2[nodeHeaders2.Count - 2].InnerText;
-            r = new Regex(@"(?<TotalPage>\d+)");
-            m = r.Match(s);
-            if (m.Success)
+            if(nodeHeaders2!=null)
             {
-                TaskInfo.TotalPage = CommonTools.TryParse(m.Groups["TotalPage"].Value, 0);
+                string s = nodeHeaders2[nodeHeaders2.Count - 2].InnerText;
+                r = new Regex(@"(?<TotalPage>\d+)");
+                m = r.Match(s);
+                if (m.Success)
+                {
+                    TaskInfo.TotalPage = CommonTools.TryParse(m.Groups["TotalPage"].Value, 0);
+                }
+
+
+
+
+                TaskInfo.PageSection = GetSection(
+                        GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", (TaskInfo.TotalPage - 1).ToString(CultureInfo.InvariantCulture)))
+                   );
+                TaskInfo.TotalSection = TaskInfo.PageSection * (TaskInfo.TotalPage - 1) +
+                    GetSection(
+                        GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", TaskInfo.TotalPage.ToString(CultureInfo.InvariantCulture)))
+                   );
             }
-
             
-
-            TaskInfo.PageSection = GetSection(
-                    GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", (TaskInfo.TotalPage - 1).ToString(CultureInfo.InvariantCulture)))
-               );
-            TaskInfo.TotalSection = TaskInfo.PageSection * (TaskInfo.TotalPage - 1) +
-                GetSection(
-                    GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", TaskInfo.TotalPage.ToString(CultureInfo.InvariantCulture)))
-               );
-
-
             if (TaskInfo.BeginSection == 0)
             { TaskInfo.BeginSection = 1; }
             if (TaskInfo.EndSection == 0 )
@@ -103,7 +106,7 @@ namespace CSNovelCrawler.Plugin
         /// <returns></returns>
         public int GetSection(HtmlDocument htmlRoot)
         {
-            return htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]").Count;
+            return htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]").Count;
         }
         
         public override bool Download()
