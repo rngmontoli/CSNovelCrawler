@@ -74,9 +74,9 @@
     <ApplicationIcon>favicon .ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EncryptAES">
-      <HintPath>..\..\EncryptAES\EncryptAES\bin\Debug\EncryptAES.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="EncryptAES, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EncryptAES.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net20\HtmlAgilityPack.dll</HintPath>
