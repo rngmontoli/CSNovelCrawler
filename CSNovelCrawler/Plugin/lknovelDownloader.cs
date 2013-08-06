@@ -146,7 +146,7 @@ namespace CSNovelCrawler.Plugin
                 try
                 {
                     var nodeHeaders =
-                        htmlRoot.DocumentNode.SelectSingleNode("/html/body/div[3]/div/div/div[1]/div[1]/div[2]");
+                        htmlRoot.DocumentNode.SelectSingleNode("/html/body/div[3]/div/div/div[1]/div[1]/div[3]");
                     string tempTextFile = nodeHeaders.InnerText;
 
                     foreach (var item in typeSetting)
