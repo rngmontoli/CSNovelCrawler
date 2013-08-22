@@ -169,7 +169,7 @@ namespace CSNovelCrawler.UI
                     TaskInfo taskInfo = GetTask(new Guid((string)sItem.Tag));
                     txtBeginSection.Text = taskInfo.BeginSection.ToString(CultureInfo.InvariantCulture);
                     txtEndSection.Text = taskInfo.EndSection.ToString(CultureInfo.InvariantCulture);
-                    txtTitle.Text = taskInfo.Title.ToString(CultureInfo.InvariantCulture);
+                    txtTitle.Text = taskInfo.CustomFileName.ToString(CultureInfo.InvariantCulture);
                     cbSaveDir.Text = taskInfo.SaveDirectoryName.ToString(CultureInfo.InvariantCulture);
                     _selectedTaskInfo = taskInfo;
                     if (taskInfo.Status!=DownloadStatus.Downloading)
@@ -238,7 +238,7 @@ namespace CSNovelCrawler.UI
 
                 taskInfo.BeginSection = CommonTools.TryParse(txtBeginSection.Text, 1);
                 taskInfo.EndSection = CommonTools.TryParse(txtEndSection.Text, 1);
-                taskInfo.Title = txtTitle.Text;
+                taskInfo.CustomFileName = txtTitle.Text;
                 taskInfo.SaveDirectoryName =cbSaveDir.Text;
                 Invoke(new TaskDelegate(RefreshTask), new ParaRefresh(taskInfo));
             }

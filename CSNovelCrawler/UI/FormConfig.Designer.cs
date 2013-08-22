@@ -42,6 +42,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.rbUTF8 = new System.Windows.Forms.RadioButton();
             this.rbUnicode = new System.Windows.Forms.RadioButton();
+            this.cb_Format = new System.Windows.Forms.ComboBox();
+            this.btn_EditFormat = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtSavePath
@@ -73,7 +76,7 @@
             // 
             // btnConfirm
             // 
-            this.btnConfirm.Location = new System.Drawing.Point(180, 242);
+            this.btnConfirm.Location = new System.Drawing.Point(197, 328);
             this.btnConfirm.Name = "btnConfirm";
             this.btnConfirm.Size = new System.Drawing.Size(75, 23);
             this.btnConfirm.TabIndex = 5;
@@ -83,7 +86,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(261, 242);
+            this.btnCancel.Location = new System.Drawing.Point(278, 328);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -94,7 +97,7 @@
             // chbSysTray
             // 
             this.chbSysTray.AutoSize = true;
-            this.chbSysTray.Location = new System.Drawing.Point(12, 151);
+            this.chbSysTray.Location = new System.Drawing.Point(12, 192);
             this.chbSysTray.Name = "chbSysTray";
             this.chbSysTray.Size = new System.Drawing.Size(144, 16);
             this.chbSysTray.TabIndex = 6;
@@ -104,7 +107,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 113);
+            this.label2.Location = new System.Drawing.Point(10, 154);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(77, 12);
             this.label2.TabIndex = 7;
@@ -112,7 +115,7 @@
             // 
             // txtSubTime
             // 
-            this.txtSubTime.Location = new System.Drawing.Point(93, 110);
+            this.txtSubTime.Location = new System.Drawing.Point(93, 151);
             this.txtSubTime.Name = "txtSubTime";
             this.txtSubTime.Size = new System.Drawing.Size(45, 22);
             this.txtSubTime.TabIndex = 8;
@@ -120,7 +123,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(146, 113);
+            this.label3.Location = new System.Drawing.Point(146, 154);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 9;
@@ -129,7 +132,7 @@
             // chbWatchClipboard
             // 
             this.chbWatchClipboard.AutoSize = true;
-            this.chbWatchClipboard.Location = new System.Drawing.Point(12, 173);
+            this.chbWatchClipboard.Location = new System.Drawing.Point(12, 214);
             this.chbWatchClipboard.Name = "chbWatchClipboard";
             this.chbWatchClipboard.Size = new System.Drawing.Size(84, 16);
             this.chbWatchClipboard.TabIndex = 6;
@@ -139,7 +142,7 @@
             // chbLogging
             // 
             this.chbLogging.AutoSize = true;
-            this.chbLogging.Location = new System.Drawing.Point(12, 195);
+            this.chbLogging.Location = new System.Drawing.Point(12, 236);
             this.chbLogging.Name = "chbLogging";
             this.chbLogging.Size = new System.Drawing.Size(96, 16);
             this.chbLogging.TabIndex = 6;
@@ -149,7 +152,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 71);
+            this.label4.Location = new System.Drawing.Point(10, 112);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(77, 12);
             this.label4.TabIndex = 10;
@@ -158,7 +161,7 @@
             // rbUTF8
             // 
             this.rbUTF8.AutoSize = true;
-            this.rbUTF8.Location = new System.Drawing.Point(94, 69);
+            this.rbUTF8.Location = new System.Drawing.Point(94, 110);
             this.rbUTF8.Name = "rbUTF8";
             this.rbUTF8.Size = new System.Drawing.Size(54, 16);
             this.rbUTF8.TabIndex = 11;
@@ -170,7 +173,7 @@
             // rbUnicode
             // 
             this.rbUnicode.AutoSize = true;
-            this.rbUnicode.Location = new System.Drawing.Point(154, 69);
+            this.rbUnicode.Location = new System.Drawing.Point(154, 110);
             this.rbUnicode.Name = "rbUnicode";
             this.rbUnicode.Size = new System.Drawing.Size(62, 16);
             this.rbUnicode.TabIndex = 11;
@@ -179,11 +182,41 @@
             this.rbUnicode.Text = "Unicode";
             this.rbUnicode.UseVisualStyleBackColor = true;
             // 
+            // cb_Format
+            // 
+            this.cb_Format.BackColor = System.Drawing.SystemColors.Menu;
+            this.cb_Format.FormattingEnabled = true;
+            this.cb_Format.Location = new System.Drawing.Point(12, 77);
+            this.cb_Format.Name = "cb_Format";
+            this.cb_Format.Size = new System.Drawing.Size(240, 20);
+            this.cb_Format.TabIndex = 12;
+            // 
+            // btn_EditFormat
+            // 
+            this.btn_EditFormat.Location = new System.Drawing.Point(261, 77);
+            this.btn_EditFormat.Name = "btn_EditFormat";
+            this.btn_EditFormat.Size = new System.Drawing.Size(75, 23);
+            this.btn_EditFormat.TabIndex = 13;
+            this.btn_EditFormat.Text = "編輯";
+            this.btn_EditFormat.UseVisualStyleBackColor = true;
+            this.btn_EditFormat.Click += new System.EventHandler(this.btn_EditFormat_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(10, 61);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(77, 12);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "預設檔名格式";
+            // 
             // FormConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(359, 277);
+            this.ClientSize = new System.Drawing.Size(365, 363);
+            this.Controls.Add(this.btn_EditFormat);
+            this.Controls.Add(this.cb_Format);
             this.Controls.Add(this.rbUnicode);
             this.Controls.Add(this.rbUTF8);
             this.Controls.Add(this.label4);
@@ -196,6 +229,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConfirm);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtSavePath);
             this.MaximizeBox = false;
@@ -224,5 +258,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton rbUTF8;
         private System.Windows.Forms.RadioButton rbUnicode;
+        private System.Windows.Forms.ComboBox cb_Format;
+        private System.Windows.Forms.Button btn_EditFormat;
+        private System.Windows.Forms.Label label5;
     }
 }

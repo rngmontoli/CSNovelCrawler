@@ -1,7 +1,14 @@
-CSNovelCrawler
+﻿CSNovelCrawler
 ==============
+ChangeLog Last Update 2013-08-23
 
-ChangeLog
+v1.4.6.0
+新增自訂檔名格式，
+例%Title%─%Author%輸出就是書名─作者，
+但如果沒辦法分辨出書名跟作者就沒辦法了
+
+v1.4.5.1
+修復輕小說文庫?
 
 v1.4.5
 

@@ -9,19 +9,17 @@ namespace CSNovelCrawler.Core
         private string _ConfigFolderPath { get{ return CoreManager.StartupPath; }}
         private string _ConfigFileName{ get{ return "config.xml";} }
         private string ConfigFullFileName { get { return Path.Combine(_ConfigFolderPath, _ConfigFileName); } }
-
+       
 
         public CustomSettings Settings { get; set; }
 
-
+        
 
         /// <summary>
         /// 儲存設定
         /// </summary>
         public void SaveSettings()
         {
-
-            
             using (var oFileStream = new FileStream(ConfigFullFileName, FileMode.Create))
             {
                 var oXmlSerializer = new XmlSerializer(typeof(CustomSettings));

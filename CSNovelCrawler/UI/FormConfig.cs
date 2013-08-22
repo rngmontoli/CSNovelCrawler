@@ -24,8 +24,14 @@ namespace CSNovelCrawler.UI
             txtSubTime.Text = CoreManager.ConfigManager.Settings.SubscribeTime.ToString(CultureInfo.InvariantCulture);
             rbUnicode.Checked = CoreManager.ConfigManager.Settings.TextEncoding == rbUnicode.Tag.ToString();
             rbUTF8.Checked = CoreManager.ConfigManager.Settings.TextEncoding == rbUTF8.Tag.ToString();
+            cb_Format.Items.AddRange(CoreManager.ConfigManager.Settings.DefaultFormatFileName.ToArray());
+            cb_Format.Items.AddRange(CoreManager.ConfigManager.Settings.CustomFormatFileName.ToArray());
+            cb_Format.DisplayMember = "Name";
+            cb_Format.ValueMember = "Format";
+            cb_Format.SelectedIndex=cb_Format.FindString(CoreManager.ConfigManager.Settings.SelectFormatName);
 
-          
+
+                
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -51,6 +57,10 @@ namespace CSNovelCrawler.UI
             CoreManager.ConfigManager.Settings.TextEncoding = rbUnicode.Checked
                                                                   ? rbUnicode.Tag.ToString()
                                                                   : rbUTF8.Checked ? rbUTF8.Tag.ToString():"utf-16";
+            CoreManager.ConfigManager.Settings.SelectFormatName = ((CSNovelCrawler.Core.CustomSettings.FormatFileName_Class)(cb_Format.SelectedItem)).Name;
+            CoreManager.ConfigManager.Settings.SelectFormat = ((CSNovelCrawler.Core.CustomSettings.FormatFileName_Class)(cb_Format.SelectedItem)).Format;
+
+
             CoreManager.ConfigManager.SaveSettings();
             Close();
         }
@@ -58,6 +68,20 @@ namespace CSNovelCrawler.UI
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void btn_EditFormat_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = new DialogResult();
+            var ConfigFormat = new FormConfigFormat();
+            dr=ConfigFormat.ShowDialog();
+
+            //if (dr == DialogResult.OK)
+            //    MessageBox.Show("User clicked OK button");
+            //else if (dr == DialogResult.Cancel)
+            //    MessageBox.Show("User clicked Cancel button");
+
+            ConfigFormat.Dispose();
         }
 
 

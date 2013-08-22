@@ -83,6 +83,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
@@ -91,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Class\CharSetConverter.cs" />
     <Compile Include="Class\DictionaryExtension.cs" />
+    <Compile Include="Class\FormatFileName.cs" />
     <Compile Include="Core\ConfigManager.cs" />
     <Compile Include="Core\CustomSettings.cs" />
     <Compile Include="Core\LogManager.cs" />
@@ -111,11 +113,23 @@
     <Compile Include="Plugin\lknovelPlugin.cs" />
     <Compile Include="Plugin\ranwenDownloader.cs" />
     <Compile Include="Plugin\ranwenPlugin.cs" />
+    <Compile Include="UI\FormAddFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormAddFormat.Designer.cs">
+      <DependentUpon>FormAddFormat.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\FormConfig.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\FormConfig.Designer.cs">
       <DependentUpon>FormConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\FormConfigFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\FormConfigFormat.Designer.cs">
+      <DependentUpon>FormConfigFormat.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\FormPlugins.cs">
       <SubType>Form</SubType>
@@ -158,8 +172,14 @@
     <EmbeddedResource Include="Plugin\eynySettingsForm.resx">
       <DependentUpon>eynySettingsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormAddFormat.resx">
+      <DependentUpon>FormAddFormat.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\FormConfig.resx">
       <DependentUpon>FormConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\FormConfigFormat.resx">
+      <DependentUpon>FormConfigFormat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using CSNovelCrawler.Interface;
 using System.ComponentModel;
 
+
 namespace CSNovelCrawler.Class
 {
     public class TaskInfo
@@ -11,6 +12,7 @@ namespace CSNovelCrawler.Class
         public TaskInfo()
         {
             Title = "Unknow";
+            CustomFileName = "Unknow";
             Author = "Unknow";
             Progress = 0;
             TotalSection = 0;
@@ -107,10 +109,11 @@ namespace CSNovelCrawler.Class
         {
             get
             {
-                return string.Format("{0}\\{1}.txt" ,SaveDirectoryName , Title);
+                return string.Format("{0}\\{1}.txt", SaveDirectoryName, CustomFileName);
             }
         }
 
+        public string CustomFileName { get; set; }
         /// <summary>
         /// 任務URL
         /// </summary>

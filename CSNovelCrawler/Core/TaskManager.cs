@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using CSNovelCrawler.Class;
 using CSNovelCrawler.Interface;
 
+
 namespace CSNovelCrawler.Core
 {
     public class TaskManager:IDisposable
@@ -62,6 +63,11 @@ namespace CSNovelCrawler.Core
                     if (taskInfo.Analysis())
                     {
                         taskInfo.Status = DownloadStatus.AnalysisComplete;
+                        if (taskInfo.CustomFileName == "Unknow")
+                        {
+                            FormatFileName FFN = new FormatFileName();
+                            taskInfo.CustomFileName = FFN.OutputFormat(taskInfo, CoreManager.ConfigManager.Settings.SelectFormat);
+                        }
                         PreDelegates.Refresh(new ParaRefresh(taskInfo));
                     }
                     else
