@@ -58,7 +58,7 @@ namespace CSNovelCrawler.Plugin
 
             ////取作者跟書名
             string htmlTitle = htmlRoot.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
-             r = new Regex(@"(?<Title>.+)\s*作者\W\s*(?<Author>\S+)");
+            r = new Regex(@"(?<Title>(.(?!【))+)[^\u4e00-\u9fa5a-zA-Z0-9]*作者[^\u4e00-\u9fa5a-zA-Z0-9]*(?<Author>[\u0800-\u9fa5\x3130-\x318Fa-zA-Z0-9]+)");
              m = r.Match(htmlTitle);
             if (m.Success)
             {

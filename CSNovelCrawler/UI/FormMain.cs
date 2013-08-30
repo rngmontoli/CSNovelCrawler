@@ -527,6 +527,14 @@ namespace CSNovelCrawler.UI
                 }
             }
         }
+
+        private void 顯示視窗ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            notifyIcon1.Visible = false;
+            Show();
+            WindowState = FormWindowState.Normal;
+
+        }
     }
 
 }

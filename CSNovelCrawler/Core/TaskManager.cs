@@ -85,6 +85,7 @@ namespace CSNovelCrawler.Core
                     CoreManager.LogManager.Debug(ex.ToString());
                 }
 
+
             }) {IsBackground = true};
             t.Start();
             
