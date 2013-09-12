@@ -5,7 +5,7 @@ using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Plugin
 {
-    [PluginInformation("ranwenDownloader", "ranwen.net插件", "Montoli", "1.0.1.0", "燃文下載插件", "http://www.biquge.com")]
+    [PluginInformation("燃", "ranwen.net插件", "Montoli", "1.0.1.0", "燃文下載插件", "http://www.google.com")]
     public class RanwenPlugin : IPlugin
     {
         public RanwenPlugin()

@@ -24,11 +24,11 @@ namespace CSNovelCrawler.UI
                     var lvi = new ListViewItem(new[]
                         {
                             attrib.FriendlyName,
-                            attrib.Version.ToString(),
-                            attrib.Author,
-                            attrib.Describe,
-                            attrib.SupportUrl,
-                            attrib.Name
+                            attrib.Version.ToString()
+                           // attrib.Author,
+                            //attrib.Describe,
+                            //attrib.SupportUrl,
+                           // attrib.Name
                         }) {Tag = plugin};
                     listView1.Items.Add(lvi);
                 }

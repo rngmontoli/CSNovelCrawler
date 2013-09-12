@@ -5,7 +5,7 @@ using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Plugin
 {
-    [PluginInformation("biqugeDownloader", "biquge.com插件", "Montoli", "1.0.1.0", "笔趣阁下載插件", "http://www.biquge.com")]
+    [PluginInformation("笔Downloader", "biquge.com插件", "Montoli", "1.0.1.0", "笔趣阁下載插件", "http://www.google.com")]
     public class BiqugePiugin : IPlugin
     {
         public BiqugePiugin()

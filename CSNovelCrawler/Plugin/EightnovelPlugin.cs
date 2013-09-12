@@ -6,7 +6,7 @@ using CSNovelCrawler.Interface;
 namespace CSNovelCrawler.Plugin
 {
 
-     [PluginInformation("8novelDownloader", "8novel.com插件", "Montoli", "1.0.0.0", "無限小說下載插件", "http://www.biquge.com")]
+     [PluginInformation("無限Downloader", "8novel.com插件", "Montoli", "1.0.0.0", "無限小說下載插件", "http://www.google.com")]
     public class EightnovelPlugin : IPlugin
     {
          public EightnovelPlugin()
