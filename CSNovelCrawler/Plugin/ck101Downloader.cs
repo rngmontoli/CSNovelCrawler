@@ -106,7 +106,7 @@ namespace CSNovelCrawler.Plugin
         /// <returns></returns>
         public int GetSection(HtmlDocument htmlRoot)
         {
-            return htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]").Count;
+            return htmlRoot.DocumentNode.SelectNodes("//*[@class=\"t_f\"]").Count;
         }
         
         public override bool Download()
@@ -169,7 +169,7 @@ namespace CSNovelCrawler.Plugin
                         {
                             if (lastPage != 1)
                             {
-                                nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                                nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@class=\"t_f\"]");
                             }
                             else
                             {
@@ -179,13 +179,13 @@ namespace CSNovelCrawler.Plugin
                                 switch (TaskInfo.FailTimes % 3)//常常取不到完整資料，用多個網址取
                                 {
                                     case 0:
-                                        var html = htmlRoot.DocumentNode.SelectSingleNode("//*[@id=\"postlist\"]").InnerHtml;
+                                        var html = htmlRoot.DocumentNode.SelectSingleNode("//*[@class=\"t_fsz\"]").InnerHtml;
                                         html +=
                                             GetHtmlDocument(
                                                 string.Format("http://ck101.com/forum.php?mod=threadlazydata&tid={0}",
                                                               TaskInfo.Tid)).DocumentNode.InnerHtml;
                                         htmlRoot.LoadHtml(html);
-                                        nodeHeaders = htmlRoot.DocumentNode.SelectNodes("/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
+                                        nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@class=\"t_f\"]");
                                         break;
                                     default:
 

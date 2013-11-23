@@ -23,7 +23,7 @@ namespace CSNovelCrawler.UI
                     var attrib = (PluginInformationAttribute)types[0];
                     var lvi = new ListViewItem(new[]
                         {
-                            attrib.FriendlyName,
+                            attrib.Name,
                             attrib.Version.ToString()
                            // attrib.Author,
                             //attrib.Describe,
