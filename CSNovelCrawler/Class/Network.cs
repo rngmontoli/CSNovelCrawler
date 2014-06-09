@@ -43,6 +43,28 @@ namespace CSNovelCrawler.Class
             //return curHtmlNode;
         }
 
+        public static void RemoveSubHtmlNode(HtmlNode curHtmlNode, string subNodeToRemove, string subNodeToRemove2)
+        {
+
+            try
+            {
+                var foundAllSub = curHtmlNode.SelectNodes(subNodeToRemove);
+                if (foundAllSub != null)
+                {
+                    foreach (HtmlNode subNode in foundAllSub)
+                    {
+                        RemoveSubHtmlNode(subNode, subNodeToRemove2);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            //return curHtmlNode;
+        }
         /// <summary>
         /// 取得網頁網始碼
         /// </summary>
@@ -140,7 +162,7 @@ namespace CSNovelCrawler.Class
             //再來建立你要取得的Request
             var webReq = (HttpWebRequest)WebRequest.Create(para.Url);
             webReq.ContentType = "application/x-www-form-urlencoded";
-            webReq.Accept = "text/html, application/xhtml+xml, */*";
+            webReq.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
             webReq.Headers.Set("Accept-Language", "zh-TW");
             webReq.UserAgent = para.UserAgent;
             webReq.Headers.Set("Accept-Encoding", "gzip, deflate");

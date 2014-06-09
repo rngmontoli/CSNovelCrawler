@@ -42,6 +42,15 @@ namespace CSNovelCrawler.Class
         }
     }
 
+    public class EynyTag : ITypeSetting
+    {
+        public void Set(ref string txt)
+        {
+            txt = Regex.Replace(txt, @"...<div class='locked'><em>瀏覽完整內容，請先 <a href='member.php\?mod=register'>註冊<\/a> 或 <a href='javascript:;' onclick=""lsSubmit\(\)"">登入會員<\/a><\/em><\/div>", string.Empty);
+            txt = Regex.Replace(txt, @"<div><\/div>", string.Empty);
+        }
+    }
+
     public class Traditional : ITypeSetting
     {
         public void Set(ref string txt)

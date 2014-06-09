@@ -30,7 +30,8 @@ namespace CSNovelCrawler.Core
                     new LknovelPlugin(),
                     new RanwenPlugin(),
                     new HjwzwPlugin(),
-                    new EightnovelPlugin()
+                    new EightnovelPlugin(),
+                    //new eightcomicPlugin()
                     
                 };
             foreach (var plugin in _plugins)

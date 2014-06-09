@@ -6,7 +6,7 @@ using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Plugin
 {
-    [PluginInformation("伊Downloader", "eyny.com插件", "Montoli", "1.0.1.0", "伊莉下載插件", "http://www.google.com")]
+    [PluginInformation("伊Downloader", "eyny.com插件", "Montoli", "1.0.2.0", "伊莉下載插件", "http://www.google.com")]
     public class EynyPlugin : IPlugin
     {
         public EynyPlugin()

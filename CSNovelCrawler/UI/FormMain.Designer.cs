@@ -34,6 +34,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.顯示視窗ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出程式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SubscribeTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStripSubscription = new System.Windows.Forms.ToolStripButton();
@@ -50,7 +51,6 @@
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.開啟檔案ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.開啟檔案所在位置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.顯示視窗ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new CSNovelCrawler.UI.SplitContainerEx();
             this.lsv = new System.Windows.Forms.ListView();
             this.Subscribe = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -107,6 +107,13 @@
             this.退出程式ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(125, 48);
+            // 
+            // 顯示視窗ToolStripMenuItem
+            // 
+            this.顯示視窗ToolStripMenuItem.Name = "顯示視窗ToolStripMenuItem";
+            this.顯示視窗ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.顯示視窗ToolStripMenuItem.Text = "顯示視窗";
+            this.顯示視窗ToolStripMenuItem.Click += new System.EventHandler(this.顯示視窗ToolStripMenuItem_Click);
             // 
             // 退出程式ToolStripMenuItem
             // 
@@ -246,13 +253,6 @@
             this.開啟檔案所在位置ToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.開啟檔案所在位置ToolStripMenuItem.Text = "開啟檔案所在資料夾";
             this.開啟檔案所在位置ToolStripMenuItem.Click += new System.EventHandler(this.開啟檔案所在資料夾ToolStripMenuItem_Click);
-            // 
-            // 顯示視窗ToolStripMenuItem
-            // 
-            this.顯示視窗ToolStripMenuItem.Name = "顯示視窗ToolStripMenuItem";
-            this.顯示視窗ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.顯示視窗ToolStripMenuItem.Text = "顯示視窗";
-            this.顯示視窗ToolStripMenuItem.Click += new System.EventHandler(this.顯示視窗ToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 

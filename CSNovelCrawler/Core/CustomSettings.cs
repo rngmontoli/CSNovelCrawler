@@ -10,9 +10,9 @@ namespace CSNovelCrawler.Core
     {
         public string DefaultSaveFolder = Environment.CurrentDirectory;
         public bool WatchClipboard = true;
-        public bool HideSysTray = true;
+        public bool HideSysTray = false;
         public bool Logging = false;
-        public string TextEncoding = Encoding.Unicode.BodyName;
+        public string TextEncoding = Encoding.UTF8.BodyName;
         public int SubscribeTime =10;
 
 

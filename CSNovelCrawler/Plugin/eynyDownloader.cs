@@ -18,40 +18,47 @@ namespace CSNovelCrawler.Plugin
 
         public EynyDownloader(IPlugin plugin)
         {
-            var aes = new EncryptAes();
-            string url = string.Format("http://www02.eyny.com/member.php?mod=logging&action=login&loginsubmit=yes&handlekey=login&loginhash=LiKaw&inajax=1");
+            //var aes = new EncryptAes();
+            //string url = string.Format("http://www02.eyny.com/member.php?mod=logging&action=login&loginsubmit=yes&handlekey=login&loginhash=LiKaw&inajax=1");
 
-            ServicePointManager.Expect100Continue = false;
+            //ServicePointManager.Expect100Continue = false;
 
-            string postdata = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0WBD7ARSRyDoyl8n0HpXAPIEuJgubT+X9mDY0ncZ5Tl7BnTKl0gJ79WwfclPChuPPU+S3MhyyLx2M/ugEgjDm8BrG7dRNRcXhzMBU6PhqqGLwASVuRjwg4wSvdORanK3GA=";
-            if (plugin.Configuration.ContainsKey("PostData"))
-            {
-                if (!string.IsNullOrEmpty(plugin.Configuration["PostData"].Trim()))
-                {
-                    postdata = plugin.Configuration["PostData"];
-                }
-            }
+            //string postdata = "jNLWAPIFsJ0iWz7D00C09Fy1nAmQepY1y5cHlwqy0+75fQ1bfPELaZdYi/OKhAghQA0TiEVPd0wsFNCzNcVQNpqObZuZyl3DE18XX+Gwn0WBD7ARSRyDoyl8n0HpXAPIEuJgubT+X9mDY0ncZ5Tl7BnTKl0gJ79WwfclPChuPPU+S3MhyyLx2M/ugEgjDm8BrG7dRNRcXhzMBU6PhqqGLwASVuRjwg4wSvdORanK3GA=";
+            //if (plugin.Configuration.ContainsKey("PostData"))
+            //{
+            //    if (!string.IsNullOrEmpty(plugin.Configuration["PostData"].Trim()))
+            //    {
+            //        postdata = plugin.Configuration["PostData"];
+            //    }
+            //}
 
-            byte[] data = Encoding.UTF8.GetBytes(aes.DecryptAes256(postdata));
-            //建立請求
-            var req = (HttpWebRequest)WebRequest.Create(url);
-            req.UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)";
-            req.ContentType = "application/x-www-form-urlencoded";
-            req.ContentLength = data.Length;
-            req.Method = "POST";
-            req.CookieContainer = new CookieContainer();
+            //byte[] data = Encoding.UTF8.GetBytes(aes.DecryptAes256(postdata));
+            ////建立請求
+            //var req = (HttpWebRequest)WebRequest.Create(url);
+            //req.UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)";
+            //req.ContentType = "application/x-www-form-urlencoded";
+            //req.ContentLength = data.Length;
+            //req.Method = "POST";
+            //req.CookieContainer = new CookieContainer();
 
-            using (var outstream = req.GetRequestStream())
-            {
-                outstream.Write(data, 0, data.Length);
-                outstream.Flush();
-            }
-            //關閉請求
-            req.GetResponse().Close();
+            //using (var outstream = req.GetRequestStream())
+            //{
+            //    outstream.Write(data, 0, data.Length);
+            //    outstream.Flush();
+            //}
+            ////關閉請求
+            //req.GetResponse().Close();
+            //CurrentParameter = new DownloadParameter
+            //    {
+            //    UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
+            //    Cookies = req.CookieContainer
+            //};
+
+
             CurrentParameter = new DownloadParameter
-                {
+            {
                 UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
-                Cookies = req.CookieContainer
+                Timeout = 10000
             };
         }
        
@@ -72,8 +79,10 @@ namespace CSNovelCrawler.Plugin
                 //taskInfo.CurrentPage = CommonTools.TryParse(m.Groups["CurrentPage"].Value, 0);
                 TaskInfo.Tid = m.Groups["TID"].Value;
             }
-            TaskInfo.Url= Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)",
-                          "1");
+
+           
+            TaskInfo.Url = //string.Format(@"http://archiver.eyny.com/archiver/tid-{0}-1.html", TaskInfo.Tid);
+                Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)","1");
 
             //用HtmlAgilityPack分析
             HtmlDocument htmlRoot = GetHtmlDocument(TaskInfo.Url);
@@ -120,28 +129,31 @@ namespace CSNovelCrawler.Plugin
 
         public override bool Download()
         {
-            Regex r = new Regex(@"(?<Head>^http:\/\/\w*\.eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?<Tail>-\w+\.html)");
-            Match m = r.Match(TaskInfo.Url);
+            //Regex r = new Regex(@"(?<Head>^http:\/\/\w*\.eyny.com\/thread-\d+-)(?<CurrentPage>\d+)(?<Tail>-\w+\.html)");
+            //Match m = r.Match(TaskInfo.Url);
             string urlHead = string.Empty, urlTail = string.Empty;
-            if (m.Success)
-            {
-                urlHead = m.Groups["Head"].Value;
-                urlTail = m.Groups["Tail"].Value;
-            }
-
-            
+            //if (m.Success)
+            //{
+            //    urlHead = m.Groups["Head"].Value;
+            //    urlTail = m.Groups["Tail"].Value;
+            //}
+             //http://archiver.eyny.com/archiver/tid-9169460-1.html
+            urlHead = string.Format(@"http://archiver.eyny.com/archiver/tid-{0}-",TaskInfo.Tid);
+            urlTail = @".html";
             HtmlNodeCollection nodeHeaders = null;
             
             int lastPage = 0;
             //排版插件
             var typeSetting = new Collection<ITypeSetting>
                 { 
+
                     new HtmlDecode(), 
+                    new EynyTag(),
                     new UniformFormat()
                 };
-            
 
 
+            string RawData = "";
             for (; TaskInfo.BeginSection <= TaskInfo.EndSection && !CurrentParameter.IsStop; TaskInfo.BeginSection++)
             {
                 
@@ -160,31 +172,41 @@ namespace CSNovelCrawler.Plugin
 
                         if (htmlRoot != null)
                         {
-                            nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table/tr[1]/td[2]/div[2]/div[2]/div[1]/table[1]/tr[1]/td[1]");
+                            nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"content\"]");
 
                         }
+
+                        
+                        Network.RemoveSubHtmlNode(nodeHeaders[0], "div");
+                        Network.RemoveSubHtmlNode(nodeHeaders[0], "ignore_js_op");
+                        Network.RemoveSubHtmlNode(nodeHeaders[0], "i");
+                        Network.RemoveSubHtmlNode(nodeHeaders[0], "p", "strong");
+                        RawData = nodeHeaders[0].InnerText;
+                        RawData += "\r\n發表於 2001-1-1 1:1 PM";
+
+                        foreach (var item in typeSetting)
+                        {
+                            item.Set(ref RawData);
+                        }
+                        if (nodeHeaders == null)
+                        {
+                            throw new Exception("下載資料為空的");
+                        }
+
                     }
+                    //Network.RemoveSubHtmlNode(nodeHeaders[0], "p");
+                   
 
                     //計算要取的區塊在第幾個
                     int partSection = TaskInfo.BeginSection - ((lastPage - 1) * TaskInfo.PageSection) - 1;
-                    if (nodeHeaders == null)
-                    {
-                        throw new Exception("下載資料為空的");
-                    }
-                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "div");
-                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "ignore_js_op");
-                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "i");
-                    string tempTxt = nodeHeaders[partSection].InnerText;
 
 
-                    foreach (var item in typeSetting)
-                    {
 
-                        item.Set(ref tempTxt);
-
-                    }
-                    FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath,TaskInfo.TextEncoding);
-
+                    Regex r = new Regex(@"((發表於(( [昨前]天 \d+:\d+ [PA]M)|( \d+-\d+-\d+ \d+:\d+ [PA]M)|( .+?前))))(?<Main>.+?)(?=(發表於(( [昨前]天 \d+:\d+ [PA]M)|( \d+-\d+-\d+ \d+:\d+ [PA]M)|( .+?前))))", RegexOptions.Singleline);
+                    var m = r.Matches(RawData);
+                    string tempTxt = m[partSection].Groups["Main"].Value;
+                    FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath, TaskInfo.TextEncoding);
+                    
                     
                 }
                 catch (Exception)
