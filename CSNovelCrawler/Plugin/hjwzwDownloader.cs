@@ -111,7 +111,9 @@ namespace CSNovelCrawler.Plugin
                     _sectionNames.Add(temp);
                 }
             }
-            _sectionNames.Sort();
+
+            //33244會有問題
+            //_sectionNames.Sort();
         }
 
         public override bool Download()
