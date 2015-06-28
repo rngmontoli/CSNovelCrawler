@@ -67,7 +67,7 @@ namespace CSNovelCrawler.Plugin
             }
 
             //取總頁數
-            HtmlNodeCollection nodeHeaders2 = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"pgt\"]/table/tr/td[1]/div/div/a");
+            HtmlNodeCollection nodeHeaders2 = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"pgt\"]/div[1]/div/a");
             if(nodeHeaders2!=null)
             {
                 string s = nodeHeaders2[nodeHeaders2.Count - 2].InnerText;
