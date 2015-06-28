@@ -1,7 +1,7 @@
-ChangeLog Last Update 2014- 10- 07
+ChangeLog Last Update 2015- 06- 28
 
 ####v1.4.6.6####
-Fix：ck因頁數的html修改而無法分析的問題
+- Fix：ck因頁數的html修改而無法分析的問題
 
 ####v1.4.6.5####
 - 修正某屋的排序，但我忘記當初為什麼要加排序那段了...
