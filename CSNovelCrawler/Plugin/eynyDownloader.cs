@@ -99,7 +99,17 @@ namespace CSNovelCrawler.Plugin
 
             //取總頁數
             HtmlNodeCollection nodeHeaders2 = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"pgt\"]/div[1]/div/a");
-            string s = nodeHeaders2[nodeHeaders2.Count - 3].InnerText;
+            //只有10頁以下時會取不到最後一頁
+            int LastPageIndex = 0;
+            if (nodeHeaders2.Count == 13)
+            {
+                LastPageIndex = nodeHeaders2.Count - 3;
+            }
+            else
+            {
+                LastPageIndex = nodeHeaders2.Count - 2;
+            }
+            string s = nodeHeaders2[LastPageIndex].InnerText;
             r = new Regex(@"(?<TotalPage>\d+)");
             m = r.Match(s);
             if (m.Success)
