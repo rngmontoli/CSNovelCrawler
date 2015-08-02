@@ -31,6 +31,7 @@ namespace CSNovelCrawler.Core
                     new RanwenPlugin(),
                     new HjwzwPlugin(),
                     new EightnovelPlugin(),
+                    new SfacgPlugin(),
                     //new eightcomicPlugin()
                     
                 };

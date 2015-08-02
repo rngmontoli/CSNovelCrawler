@@ -67,6 +67,14 @@ namespace CSNovelCrawler.Class
         }
     }
 
-     
+
+    public class SfacgToIndent : ITypeSetting
+    {
+        public void Set(ref string txt)
+        {
+            txt = Regex.Replace(txt, "&nbsp; &nbsp; ", "\r\n");
+            txt = Regex.Replace(txt, @"<BR>|<br>|<\/?p>", "\r\n");
+        }
+    }
 
 }

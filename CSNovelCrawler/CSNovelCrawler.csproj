@@ -113,6 +113,8 @@
     <Compile Include="Plugin\lknovelPlugin.cs" />
     <Compile Include="Plugin\ranwenDownloader.cs" />
     <Compile Include="Plugin\ranwenPlugin.cs" />
+    <Compile Include="Plugin\SfacgDownloader.cs" />
+    <Compile Include="Plugin\SfacgPlugin.cs" />
     <Compile Include="UI\FormAddFormat.cs">
       <SubType>Form</SubType>
     </Compile>
