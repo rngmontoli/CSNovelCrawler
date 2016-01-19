@@ -1,33 +1,39 @@
-﻿using System.Globalization;
-using HtmlAgilityPack;
 using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using CSNovelCrawler.Class;
+using HtmlAgilityPack;
 
 namespace CSNovelCrawler.Plugin
 {
-  
-    class Ck101Downloader : AbstractDownloader
+    internal class Ck101Downloader : AbstractDownloader
     {
         public Ck101Downloader()
         {
-            
-            
             CurrentParameter = new DownloadParameter
                 {
-                UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
-                Timeout = 10000
-            };
+                    UserAgent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
+                    Timeout = 10000
+                };
         }
-    
-
 
         public HtmlDocument GetHtmlDocument(string url)
         {
             CurrentParameter.Url = url;
-            return Network.GetHtmlDocument(Network.GetHtmlSource(CurrentParameter, Encoding.UTF8));
+            var HtmlSource = Network.GetHtmlSource(CurrentParameter, Encoding.UTF8);
+            return Network.GetHtmlDocument(HtmlSource);
+        }
+
+        public HtmlDocument GetHtmlDocumentReplaceDivToEmpty(string url)
+        {
+            CurrentParameter.Url = url;
+            var HtmlSource = Network.GetHtmlSource(CurrentParameter, Encoding.UTF8);
+            HtmlSource = Regex.Replace(HtmlSource, @"<\/?div[^<]*>", string.Empty, RegexOptions.Singleline);
+            HtmlSource = Regex.Replace(HtmlSource, @"<!--[^<]*-->", string.Empty, RegexOptions.Singleline);
+            //HtmlSource = Regex.Replace(HtmlSource, @"\(adsbygoogle .*\);", string.Empty, RegexOptions.Singleline);
+            return Network.GetHtmlDocument(HtmlSource);
         }
 
         /// <summary>
@@ -35,10 +41,6 @@ namespace CSNovelCrawler.Plugin
         /// </summary>
         public override bool Analysis()
         {
-            
-            
-
-
             //取TID
             Regex r = new Regex(@"^http:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-(?<CurrentPage>\d+)-\w+\.html");
             Match m = r.Match(TaskInfo.Url);
@@ -49,17 +51,14 @@ namespace CSNovelCrawler.Plugin
             }
 
             TaskInfo.Url = string.Format("http://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
-                                       
-               
 
             //用HtmlAgilityPack分析
             HtmlDocument htmlRoot = GetHtmlDocument(TaskInfo.Url);
 
-
             ////取作者跟書名
             string htmlTitle = htmlRoot.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
             r = new Regex(@"(?<Title>(.(?!【))+)[^\u4e00-\u9fa5a-zA-Z0-9]*作者[^\u4e00-\u9fa5a-zA-Z0-9]*(?<Author>[\u0800-\u9fa5\x3130-\x318Fa-zA-Z0-9]+)");
-             m = r.Match(htmlTitle);
+            m = r.Match(htmlTitle);
             if (m.Success)
             {
                 TaskInfo.Author = m.Groups["Author"].Value.Trim();
@@ -68,7 +67,7 @@ namespace CSNovelCrawler.Plugin
 
             //取總頁數
             HtmlNodeCollection nodeHeaders2 = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"pgt\"]/div[1]/div/a");
-            if(nodeHeaders2!=null)
+            if (nodeHeaders2 != null)
             {
                 string s = nodeHeaders2[nodeHeaders2.Count - 2].InnerText;
                 r = new Regex(@"(?<TotalPage>\d+)");
@@ -78,9 +77,6 @@ namespace CSNovelCrawler.Plugin
                     TaskInfo.TotalPage = CommonTools.TryParse(m.Groups["TotalPage"].Value, 0);
                 }
 
-
-
-
                 TaskInfo.PageSection = GetSection(
                         GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", (TaskInfo.TotalPage - 1).ToString(CultureInfo.InvariantCulture)))
                    );
@@ -89,16 +85,15 @@ namespace CSNovelCrawler.Plugin
                         GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", TaskInfo.TotalPage.ToString(CultureInfo.InvariantCulture)))
                    );
             }
-            
+
             if (TaskInfo.BeginSection == 0)
             { TaskInfo.BeginSection = 1; }
-            if (TaskInfo.EndSection == 0 )
+            if (TaskInfo.EndSection == 0)
             { TaskInfo.EndSection = TaskInfo.TotalSection; }
-            
-            return true;
 
-            
+            return true;
         }
+
         /// <summary>
         /// 取頁的樓層數
         /// </summary>
@@ -108,7 +103,7 @@ namespace CSNovelCrawler.Plugin
         {
             return htmlRoot.DocumentNode.SelectNodes("//*[@class=\"t_f\"]").Count;
         }
-        
+
         public override bool Download()
         {
             CurrentParameter.IsStop = false;
@@ -122,21 +117,18 @@ namespace CSNovelCrawler.Plugin
                 urlTail = m.Groups["Tail"].Value;
             }
 
-
             HtmlNodeCollection nodeHeaders = null;
             int lastPage = 0;
             //排版插件
             var typeSetting = new Collection<ITypeSetting>
-                { 
+                {
                     new HtmlDecode(),
                     new UniformFormat()
                 };
-            
 
             for (; TaskInfo.BeginSection <= TaskInfo.EndSection && !CurrentParameter.IsStop; TaskInfo.BeginSection++)
             {
                 //要下載的頁數
-                
 
                 try
                 {
@@ -154,60 +146,24 @@ namespace CSNovelCrawler.Plugin
                                 case 0:
                                     url = string.Format("http://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
                                     break;
+
                                 case 1:
                                     url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
                                     break;
+
                                 case 2:
                                     url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
                                     break;
                             }
                         }
 
-                        HtmlDocument htmlRoot = GetHtmlDocument(url);
+                        HtmlDocument htmlRoot = GetHtmlDocumentReplaceDivToEmpty(url);
 
                         if (htmlRoot != null)
                         {
-                            if (lastPage != 1)
-                            {
-                                nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@class=\"t_f\"]");
-                            }
-                            else
-                            {
-                                //"//*[@id=\"postlist\"]/div[3]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]"
-                               // nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
-
-                                switch (TaskInfo.FailTimes % 3)//常常取不到完整資料，用多個網址取
-                                {
-                                    case 0:
-                                        var html = htmlRoot.DocumentNode.SelectSingleNode("//*[@class=\"t_fsz\"]").InnerHtml;
-                                        html +=
-                                            GetHtmlDocument(
-                                                string.Format("http://ck101.com/forum.php?mod=threadlazydata&tid={0}",
-                                                              TaskInfo.Tid)).DocumentNode.InnerHtml;
-                                        htmlRoot.LoadHtml(html);
-                                        nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@class=\"t_f\"]");
-                                        break;
-                                    default:
-
-                                        nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div/table[1]/tr/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]");
-                                        break;
-                                }
-                                
-                                
-                               
-                                 if (nodeHeaders.Count == 1)
-                                 {
-                                     foreach (var node in htmlRoot.DocumentNode.SelectNodes("//*[@id=\"postlist\"]/div[3]/div/table/tr[2]/td[1]/div[1]/div[1]/div[1]/table[1]/tr[1]/td[1]"))
-                                     {
-                                         nodeHeaders.Add(node);
-                                     }
-
-                                 }
-                            }
+                            nodeHeaders = htmlRoot.DocumentNode.SelectNodes("//*[@class=\"t_f\"]");
                         }
                     }
-
-
 
                     //計算要取的區塊在第幾個
                     int partSection = TaskInfo.BeginSection - ((lastPage - 1) * TaskInfo.PageSection) - 1;
@@ -218,6 +174,7 @@ namespace CSNovelCrawler.Plugin
                     Network.RemoveSubHtmlNode(nodeHeaders[partSection], "div");
                     Network.RemoveSubHtmlNode(nodeHeaders[partSection], "ignore_js_op");
                     Network.RemoveSubHtmlNode(nodeHeaders[partSection], "i");
+                    Network.RemoveSubHtmlNode(nodeHeaders[partSection], "script");
                     string tempTxt = nodeHeaders[partSection].InnerText;
 
                     foreach (var item in typeSetting)
@@ -225,8 +182,6 @@ namespace CSNovelCrawler.Plugin
                         item.Set(ref tempTxt);
                     }
                     FileWrite.TxtWrire(tempTxt, TaskInfo.SaveFullPath, TaskInfo.TextEncoding);
-
-
                 }
                 catch (Exception)
                 {
@@ -245,10 +200,5 @@ namespace CSNovelCrawler.Plugin
             bool finish = TaskInfo.CurrentSection == TaskInfo.EndSection;
             return finish;
         }
-
-
-
-        
-
     }
 }
