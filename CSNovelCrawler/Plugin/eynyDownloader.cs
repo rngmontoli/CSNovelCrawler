@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using CSNovelCrawler.Class;
 using CSNovelCrawler.Interface;
-using EncryptAES;
+
 using HtmlAgilityPack;
 using System;
 using System.Collections.ObjectModel;

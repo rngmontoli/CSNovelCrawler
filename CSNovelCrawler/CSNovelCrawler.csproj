@@ -74,10 +74,6 @@
     <ApplicationIcon>favicon .ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EncryptAES, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EncryptAES.dll</HintPath>
-    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net20\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -101,12 +97,6 @@
     <Compile Include="Plugin\abstractDownloader.cs" />
     <Compile Include="Plugin\biqugeDownloader.cs" />
     <Compile Include="Plugin\biqugePiugin.cs" />
-    <Compile Include="Plugin\eynySettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Plugin\eynySettingsForm.Designer.cs">
-      <DependentUpon>eynySettingsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Plugin\hjwzwDownloader.cs" />
     <Compile Include="Plugin\hjwzwPlugin.cs" />
     <Compile Include="Plugin\lknovelDownloader.cs" />
@@ -171,9 +161,6 @@
     <Compile Include="UI\FormNew.Designer.cs">
       <DependentUpon>FormNew.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Plugin\eynySettingsForm.resx">
-      <DependentUpon>eynySettingsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\FormAddFormat.resx">
       <DependentUpon>FormAddFormat.cs</DependentUpon>
     </EmbeddedResource>

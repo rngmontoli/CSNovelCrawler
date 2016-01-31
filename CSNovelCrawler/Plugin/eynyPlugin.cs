@@ -11,12 +11,9 @@ namespace CSNovelCrawler.Plugin
     {
         public EynyPlugin()
 		{
-            Extensions = new Dictionary<string, object>
-                {
-                    {"ConfigForm", new MethodInvoker(() => new EynySettingsForm(Configuration).ShowDialog())}
-                };
-            //ConfigForm 属性设置窗口
-		}
+            Extensions = new Dictionary<string, object>();
+          
+        }
 
         public IDownloader CreateDownloader()
         {
