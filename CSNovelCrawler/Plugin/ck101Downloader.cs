@@ -42,7 +42,7 @@ namespace CSNovelCrawler.Plugin
         public override bool Analysis()
         {
             //取TID
-            Regex r = new Regex(@"^http:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-(?<CurrentPage>\d+)-\w+\.html");
+            Regex r = new Regex(@"^https?:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-(?<CurrentPage>\d+)-\w+\.html");
             Match m = r.Match(TaskInfo.Url);
             if (m.Success)
             {
@@ -50,14 +50,14 @@ namespace CSNovelCrawler.Plugin
                 TaskInfo.Tid = m.Groups["TID"].Value;
             }
 
-            TaskInfo.Url = string.Format("http://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
+            TaskInfo.Url = string.Format("https://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
 
             //用HtmlAgilityPack分析
             HtmlDocument htmlRoot = GetHtmlDocument(TaskInfo.Url);
 
             ////取作者跟書名
             string htmlTitle = htmlRoot.DocumentNode.SelectSingleNode("/html/head/title").InnerText;
-            r = new Regex(@"(?<Title>(.(?!【))+)[^\u4e00-\u9fa5a-zA-Z0-9]*作者[^\u4e00-\u9fa5a-zA-Z0-9]*(?<Author>[\u0800-\u9fa5\x3130-\x318Fa-zA-Z0-9]+)");
+            r = new Regex(@"(?<Title>(.(?!【))+)[^\u4e00-\u9fa5a-zA-Z0-9]*作\s*者[^\u4e00-\u9fa5a-zA-Z0-9]*(?<Author>[\u0800-\u9fa5\x3130-\x318Fa-zA-Z0-9]+)");
             m = r.Match(htmlTitle);
             if (m.Success)
             {
@@ -78,11 +78,11 @@ namespace CSNovelCrawler.Plugin
                 }
 
                 TaskInfo.PageSection = GetSection(
-                        GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", (TaskInfo.TotalPage - 1).ToString(CultureInfo.InvariantCulture)))
+                        GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^https?:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", (TaskInfo.TotalPage - 1).ToString(CultureInfo.InvariantCulture)))
                    );
                 TaskInfo.TotalSection = TaskInfo.PageSection * (TaskInfo.TotalPage - 1) +
                     GetSection(
-                        GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", TaskInfo.TotalPage.ToString(CultureInfo.InvariantCulture)))
+                        GetHtmlDocument(Regex.Replace(TaskInfo.Url, @"(?!^https?:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?=-\w+\.html)", TaskInfo.TotalPage.ToString(CultureInfo.InvariantCulture)))
                    );
             }
 
@@ -108,7 +108,7 @@ namespace CSNovelCrawler.Plugin
         {
             CurrentParameter.IsStop = false;
 
-            Regex r = new Regex(@"(?<Head>^http:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?<Tail>-\w+\.html)");
+            Regex r = new Regex(@"(?<Head>^https?:\/\/\w*\.*ck101.com\/thread-\d+-)(?<CurrentPage>\d+)(?<Tail>-\w+\.html)");
             Match m = r.Match(TaskInfo.Url);
             string urlHead = string.Empty, urlTail = string.Empty;
             if (m.Success)
@@ -144,15 +144,15 @@ namespace CSNovelCrawler.Plugin
                             switch (TaskInfo.FailTimes % 2)//常常取不到完整資料，用多個網址取
                             {
                                 case 0:
-                                    url = string.Format("http://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
+                                    url = string.Format("https://ck101.com/thread-{0}-1-1.html", TaskInfo.Tid);
                                     break;
 
                                 case 1:
-                                    url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
+                                    url = string.Format("https://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
                                     break;
 
                                 case 2:
-                                    url = string.Format("http://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
+                                    url = string.Format("https://m.ck101.com/forum.php?mod=redirect&ptid={0}&authorid=0&postno=1", TaskInfo.Tid);
                                     break;
                             }
                         }

@@ -20,7 +20,7 @@ namespace CSNovelCrawler.Plugin
 
         public bool CheckUrl(string url)
         {
-            Regex r = new Regex(@"(^http:\/\/\w*\.*ck101.com\/thread-\d+-\d+-\w+\.html)");
+            Regex r = new Regex(@"(^https?:\/\/\w*\.*ck101.com\/thread-\d+-\d+-\w+\.html)");
             Match m = r.Match(url);
             if (m.Success)
             {
@@ -31,7 +31,7 @@ namespace CSNovelCrawler.Plugin
 
         public string GetHash(string url)
         {
-            Regex r = new Regex(@"(^http:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-\d+-\w+\.html)");
+            Regex r = new Regex(@"(^https?:\/\/\w*\.*ck101.com\/thread-(?<TID>\d+)-\d+-\w+\.html)");
             Match m = r.Match(url);
             if (m.Success)
             {
