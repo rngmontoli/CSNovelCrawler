@@ -1,4 +1,7 @@
-ChangeLog Last Update 2016- 01- 31
+ChangeLog Last Update 2017-03-05
+
+####v1.4.6.9####
+- Fix：ck http to https
 
 ####v1.4.6.8####
 - Fix：ck抓取規則調整，測試樣本不多，請網友有問題再反應囉
