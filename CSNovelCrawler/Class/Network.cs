@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading;
 using CSNovelCrawler.Core;
 using HtmlAgilityPack;
+using System.Text;
 
 namespace CSNovelCrawler.Class
 {
@@ -179,7 +180,39 @@ namespace CSNovelCrawler.Class
             //webReq.Proxy = proxy;
             return GetHtmlSource(webReq, encode);
         }
-       
+
+
+        /// <summary>
+        /// 取得網頁網始碼
+        /// </summary>
+        /// <param name="para"></param>
+        /// <param name="encode"></param>
+        /// <returns></returns>
+        public static string PostHtmlSource(DownloadParameter para, System.Text.Encoding encode, string formData)
+        {
+
+            //再來建立你要取得的Request
+            var webReq = (HttpWebRequest)WebRequest.Create(para.Url);
+            webReq.ContentType = "application/x-www-form-urlencoded";
+            webReq.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+            webReq.Headers.Set("Accept-Language", "zh-TW,zh;q=0.8,en-US;q=0.6,en;q=0.4");
+            webReq.UserAgent = para.UserAgent;
+            webReq.Headers.Set("Accept-Encoding", "gzip, deflate");
+            webReq.Method = "POST";
+            webReq.Timeout = 30000;
+            if (para.Timeout != 0)
+            {
+                webReq.Timeout = para.Timeout;
+            }
+            byte[] bs = Encoding.ASCII.GetBytes(formData);
+            using (Stream reqStream = webReq.GetRequestStream())
+            {
+                reqStream.Write(bs, 0, bs.Length);
+            }
+
+            return GetHtmlSource(webReq, encode);
+        }
+
 
 
     }

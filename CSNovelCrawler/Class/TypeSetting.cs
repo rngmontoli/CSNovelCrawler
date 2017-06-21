@@ -15,6 +15,24 @@ namespace CSNovelCrawler.Class
         }
     }
 
+    public class PRegex : ITypeSetting
+    {
+        public void Set(ref string txt)
+        {
+            txt = Regex.Replace(txt, "<p>", "", RegexOptions.IgnoreCase);
+            txt = Regex.Replace(txt, "</p>", "\r\n", RegexOptions.IgnoreCase);
+        }
+    }
+
+    public class AnnotationRegex : ITypeSetting
+    {
+        public void Set(ref string txt)
+        {
+            txt = Regex.Replace(txt, "<!--PAGE.+?-->", "\r\n", RegexOptions.IgnoreCase);
+        }
+    }
+
+
     public class HjwzwRegex : ITypeSetting
     {
         public void Set(ref string txt)
@@ -39,6 +57,14 @@ namespace CSNovelCrawler.Class
             txt = Regex.Replace(txt, @"(^\s+)", string.Empty,RegexOptions.Multiline);
             txt = Regex.Replace(txt, @"^(?=\S+)", @"　　", RegexOptions.Multiline);
             txt = Regex.Replace(txt, @"[\r|\n]*$[\r|\n]*", "\r\n\r\n", RegexOptions.Multiline);
+        }
+    }
+
+    public class Remove0007 : ITypeSetting
+    {
+        public void Set(ref string txt)
+        {
+            txt = Regex.Replace(txt, @"([\x00-\x07])", string.Empty);
         }
     }
 
