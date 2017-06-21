@@ -170,12 +170,12 @@ namespace CSNovelCrawler.Plugin
                               );
                     }
 
-                    htmlRoot = PostHtmlDocument(formData);
+                    HtmlDocument htmlPostResponse = PostHtmlDocument(formData);
 
-                    //var node = htmlRoot.DocumentNode.SelectSingleNode("//*[@id=\"content\"]");
+                    var titleNode = htmlRoot.DocumentNode.SelectSingleNode("/html/body/div[3]/div/div[2]/h1");
                     //Network.RemoveSubHtmlNode(node, "div");
 
-                    string tempTextFile = htmlRoot.DocumentNode.InnerHtml + "\r\n";
+                    string tempTextFile = titleNode.InnerText + "\r\n" + htmlPostResponse.DocumentNode.InnerHtml + "\r\n";
                     foreach (var item in typeSetting)
                     {
                         item.Set(ref tempTextFile);

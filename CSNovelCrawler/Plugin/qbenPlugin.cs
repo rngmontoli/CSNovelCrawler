@@ -5,7 +5,7 @@ using CSNovelCrawler.Interface;
 
 namespace CSNovelCrawler.Plugin
 {
-    [PluginInformation("qBenDownloader", "qBen插件", "Montoli", "1.0.0.0", "qBen下載插件", "http://www.google.com")]
+    [PluginInformation("quanBenDownloader", "quanBen插件", "Montoli", "1.0.0.0", "quanBen下載插件", "http://www.google.com")]
     public class qbenPlugin : IPlugin
     {
         public qbenPlugin()
